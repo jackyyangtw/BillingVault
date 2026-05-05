@@ -3,6 +3,7 @@ import { ShieldCheck, ArrowRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import HeroGridBackground from "./HeroGridBackground";
 
 const trustSignals = ["免信用卡即可開始", "14 天免費試用", "隨時取消"];
 
@@ -15,15 +16,7 @@ const mockStats = [
 export default function HeroSection() {
   return (
     <section className="relative overflow-hidden pt-32 pb-24 lg:pt-40">
-      {/* 漸層光暈 */}
-      <div
-        aria-hidden
-        className="bg-primary/10 pointer-events-none absolute -top-40 left-1/2 size-[900px] -translate-x-1/2 rounded-full blur-3xl"
-      />
-      <div
-        aria-hidden
-        className="bg-primary/5 pointer-events-none absolute top-0 right-0 size-[500px] translate-x-1/3 rounded-full blur-2xl"
-      />
+      <HeroGridBackground />
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
@@ -32,7 +25,7 @@ export default function HeroSection() {
             以資安為核心的 SaaS 結帳平台
           </Badge>
 
-          <h1 className="text-foreground text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl">
+          <h1 className="text-foreground text-5xl leading-tight font-bold tracking-tight sm:text-6xl lg:text-7xl">
             你的 SaaS 值得擁有
             <br />
             <span className="text-primary">更好的結帳體驗</span>

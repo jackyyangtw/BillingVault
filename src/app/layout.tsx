@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/tailwind-css/utils";
 import Navbar from "./_components/layout/Navbar";
 import Footer from "./_components/layout/Footer";
+import ThemeProvider from "./_components/layout/ThemeProvider";
 
 const notoSans = Noto_Sans({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -31,6 +32,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={cn(
         "h-full",
         "antialiased",
@@ -41,9 +43,11 @@ export default function RootLayout({
       )}
     >
       <body className="flex min-h-full flex-col">
-        <Navbar />
-        {children}
-        <Footer />
+        <ThemeProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

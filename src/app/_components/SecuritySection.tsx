@@ -56,7 +56,7 @@ export default function SecuritySection() {
             資安設計
           </Badge>
           <h2 className="text-4xl font-bold tracking-tight">
-            安全是設計原則，不是事後補丁
+            安全是設計原則，不是事後補舊
           </h2>
           <p className="text-muted-foreground mt-4">
             SecureCart 的每一層架構都以真實攻擊情境為前提進行設計， 從 Token

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { ShieldCheck, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/tailwind-css/utils";
+import ThemeToggle from "./ThemeToggle";
 
 const navLinks = [
   { label: "產品", href: "/#products" },
@@ -43,6 +44,7 @@ export default function Navbar() {
         </ul>
 
         <div className="hidden items-center gap-2 md:flex">
+          <ThemeToggle />
           <Button variant="ghost" size="sm" asChild>
             <Link href="/auth/login">登入</Link>
           </Button>
@@ -51,13 +53,12 @@ export default function Navbar() {
           </Button>
         </div>
 
-        <button
-          className="md:hidden"
-          onClick={() => setOpen(!open)}
-          aria-label="開啟選單"
-        >
-          {open ? <X className="size-5" /> : <Menu className="size-5" />}
-        </button>
+        <div className="flex items-center gap-2 md:hidden">
+          <ThemeToggle />
+          <button onClick={() => setOpen(!open)} aria-label="開啟選單">
+            {open ? <X className="size-5" /> : <Menu className="size-5" />}
+          </button>
+        </div>
       </nav>
 
       <div
