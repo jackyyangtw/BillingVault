@@ -1,9 +1,21 @@
-export default function Home() {
+import HeroSection from "./_components/HeroSection";
+import ProductsSection from "./_components/ProductsSection";
+import PricingSection from "./_components/PricingSection";
+import SecuritySection from "./_components/SecuritySection";
+import CheckoutFlowSection from "./_components/CheckoutFlowSection";
+import TestimonialsSection from "./_components/TestimonialsSection";
+import CtaSection from "./_components/CtaSection";
+
+export default function HomePage() {
   return (
-    <div className="flex flex-1 flex-col items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex w-full max-w-3xl flex-1 flex-col items-center justify-between bg-white px-16 py-32 sm:items-start dark:bg-black">
-        home page
-      </main>
-    </div>
+    <main className="flex flex-col">
+      <HeroSection />
+      <ProductsSection />
+      <PricingSection />
+      <SecuritySection />
+      <CheckoutFlowSection />
+      <TestimonialsSection />
+      <CtaSection />
+    </main>
   );
 }
