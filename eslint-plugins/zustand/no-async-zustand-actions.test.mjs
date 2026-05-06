@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { RuleTester } from "eslint";
 import { describe } from "vitest";
-import rule from "./no-async-in-store.mjs";
+import rule from "./no-async-zustand-actions.mjs";
 
 const ruleTester = new RuleTester({
   languageOptions: {
@@ -14,7 +14,7 @@ const ruleTester = new RuleTester({
 // Helpers
 // ---------------------------------------------------------------------------
 
-const MSG_ID = "noAsyncInStore";
+const MSG_ID = "noAsyncZustandActions";
 
 /**
  * 快速建立 invalid case — 預設只有 1 個 error

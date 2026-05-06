@@ -1,5 +1,5 @@
 /**
- * ESLint Rule: no-async-in-store
+ * ESLint Rule: no-async-zustand-actions
  *
  * 禁止在 Zustand store 的 state creator 中定義 async function。
  * Zustand store 應只包含同步的狀態操作，非同步邏輯應放在 component 或獨立 action 層。
@@ -24,8 +24,8 @@ const rule = {
       recommended: true,
     },
     messages: {
-      noAsyncInStore:
-        "Zustand store 不應包含 async function。請將非同步邏輯移至 component 或獨立的 action 模組中，視情況搭配 Tanstack Query 使用。",
+      noAsyncZustandActions:
+        "Zustand stores should not contain async functions. Move asynchronous logic to a component or a dedicated action module, and use TanStack Query when appropriate.",
     },
     schema: [],
   },
@@ -169,7 +169,7 @@ const rule = {
       // 攔截所有 async function，再判斷是否在 state creator 裡
       ":function[async=true]"(node) {
         if (isInsideStateCreator(node)) {
-          context.report({ node, messageId: "noAsyncInStore" });
+          context.report({ node, messageId: "noAsyncZustandActions" });
         }
       },
     };

@@ -21,7 +21,7 @@ const eslintConfig = defineConfig([
       zustand: zustandPlugin,
     },
     rules: {
-      "zustand/no-async-in-store": "error",
+      "zustand/no-async-zustand-actions": "error",
     },
   },
 ]);
