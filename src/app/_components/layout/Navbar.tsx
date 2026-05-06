@@ -18,7 +18,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="border-border/60 bg-background/80 fixed inset-x-0 top-0 z-50 border-b backdrop-blur-md">
+    <header className="border-border/50 bg-background/55 fixed inset-x-0 top-0 z-50 border-b shadow-sm backdrop-blur-xl">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
         <Link
           href="/"
@@ -63,7 +63,7 @@ export default function Navbar() {
 
       <div
         className={cn(
-          "border-border/60 bg-background flex flex-col gap-4 border-t px-6 pt-4 pb-6 transition-all duration-300 md:hidden",
+          "border-border/50 bg-background/70 flex flex-col gap-4 border-t px-6 pt-4 pb-6 shadow-sm backdrop-blur-xl transition-all duration-300 md:hidden",
           open ? "block" : "hidden",
         )}
       >
