@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 import { products } from "@/mocks/fixtures/products";
 import { plans } from "@/mocks/fixtures/plans";
 

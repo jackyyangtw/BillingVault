@@ -1,6 +1,6 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useMemo, useState } from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { products } from "@/mocks/fixtures/products";
@@ -46,7 +46,7 @@ export default function CheckoutForm({
     [initialCycle, initialPlanId, initialProductId],
   );
   const form = useForm<CheckoutFormValues>({
-    resolver: zodResolver(checkoutFormSchema),
+    resolver: standardSchemaResolver(checkoutFormSchema),
     mode: "onTouched",
     defaultValues,
   });
