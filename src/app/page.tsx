@@ -1,6 +1,5 @@
 import HeroSection from "./_components/HeroSection";
 import ProductsSection from "./_components/ProductsSection";
-import PricingSection from "./_components/PricingSection";
 import SecuritySection from "./_components/SecuritySection";
 import CheckoutFlowSection from "./_components/CheckoutFlowSection";
 import TestimonialsSection from "./_components/TestimonialsSection";
@@ -11,7 +10,6 @@ export default function HomePage() {
     <main className="flex flex-col">
       <HeroSection />
       <ProductsSection />
-      <PricingSection />
       <SecuritySection />
       <CheckoutFlowSection />
       <TestimonialsSection />

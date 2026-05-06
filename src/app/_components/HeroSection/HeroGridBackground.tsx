@@ -2,7 +2,7 @@ export default function HeroGridBackground() {
   return (
     <svg
       aria-hidden
-      className="text-primary/75 dark:text-primary pointer-events-none absolute inset-0 size-full [mask-image:linear-gradient(to_bottom,black,transparent_88%)]"
+      className="text-primary/35 dark:text-primary pointer-events-none absolute inset-0 size-full [mask-image:linear-gradient(to_bottom,black,transparent_88%)]"
     >
       <defs>
         <pattern
@@ -15,7 +15,7 @@ export default function HeroGridBackground() {
             d="M 48 0 L 0 0 0 48"
             fill="none"
             stroke="currentColor"
-            strokeOpacity="0.32"
+            strokeOpacity="0.88"
             strokeWidth="1"
           />
         </pattern>

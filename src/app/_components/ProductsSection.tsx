@@ -1,73 +1,57 @@
 import Link from "next/link";
 import {
-  ShieldCheck,
-  Zap,
-  BarChart3,
-  Users,
-  Bell,
   Activity,
   ArrowRight,
+  BarChart3,
+  Bell,
+  ShieldCheck,
+  Users,
+  Zap,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
+import { cn } from "@/lib/tailwind-css/utils";
+import { products, type Product } from "@/mocks/fixtures/products";
 
-const products = [
-  {
-    icon: ShieldCheck,
-    name: "CodeGuard",
-    tagline: "依賴套件安全掃描與 CI 風險警告",
-    price: "$19",
-    color: "text-primary",
-    bg: "bg-primary/10",
-  },
-  {
-    icon: Activity,
-    name: "DeployWatch",
-    tagline: "部署監控與版本發布追蹤",
-    price: "$15",
-    color: "text-emerald-600 dark:text-emerald-400",
+const productIcons: Record<Product["id"], typeof ShieldCheck> = {
+  codeguard: ShieldCheck,
+  deploywatch: Activity,
+  errorpulse: Zap,
+  metricflow: BarChart3,
+  teamvault: Users,
+  alertgrid: Bell,
+};
+
+const accentClasses: Record<Product["accent"], { icon: string; bg: string }> = {
+  primary: { icon: "text-primary", bg: "bg-primary/10" },
+  emerald: {
+    icon: "text-emerald-600 dark:text-emerald-400",
     bg: "bg-emerald-500/10",
   },
-  {
-    icon: Zap,
-    name: "ErrorPulse",
-    tagline: "前端錯誤追蹤與 Session 診斷",
-    price: "$29",
-    color: "text-amber-600 dark:text-amber-400",
+  amber: {
+    icon: "text-amber-600 dark:text-amber-400",
     bg: "bg-amber-500/10",
   },
-  {
-    icon: BarChart3,
-    name: "MetricFlow",
-    tagline: "產品分析與轉換率儀表板",
-    price: "$39",
-    color: "text-violet-600 dark:text-violet-400",
+  violet: {
+    icon: "text-violet-600 dark:text-violet-400",
     bg: "bg-violet-500/10",
   },
-  {
-    icon: Users,
-    name: "TeamVault",
-    tagline: "安全團隊工作區與存取控制",
-    price: "$49",
-    color: "text-rose-600 dark:text-rose-400",
+  rose: {
+    icon: "text-rose-600 dark:text-rose-400",
     bg: "bg-rose-500/10",
   },
-  {
-    icon: Bell,
-    name: "AlertGrid",
-    tagline: "多通道事件警報與待命排班路由",
-    price: "$25",
-    color: "text-sky-600 dark:text-sky-400",
+  sky: {
+    icon: "text-sky-600 dark:text-sky-400",
     bg: "bg-sky-500/10",
   },
-];
+};
 
 export default function ProductsSection() {
   return (
@@ -87,22 +71,27 @@ export default function ProductsSection() {
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {products.map((product) => {
-            const Icon = product.icon;
+            const Icon = productIcons[product.id];
+            const accent = accentClasses[product.accent];
+
             return (
               <Card
-                key={product.name}
+                key={product.id}
                 className="group relative overflow-hidden transition-shadow hover:shadow-lg"
               >
                 <CardHeader className="pb-3">
                   <div
-                    className={`mb-3 flex size-10 items-center justify-center rounded-lg ${product.bg}`}
+                    className={cn(
+                      "mb-3 flex size-10 items-center justify-center rounded-lg",
+                      accent.bg,
+                    )}
                   >
-                    <Icon className={`size-5 ${product.color}`} />
+                    <Icon className={cn("size-5", accent.icon)} />
                   </div>
                   <CardTitle className="flex items-center justify-between">
                     {product.name}
                     <span className="text-muted-foreground text-base font-semibold">
-                      {product.price}
+                      ${product.price}
                       <span className="text-xs font-normal">/月</span>
                     </span>
                   </CardTitle>
@@ -115,7 +104,7 @@ export default function ProductsSection() {
                     className="w-full"
                     asChild
                   >
-                    <Link href="/pricing">
+                    <Link href={`/product/${product.id}`}>
                       了解更多
                       <ArrowRight data-icon="inline-end" />
                     </Link>
