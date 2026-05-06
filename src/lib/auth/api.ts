@@ -1,0 +1,147 @@
+/**
+ * 後端 API 抽象層（Mock 實作）
+ * 👉 後端API好了之後要拆分成個別檔案
+ *
+ * 模擬後端登入 API 的回傳結果，
+ * 未來替換成真正的 fetch() 呼叫即可，其他模組完全不需要修改。
+ *
+ * Mock 帳號：test@example.com / password123
+ *
+ * @module lib/auth/api
+ */
+import "server-only";
+
+import type { AuthApiResponse } from "./types";
+
+const MOCK_USERS = [
+  {
+    id: "user-001",
+    email: "test@example.com",
+    password: "password123",
+    name: "測試用戶",
+    phone: "0912345678",
+    avatar: undefined,
+  },
+];
+
+// ---------------------------------------------------------------------------
+// API Functions（未來替換成真正的 fetch）
+// ---------------------------------------------------------------------------
+
+/**
+ * Email 登入
+ *
+ * TODO: 替換為真正的後端 API 呼叫
+ * ```ts
+ * const res = await fetch(`${API_BASE}/auth/login`, {
+ *   method: "POST",
+ *   headers: { "Content-Type": "application/json" },
+ *   body: JSON.stringify({ email, password }),
+ * });
+ * return res.json();
+ * ```
+ */
+export async function apiLogin(
+  email: string,
+  password: string,
+): Promise<AuthApiResponse> {
+  // 模擬網路延遲
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  const user = MOCK_USERS.find(
+    (u) => u.email === email && u.password === password,
+  );
+
+  if (!user) {
+    return { success: false, error: "帳號或密碼錯誤" };
+  }
+
+  return {
+    success: true,
+    token: `mock-jwt-token-${user.id}`,
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      avatar: user.avatar,
+    },
+  };
+}
+
+/**
+ * Email 註冊
+ *
+ * TODO: 替換為真正的後端 API 呼叫
+ * ```ts
+ * const res = await fetch(`${API_BASE}/auth/register`, {
+ *   method: "POST",
+ *   headers: { "Content-Type": "application/json" },
+ *   body: JSON.stringify({ email, password, name, phone }),
+ * });
+ * return res.json();
+ * ```
+ */
+export async function apiRegister(
+  email: string,
+  password: string,
+  name: string,
+  phone: string,
+): Promise<AuthApiResponse> {
+  // 模擬網路延遲
+  await new Promise((resolve) => setTimeout(resolve, 800));
+
+  // 模擬：檢查 email 是否已被註冊
+  const exists = MOCK_USERS.find((u) => u.email === email);
+  if (exists) {
+    return { success: false, error: "此 Email 已被註冊" };
+  }
+
+  // 模擬：建立新用戶
+  const newUser = {
+    id: `user-${Date.now()}`,
+    name,
+    email,
+    phone,
+  };
+
+  return {
+    success: true,
+    token: `mock-jwt-token-${newUser.id}`,
+    user: newUser,
+  };
+}
+
+/**
+ * 第三方登入
+ *
+ * TODO: 替換為真正的 OAuth 流程
+ * ```ts
+ * const res = await fetch(`${API_BASE}/auth/oauth/exchange`, {
+ *   method: "POST",
+ *   headers: { "Content-Type": "application/json" },
+ *   body: JSON.stringify({ provider, code }),
+ * });
+ * return res.json();
+ * ```
+ */
+export async function apiThirdPartyLogin(
+  provider: string,
+  _code?: string,
+): Promise<AuthApiResponse> {
+  // 模擬網路延遲
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  return {
+    success: true,
+    token: `mock-jwt-token-user-third-party`,
+    // 模擬：一律視為新用戶（尚未完成註冊）
+    isRegistered: false,
+    user: {
+      id: "user-third-party",
+      name: `${provider} 用戶`,
+      email: `${provider.toLowerCase()}@example.com`,
+      phone: "0987654321",
+    },
+  };
+}
