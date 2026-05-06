@@ -17,6 +17,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { TypographyH2, TypographyLead } from "@/components/ui/typography";
 import { cn } from "@/lib/tailwind-css/utils";
 import { products, type Product } from "@/mocks/fixtures/products";
 
@@ -61,12 +62,12 @@ export default function ProductsSection() {
           <Badge variant="secondary" className="mb-4">
             產品介紹
           </Badge>
-          <h2 className="text-4xl font-bold tracking-tight">
+          <TypographyH2 className="border-0 pb-0 text-4xl font-bold">
             專為開發者團隊打造的工具
-          </h2>
-          <p className="text-muted-foreground mt-4">
+          </TypographyH2>
+          <TypographyLead className="mt-4 text-base">
             一套完整的資安與可觀測性工具，每項產品皆可獨立訂閱。
-          </p>
+          </TypographyLead>
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

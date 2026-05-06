@@ -1,6 +1,12 @@
 import { Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  TypographyH2,
+  TypographyMuted,
+  TypographyP,
+  TypographySmall,
+} from "@/components/ui/typography";
 
 const testimonials = [
   {
@@ -34,9 +40,9 @@ export default function TestimonialsSection() {
           <Badge variant="secondary" className="mb-4">
             用戶評價
           </Badge>
-          <h2 className="text-4xl font-bold tracking-tight">
+          <TypographyH2 className="border-0 pb-0 text-4xl font-bold">
             深受工程團隊信賴
-          </h2>
+          </TypographyH2>
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
@@ -51,12 +57,14 @@ export default function TestimonialsSection() {
                     />
                   ))}
                 </div>
-                <p className="text-foreground flex-1 text-sm leading-relaxed">
+                <TypographyP className="text-foreground flex-1 text-sm leading-relaxed [&:not(:first-child)]:mt-0">
                   &ldquo;{t.quote}&rdquo;
-                </p>
+                </TypographyP>
                 <div>
-                  <p className="text-sm font-semibold">{t.author}</p>
-                  <p className="text-muted-foreground text-xs">{t.role}</p>
+                  <TypographySmall>{t.author}</TypographySmall>
+                  <TypographyMuted className="text-xs">
+                    {t.role}
+                  </TypographyMuted>
                 </div>
               </CardContent>
             </Card>

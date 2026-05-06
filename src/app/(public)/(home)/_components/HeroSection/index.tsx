@@ -3,6 +3,11 @@ import { ShieldCheck, ArrowRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import {
+  TypographyH1,
+  TypographyLarge,
+  TypographyMuted,
+} from "@/components/ui/typography";
 import HeroGridBackground from "./HeroGridBackground";
 
 const trustSignals = ["免信用卡即可開始", "14 天免費試用", "隨時取消"];
@@ -25,16 +30,16 @@ export default function HeroSection() {
             以資安為核心的 SaaS 結帳平台
           </Badge>
 
-          <h1 className="text-foreground text-5xl leading-tight font-bold tracking-tight sm:text-6xl lg:text-7xl">
+          <TypographyH1 className="text-foreground text-5xl leading-tight font-bold sm:text-6xl lg:text-7xl">
             你的 SaaS 值得擁有
             <br />
             <span className="text-primary">更好的結帳體驗</span>
-          </h1>
+          </TypographyH1>
 
-          <p className="text-muted-foreground mx-auto mt-6 max-w-xl text-lg leading-relaxed">
+          <TypographyMuted className="mx-auto mt-6 max-w-xl text-lg leading-relaxed">
             SecureCart 提供訂閱方案管理、帳務計費、模擬信用卡 Tokenization
             與稽核紀錄， 讓你專注在功能開發，而不是重複建構結帳流程。
-          </p>
+          </TypographyMuted>
 
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Button size="lg" asChild>
@@ -64,8 +69,10 @@ export default function HeroSection() {
           <div className="border-border bg-card rounded-2xl border p-6 shadow-xl">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-muted-foreground text-xs">目前方案</p>
-                <p className="mt-1 text-lg font-semibold">Pro — $29 / 月</p>
+                <TypographyMuted className="text-xs">目前方案</TypographyMuted>
+                <TypographyLarge className="mt-1">
+                  Pro — $29 / 月
+                </TypographyLarge>
               </div>
               <Badge>訂閱中</Badge>
             </div>
@@ -73,10 +80,12 @@ export default function HeroSection() {
             <div className="grid grid-cols-3 gap-4 text-center">
               {mockStats.map((item) => (
                 <div key={item.label} className="bg-muted rounded-lg px-3 py-4">
-                  <p className="text-xl font-bold">{item.value}</p>
-                  <p className="text-muted-foreground mt-1 text-xs">
+                  <TypographyLarge className="text-xl font-bold">
+                    {item.value}
+                  </TypographyLarge>
+                  <TypographyMuted className="mt-1 text-xs">
                     {item.label}
-                  </p>
+                  </TypographyMuted>
                 </div>
               ))}
             </div>

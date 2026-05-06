@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { TypographyH3, TypographyMuted } from "@/components/ui/typography";
 import { cn } from "@/lib/tailwind-css/utils";
 import {
   type BillingCycle,
@@ -52,10 +53,10 @@ export default function PricingPlans() {
             )}
 
             <div>
-              <h3 className="text-lg font-semibold">{plan.name}</h3>
-              <p className="text-muted-foreground mt-1 text-sm">
+              <TypographyH3 className="text-lg">{plan.name}</TypographyH3>
+              <TypographyMuted className="mt-1">
                 {plan.description}
-              </p>
+              </TypographyMuted>
               <div className="mt-4 flex min-h-14 items-baseline gap-1">
                 <span
                   className={cn(
@@ -66,9 +67,9 @@ export default function PricingPlans() {
                   {formatPlanPrice(plan, cycle)}
                 </span>
                 {plan.monthlyPrice !== null && (
-                  <span className="text-muted-foreground">
+                  <TypographyMuted className="inline">
                     /{cycle === "monthly" ? "月" : "年"}
-                  </span>
+                  </TypographyMuted>
                 )}
               </div>
             </div>

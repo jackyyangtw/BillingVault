@@ -2,6 +2,12 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  TypographyH2,
+  TypographyLead,
+  TypographyMuted,
+  TypographySmall,
+} from "@/components/ui/typography";
 
 const steps = [
   { step: "01", label: "選擇方案", desc: "選擇 Starter、Pro 或 Business" },
@@ -19,12 +25,12 @@ export default function CheckoutFlowSection() {
           <Badge variant="secondary" className="mb-4">
             流程說明
           </Badge>
-          <h2 className="text-4xl font-bold tracking-tight">
+          <TypographyH2 className="border-0 pb-0 text-4xl font-bold">
             從選擇方案到啟用訂閱
-          </h2>
-          <p className="text-muted-foreground mt-4">
+          </TypographyH2>
+          <TypographyLead className="mt-4 text-base">
             五個步驟的簡潔結帳流程，在提升轉換率的同時確保使用者資料安全。
-          </p>
+          </TypographyLead>
         </div>
 
         <div className="relative mx-auto max-w-4xl">
@@ -42,10 +48,10 @@ export default function CheckoutFlowSection() {
                     <div className="bg-border absolute top-1/2 left-full hidden h-0.5 w-full -translate-y-1/2 md:block" />
                   )}
                 </div>
-                <p className="mt-3 text-sm font-semibold">{item.label}</p>
-                <p className="text-muted-foreground mt-1 text-xs">
+                <TypographySmall className="mt-3">{item.label}</TypographySmall>
+                <TypographyMuted className="mt-1 text-xs">
                   {item.desc}
-                </p>
+                </TypographyMuted>
               </div>
             ))}
           </div>

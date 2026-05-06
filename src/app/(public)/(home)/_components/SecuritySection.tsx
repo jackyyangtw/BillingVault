@@ -7,6 +7,12 @@ import {
   Activity,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import {
+  TypographyH2,
+  TypographyH3,
+  TypographyLead,
+  TypographyMuted,
+} from "@/components/ui/typography";
 
 const securityItems = [
   {
@@ -55,13 +61,13 @@ export default function SecuritySection() {
           <Badge variant="secondary" className="mb-4">
             資安設計
           </Badge>
-          <h2 className="text-4xl font-bold tracking-tight">
+          <TypographyH2 className="border-0 pb-0 text-4xl font-bold">
             安全是設計原則，不是事後補舊
-          </h2>
-          <p className="text-muted-foreground mt-4">
+          </TypographyH2>
+          <TypographyLead className="mt-4 text-base">
             SecureCart 的每一層架構都以真實攻擊情境為前提進行設計， 從 Token
             處理到表單送出，每個環節都有對應的防護措施。
-          </p>
+          </TypographyLead>
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -76,10 +82,12 @@ export default function SecuritySection() {
                   <Icon className="text-primary size-5" />
                 </div>
                 <div>
-                  <h3 className="font-semibold">{item.title}</h3>
-                  <p className="text-muted-foreground mt-1.5 text-sm leading-relaxed">
+                  <TypographyH3 className="text-base">
+                    {item.title}
+                  </TypographyH3>
+                  <TypographyMuted className="mt-1.5 leading-relaxed">
                     {item.description}
-                  </p>
+                  </TypographyMuted>
                 </div>
               </div>
             );

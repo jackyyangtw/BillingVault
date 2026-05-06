@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { TypographyH2, TypographyLead } from "@/components/ui/typography";
 import CtaTechBackground from "./CtaTechBackground";
 
 export default function CtaSection() {
@@ -11,12 +12,12 @@ export default function CtaSection() {
           <CtaTechBackground />
 
           <div className="relative">
-            <h2 className="text-primary-foreground text-4xl font-bold">
+            <TypographyH2 className="text-primary-foreground border-0 pb-0 text-4xl font-bold">
               準備好打造安全的結帳體驗了嗎？
-            </h2>
-            <p className="text-primary-foreground/80 mx-auto mt-4 max-w-md">
+            </TypographyH2>
+            <TypographyLead className="text-primary-foreground/80 mx-auto mt-4 max-w-md text-base">
               立即開始 14 天免費試用，無需信用卡，隨時可取消。
-            </p>
+            </TypographyLead>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Button size="lg" variant="secondary" asChild>
                 <Link href="/pricing">

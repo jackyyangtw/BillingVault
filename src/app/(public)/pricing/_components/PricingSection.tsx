@@ -1,5 +1,10 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import {
+  TypographyH2,
+  TypographyLead,
+  TypographyMuted,
+} from "@/components/ui/typography";
 import PricingPlans from "./PricingPlans";
 
 export default function PricingSection() {
@@ -10,15 +15,17 @@ export default function PricingSection() {
           <Badge variant="secondary" className="mb-4">
             定價方案
           </Badge>
-          <h2 className="text-4xl font-bold tracking-tight">簡單透明的定價</h2>
-          <p className="text-muted-foreground mt-4">
+          <TypographyH2 className="border-0 pb-0 text-4xl font-bold">
+            簡單透明的定價
+          </TypographyH2>
+          <TypographyLead className="mt-4 text-base">
             免費起步，隨需擴展。無隱藏費用，無意外超額收費。
-          </p>
+          </TypographyLead>
         </div>
 
         <PricingPlans />
 
-        <p className="text-muted-foreground mt-10 text-center text-sm">
+        <TypographyMuted className="mt-10 text-center">
           需要客製化方案？{" "}
           <Link
             href="/checkout?plan=enterprise"
@@ -26,7 +33,7 @@ export default function PricingSection() {
           >
             洽詢 Enterprise 企業版 →
           </Link>
-        </p>
+        </TypographyMuted>
       </div>
     </section>
   );
