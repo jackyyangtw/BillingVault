@@ -1,21 +1,14 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import CtaTechBackground from "./CtaTechBackground";
 
 export default function CtaSection() {
   return (
     <section className="py-24">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="bg-primary relative overflow-hidden rounded-3xl px-8 py-16 text-center">
-          {/* 裝飾光暈 */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -top-20 -right-20 size-64 rounded-full bg-white/10 blur-3xl"
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -bottom-20 -left-20 size-64 rounded-full bg-white/10 blur-3xl"
-          />
+        <div className="shadow-primary/20 relative overflow-hidden rounded-3xl px-8 py-16 text-center shadow-2xl">
+          <CtaTechBackground />
 
           <div className="relative">
             <h2 className="text-primary-foreground text-4xl font-bold">
