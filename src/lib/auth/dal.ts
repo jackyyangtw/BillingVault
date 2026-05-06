@@ -86,7 +86,7 @@ export const verifySession = cache(async () => {
  * - 有 session：回傳 UserProfile
  * - 無 session：回傳 null（不做 redirect，讓呼叫方自行決定）
  *
- * TODO: 未來替換為帶 token 呼叫後端 API 取得用戶資料
+ * TODO: 可替換為帶 token 呼叫後端 API 取得用戶資料
  * ```ts
  * const res = await fetch(`${API_BASE}/auth/me`, {
  *   headers: { Authorization: `Bearer ${token}` },

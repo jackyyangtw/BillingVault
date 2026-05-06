@@ -31,7 +31,7 @@ const MOCK_USERS = [
 /**
  * Email 登入
  *
- * TODO: 替換為真正的後端 API 呼叫
+ * TODO: 可替換為真正的後端 API 呼叫
  * ```ts
  * const res = await fetch(`${API_BASE}/auth/login`, {
  *   method: "POST",
@@ -41,7 +41,7 @@ const MOCK_USERS = [
  * return res.json();
  * ```
  */
-export async function apiLogin(
+export async function loginAPI(
   email: string,
   password: string,
 ): Promise<AuthApiResponse> {
@@ -72,7 +72,7 @@ export async function apiLogin(
 /**
  * Email 註冊
  *
- * TODO: 替換為真正的後端 API 呼叫
+ * TODO: 可替換為真正的後端 API 呼叫
  * ```ts
  * const res = await fetch(`${API_BASE}/auth/register`, {
  *   method: "POST",
@@ -82,7 +82,7 @@ export async function apiLogin(
  * return res.json();
  * ```
  */
-export async function apiRegister(
+export async function registerAPI(
   email: string,
   password: string,
   name: string,
@@ -115,7 +115,7 @@ export async function apiRegister(
 /**
  * 第三方登入
  *
- * TODO: 替換為真正的 OAuth 流程
+ * TODO: 可替換為真正的 OAuth 流程
  * ```ts
  * const res = await fetch(`${API_BASE}/auth/oauth/exchange`, {
  *   method: "POST",
@@ -125,7 +125,7 @@ export async function apiRegister(
  * return res.json();
  * ```
  */
-export async function apiThirdPartyLogin(
+export async function thirdPartyLoginAPI(
   provider: string,
   _code?: string,
 ): Promise<AuthApiResponse> {
