@@ -2,10 +2,12 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ShieldCheck, Menu, X } from "lucide-react";
+import { LogOut, Menu, ShieldCheck, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/tailwind-css/utils";
-import ThemeToggle from "./ThemeToggle";
+import { useAuthStore } from "@/stores/auth-store";
+import { logoutAction } from "./actions";
+import ThemeToggle from "../ThemeToggle";
 
 const navLinks = [
   { label: "產品", href: "/#products" },
@@ -16,6 +18,13 @@ const navLinks = [
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const user = useAuthStore((state) => state.user);
+  const isAuthenticated = user !== null;
+
+  const handleLogout = async () => {
+    await logoutAction();
+    setOpen(false);
+  };
 
   return (
     <header className="border-border/50 bg-background/55 fixed inset-x-0 top-0 z-50 border-b shadow-sm backdrop-blur-xl">
@@ -45,14 +54,33 @@ export default function Navbar() {
 
         <div className="hidden items-center gap-2 md:flex">
           <ThemeToggle />
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/auth/login">登入</Link>
-          </Button>
-          <Button size="sm" asChild>
-            <Link href="/pricing">免費開始</Link>
-          </Button>
+          {isAuthenticated ? (
+            <>
+              <span className="text-muted-foreground max-w-36 truncate text-sm">
+                {user.name}
+              </span>
+              <Button
+                type="submit"
+                variant="outline"
+                size="sm"
+                onClick={handleLogout}
+              >
+                <LogOut data-icon="inline-start" />
+                登出
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/login">登入</Link>
+              </Button>
+              <Button size="sm" asChild>
+                <Link href="/pricing">免費開始</Link>
+              </Button>
+            </>
+          )}
         </div>
-
+        {/* mobile menu toggle */}
         <div className="flex items-center gap-2 md:hidden">
           <ThemeToggle />
           <button onClick={() => setOpen(!open)} aria-label="開啟選單">
@@ -60,7 +88,7 @@ export default function Navbar() {
           </button>
         </div>
       </nav>
-
+      {/* mobile menu */}
       <div
         className={cn(
           "border-border/50 bg-background/70 flex flex-col gap-4 border-t px-6 pt-4 pb-6 shadow-sm backdrop-blur-xl transition-all duration-300 md:hidden",
@@ -78,12 +106,31 @@ export default function Navbar() {
           </Link>
         ))}
         <div className="flex flex-col gap-2 pt-2">
-          <Button variant="outline" asChild>
-            <Link href="/auth/login">登入</Link>
-          </Button>
-          <Button asChild>
-            <Link href="/pricing">免費開始試用</Link>
-          </Button>
+          {isAuthenticated ? (
+            <>
+              <p className="text-muted-foreground truncate text-sm">
+                已登入：{user.name}
+              </p>
+              <Button
+                type="submit"
+                variant="outline"
+                className="w-full"
+                onClick={handleLogout}
+              >
+                <LogOut data-icon="inline-start" />
+                登出
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="outline" asChild>
+                <Link href="/login">登入</Link>
+              </Button>
+              <Button asChild>
+                <Link href="/pricing">免費開始試用</Link>
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </header>

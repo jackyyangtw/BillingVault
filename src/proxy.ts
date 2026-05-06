@@ -5,7 +5,7 @@
  * 1. 產生 CSP nonce，注入 Content-Security-Policy header
  * 2. 檢查 session cookie 是否存在（樂觀檢查）：
  *    - 未登入者訪問 protected 路徑 → redirect `/login`
- *    - 已登入者訪問 auth 路徑（如 `/login`）→ redirect `/account`
+ *    - 已登入者訪問 auth 路徑（如 `/login`）→ redirect `/checkout`
  *    - 其他路由正常放行
  *
  * 安全措施：
@@ -64,7 +64,7 @@ export async function proxy(request: NextRequest) {
   const isAuthRoute = authRoutes.includes(path);
   if (isAuthRoute && isAuthenticated) {
     const redirectRes = NextResponse.redirect(
-      new URL("/account", request.nextUrl),
+      new URL("/checkout", request.nextUrl),
     );
     redirectRes.headers.set("Content-Security-Policy", cspHeaderValue);
     return redirectRes;

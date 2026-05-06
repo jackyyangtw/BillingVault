@@ -129,6 +129,7 @@ export async function thirdPartyLoginAPI(
   provider: string,
   _code?: string,
 ): Promise<AuthApiResponse> {
+  void _code;
   // 模擬網路延遲
   await new Promise((resolve) => setTimeout(resolve, 500));
 
