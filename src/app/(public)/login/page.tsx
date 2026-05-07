@@ -3,7 +3,6 @@ import Link from "next/link";
 import { ArrowLeft, LockKeyhole, ShieldCheck, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { isSafeCallbackUrl } from "@/proxy/isSafeCallbackUrl";
 import LoginForm from "./_components/LoginForm";
 
 export const metadata: Metadata = {
@@ -13,15 +12,9 @@ export const metadata: Metadata = {
 
 type LoginPageProps = {
   searchParams: Promise<{
-    callbackUrl?: string | string[];
+    callbackUrl?: string;
   }>;
 };
-
-function getCallbackUrl(value: string | string[] | undefined): string {
-  const callbackUrl = Array.isArray(value) ? value[0] : value;
-  if (!callbackUrl) return "";
-  return isSafeCallbackUrl(callbackUrl) ? callbackUrl : "";
-}
 
 const trustItems = [
   {
@@ -43,7 +36,7 @@ const trustItems = [
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
   const params = await searchParams;
-  const callbackUrl = getCallbackUrl(params.callbackUrl);
+  const callbackUrl = params.callbackUrl ?? "";
 
   return (
     <main className="bg-muted/30 min-h-screen pt-24">
