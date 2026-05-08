@@ -26,71 +26,80 @@ import { buildCspHeader } from "@/proxy/buildCspHeader";
 // ---------------------------------------------------------------------------
 
 /** 需要登入才能訪問的路徑前綴 */
-const protectedPrefixes = ["/checkout"];
+const protectedRoutePrefixes = ["/checkout"];
 
 /** 已登入用戶應被導離的路徑（避免重複登入） */
-const authRoutes = ["/login"];
+const guestOnlyRoutes = ["/login"];
 
 // ---------------------------------------------------------------------------
 // Proxy Function
 // ---------------------------------------------------------------------------
 
 export async function proxy(request: NextRequest) {
-  const path = request.nextUrl.pathname;
+  const pathname = request.nextUrl.pathname;
 
   // 每次請求產生唯一 nonce
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
-  const cspHeaderValue = buildCspHeader(nonce);
+  const contentSecurityPolicy = buildCspHeader(nonce);
 
   // 樂觀檢查：cookie 有值就當作已登入
   const sessionCookie = request.cookies.get("session")?.value;
   const isAuthenticated = !!sessionCookie;
 
   // 未登入 → 訪問 protected 路徑 → redirect 到 /login（帶 callbackUrl）
-  const isProtected = protectedPrefixes.some(
-    (prefix) => path === prefix || path.startsWith(prefix + "/"),
+  const isProtectedRoute = protectedRoutePrefixes.some(
+    (prefix) => pathname === prefix || pathname.startsWith(prefix + "/"),
   );
-  if (isProtected && !isAuthenticated) {
+  if (isProtectedRoute && !isAuthenticated) {
     const loginUrl = new URL("/login", request.nextUrl);
-    const callbackUrl = path + request.nextUrl.search;
+    const callbackUrl = pathname + request.nextUrl.search;
     loginUrl.searchParams.set("callbackUrl", callbackUrl);
 
-    const redirectRes = NextResponse.redirect(loginUrl);
-    redirectRes.headers.set("Content-Security-Policy", cspHeaderValue);
-    return redirectRes;
+    const redirectResponse = NextResponse.redirect(loginUrl);
+    redirectResponse.headers.set(
+      "Content-Security-Policy",
+      contentSecurityPolicy,
+    );
+    return redirectResponse;
   }
 
-  // 已登入 → 訪問 /login → redirect 到 /account
-  const isAuthRoute = authRoutes.includes(path);
-  if (isAuthRoute && isAuthenticated) {
-    const redirectRes = NextResponse.redirect(
+  // 已登入 → 訪問 /login → redirect 到 /checkout
+  const isGuestOnlyRoute = guestOnlyRoutes.includes(pathname);
+  if (isGuestOnlyRoute && isAuthenticated) {
+    const redirectResponse = NextResponse.redirect(
       new URL("/checkout", request.nextUrl),
     );
-    redirectRes.headers.set("Content-Security-Policy", cspHeaderValue);
-    return redirectRes;
+    redirectResponse.headers.set(
+      "Content-Security-Policy",
+      contentSecurityPolicy,
+    );
+    return redirectResponse;
   }
 
   // 未登入 → 訪問 /login → 驗證 callbackUrl 安全性（防止 Open Redirect）
-  if (isAuthRoute && !isAuthenticated) {
+  if (isGuestOnlyRoute && !isAuthenticated) {
     const rawCallback = request.nextUrl.searchParams.get("callbackUrl");
     if (rawCallback && !isSafeCallbackUrl(rawCallback)) {
       const safeUrl = new URL("/login", request.nextUrl);
       // 移除惡意 callbackUrl，直接導向乾淨的 /login
-      const redirectRes = NextResponse.redirect(safeUrl);
-      redirectRes.headers.set("Content-Security-Policy", cspHeaderValue);
-      return redirectRes;
+      const redirectResponse = NextResponse.redirect(safeUrl);
+      redirectResponse.headers.set(
+        "Content-Security-Policy",
+        contentSecurityPolicy,
+      );
+      return redirectResponse;
     }
   }
 
   // 正常放行 — 注入 CSP header 與 nonce
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-nonce", nonce);
-  requestHeaders.set("Content-Security-Policy", cspHeaderValue);
+  requestHeaders.set("Content-Security-Policy", contentSecurityPolicy);
 
   const response = NextResponse.next({
     request: { headers: requestHeaders },
   });
-  response.headers.set("Content-Security-Policy", cspHeaderValue);
+  response.headers.set("Content-Security-Policy", contentSecurityPolicy);
 
   return response;
 }
