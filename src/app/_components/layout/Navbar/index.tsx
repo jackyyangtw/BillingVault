@@ -38,16 +38,13 @@ export default function Navbar() {
           </span>
           <span className="text-lg tracking-tight">SecureCart</span>
         </Link>
-
+        {/* PC menu */}
         <ul className="hidden items-center gap-6 md:flex">
           {navLinks.map((link) => (
             <li key={link.label}>
-              <Link
-                href={link.href}
-                className="text-muted-foreground hover:text-foreground text-sm transition-colors"
-              >
-                {link.label}
-              </Link>
+              <Button variant="ghost" size="sm" asChild>
+                <Link href={link.href}>{link.label}</Link>
+              </Button>
             </li>
           ))}
         </ul>
@@ -96,14 +93,15 @@ export default function Navbar() {
         )}
       >
         {navLinks.map((link) => (
-          <Link
+          <Button
             key={link.label}
-            href={link.href}
-            className="text-muted-foreground hover:text-foreground text-sm"
+            variant="ghost"
+            className="w-full justify-start"
+            asChild
             onClick={() => setOpen(false)}
           >
-            {link.label}
-          </Link>
+            <Link href={link.href}>{link.label}</Link>
+          </Button>
         ))}
         <div className="flex flex-col gap-2 pt-2">
           {isAuthenticated ? (
