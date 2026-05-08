@@ -1,13 +1,13 @@
 /**
- * OAuth 授權 URL 工具
+ * OAuth 授權流程工具
  *
- * 根據 provider 組合 OAuth 2.0 授權 URL。
- * - 有環境變數時使用真實 OAuth URL
- * - 無環境變數時 fallback 到 mock 模式（直接導向 callback 頁面帶 mock code）
+ * 依照指定 provider 建立 OAuth 2.0 授權 URL。
+ * - 有 client_id 環境變數時導向真實 provider
+ * - 沒有 client_id 時使用 mock callback，方便本機體驗登入流程
  *
- * 安全措施：
- * - CSRF 防護：使用 crypto random 產生 state，存入 sessionStorage 驗證
- * - Provider 白名單：只允許已設定的 provider
+ * 安全重點：
+ * - CSRF 防護：以 crypto random 產生 state，並透過 sessionStorage 驗證
+ * - Provider 白名單：只接受已設定的 OAuth provider
  *
  * @module lib/auth/oauth
  */
@@ -17,11 +17,11 @@
 // ---------------------------------------------------------------------------
 
 interface OAuthProviderConfig {
-  /** OAuth 授權端點 */
+  /** OAuth provider 的授權端點 */
   authUrl: string;
-  /** 申請的權限範圍 */
+  /** 要向 provider 申請的權限範圍 */
   scope: string;
-  /** 環境變數中的 client_id key（NEXT_PUBLIC_ prefix） */
+  /** 存放 client_id 的環境變數 key（NEXT_PUBLIC_ prefix） */
   clientIdEnvKey: string;
 }
 
@@ -29,10 +29,10 @@ interface OAuthProviderConfig {
 // Constants
 // ---------------------------------------------------------------------------
 
-/** sessionStorage key，用於存放 CSRF state */
+/** 存放 CSRF state 的 sessionStorage key */
 const OAUTH_STATE_KEY = "oauth_state";
 
-/** callback 處理的超時時間（毫秒） */
+/** OAuth callback 等待完成的最長時間（毫秒） */
 export const OAUTH_CALLBACK_TIMEOUT_MS = 15_000;
 
 // ---------------------------------------------------------------------------
@@ -57,7 +57,7 @@ const PROVIDER_CONFIGS: Record<string, OAuthProviderConfig> = {
   },
 };
 
-/** 支援的 provider 清單（白名單） */
+/** 允許使用的 OAuth provider 清單 */
 export const SUPPORTED_PROVIDERS = Object.keys(PROVIDER_CONFIGS);
 
 // ---------------------------------------------------------------------------
@@ -65,12 +65,11 @@ export const SUPPORTED_PROVIDERS = Object.keys(PROVIDER_CONFIGS);
 // ---------------------------------------------------------------------------
 
 /**
- * 產生 CSRF state 並存入 sessionStorage
+ * 建立 CSRF state 並寫入 sessionStorage
  *
- * 使用 crypto.randomUUID() 產生不可預測的隨機值。
- * 存入 sessionStorage（僅當前 tab 可讀取）。
+ * 使用 crypto.randomUUID() 產生不可預測的值，並限制在目前分頁內驗證。
  */
-function generateAndStoreState(): string {
+function createOAuthState(): string {
   const state = crypto.randomUUID();
   sessionStorage.setItem(OAUTH_STATE_KEY, state);
   return state;
@@ -79,8 +78,8 @@ function generateAndStoreState(): string {
 /**
  * 驗證 CSRF state
  *
- * 比對 callback 回傳的 state 是否與 sessionStorage 中的一致。
- * 驗證後立即清除 sessionStorage 中的值（一次性使用）。
+ * 比對 callback 帶回的 state 是否與本分頁儲存的值一致。
+ * 驗證後會立即清除，確保 state 只能使用一次。
  *
  * @returns 驗證是否通過
  */
@@ -95,9 +94,9 @@ export function validateOAuthState(state: string | null): boolean {
 }
 
 /**
- * 檢查 provider 是否在白名單中
+ * 檢查 provider 是否屬於允許的 OAuth provider
  */
-export function isValidProvider(provider: string): boolean {
+export function isSupportedOAuthProvider(provider: string): boolean {
   return SUPPORTED_PROVIDERS.includes(provider.toLowerCase());
 }
 
@@ -106,18 +105,18 @@ export function isValidProvider(provider: string): boolean {
 // ---------------------------------------------------------------------------
 
 /**
- * 取得 OAuth 授權 URL
+ * 建立 OAuth 授權 URL
  *
- * @param provider - Provider 名稱（Google / Facebook / LINE，不分大小寫）
- * @returns 授權 URL 字串
+ * @param provider - Provider 名稱（Google / Facebook / LINE，不區分大小寫）
+ * @returns 可導向的授權 URL
  *
  * @example
  * ```ts
- * const url = getOAuthUrl("Google");
+ * const url = buildOAuthAuthorizationUrl("Google");
  * window.open(url, "oauth-popup", "width=500,height=600");
  * ```
  */
-export function getOAuthUrl(provider: string): string {
+export function buildOAuthAuthorizationUrl(provider: string): string {
   const key = provider.toLowerCase();
   const config = PROVIDER_CONFIGS[key];
 
@@ -132,9 +131,9 @@ export function getOAuthUrl(provider: string): string {
       : undefined;
 
   const redirectUri = `${window.location.origin}/auth/callback/${key}`;
-  const state = generateAndStoreState();
+  const state = createOAuthState();
 
-  // 無 client_id → mock 模式：直接導向 callback 頁面帶 mock code
+  // 無 client_id 時走 mock callback，保留完整 callback 流程
   if (!clientId) {
     const mockParams = new URLSearchParams({
       code: `mock-code-${key}-${Date.now()}`,
@@ -143,7 +142,7 @@ export function getOAuthUrl(provider: string): string {
     return `${redirectUri}?${mockParams.toString()}`;
   }
 
-  // 有 client_id → 真實 OAuth URL
+  // 有 client_id 時建立真實 OAuth provider 授權 URL
   const params = new URLSearchParams({
     client_id: clientId,
     redirect_uri: redirectUri,
@@ -156,13 +155,13 @@ export function getOAuthUrl(provider: string): string {
 }
 
 /**
- * 開啟 OAuth popup 視窗
+ * 開啟 OAuth 授權 popup 視窗
  *
  * @param provider - Provider 名稱
- * @returns popup window reference（用於監測是否被關閉）
+ * @returns popup window reference（可用於監測視窗是否關閉）
  */
-export function openOAuthPopup(provider: string): Window | null {
-  const url = getOAuthUrl(provider);
+export function openOAuthAuthorizationPopup(provider: string): Window | null {
+  const url = buildOAuthAuthorizationUrl(provider);
   const width = 500;
   const height = 600;
   const left = window.screenX + (window.innerWidth - width) / 2;

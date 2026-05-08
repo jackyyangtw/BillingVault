@@ -5,7 +5,7 @@
  * 模擬後端登入 API 的回傳結果，
  * 未來替換成真正的 fetch() 呼叫即可，其他模組完全不需要修改。
  *
- * Mock 帳號：test@example.com / password123
+ * Mock 帳號：demo@securecart.dev / secure-demo-2026
  *
  * @module lib/auth/api
  */
@@ -15,11 +15,11 @@ import type { AuthApiResponse } from "./types";
 
 const MOCK_USERS = [
   {
-    id: "user-001",
-    email: "test@example.com",
-    password: "password123",
-    name: "測試用戶",
-    phone: "0912345678",
+    id: "user-securecart-demo",
+    email: "demo@securecart.dev",
+    password: "secure-demo-2026",
+    name: "林品安",
+    phone: "0918-246-135",
     avatar: undefined,
   },
 ];
@@ -32,14 +32,6 @@ const MOCK_USERS = [
  * Email 登入
  *
  * TODO: 可替換為真正的後端 API 呼叫
- * ```ts
- * const res = await fetch(`${API_BASE}/auth/login`, {
- *   method: "POST",
- *   headers: { "Content-Type": "application/json" },
- *   body: JSON.stringify({ email, password }),
- * });
- * return res.json();
- * ```
  */
 export async function loginAPI(
   email: string,
@@ -73,14 +65,6 @@ export async function loginAPI(
  * Email 註冊
  *
  * TODO: 可替換為真正的後端 API 呼叫
- * ```ts
- * const res = await fetch(`${API_BASE}/auth/register`, {
- *   method: "POST",
- *   headers: { "Content-Type": "application/json" },
- *   body: JSON.stringify({ email, password, name, phone }),
- * });
- * return res.json();
- * ```
  */
 export async function registerAPI(
   email: string,
@@ -116,14 +100,6 @@ export async function registerAPI(
  * 第三方登入
  *
  * TODO: 可替換為真正的 OAuth 流程
- * ```ts
- * const res = await fetch(`${API_BASE}/auth/oauth/exchange`, {
- *   method: "POST",
- *   headers: { "Content-Type": "application/json" },
- *   body: JSON.stringify({ provider, code }),
- * });
- * return res.json();
- * ```
  */
 export async function thirdPartyLoginAPI(
   provider: string,
@@ -140,9 +116,9 @@ export async function thirdPartyLoginAPI(
     isRegistered: false,
     user: {
       id: "user-third-party",
-      name: `${provider} 用戶`,
-      email: `${provider.toLowerCase()}@example.com`,
-      phone: "0987654321",
+      name: `${provider} 試用成員`,
+      email: `${provider.toLowerCase()}@securecart.dev`,
+      phone: "0927-315-864",
     },
   };
 }

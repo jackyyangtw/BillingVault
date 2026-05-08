@@ -103,7 +103,7 @@ export default function LoginForm({ callbackUrl }: LoginFormProps) {
                       id={field.name}
                       type="email"
                       autoComplete="email"
-                      placeholder="test@example.com"
+                      placeholder="demo@securecart.dev"
                       aria-invalid={invalid}
                       required
                     />
@@ -135,7 +135,7 @@ export default function LoginForm({ callbackUrl }: LoginFormProps) {
                       id={field.name}
                       type="password"
                       autoComplete="current-password"
-                      placeholder="password123"
+                      placeholder="secure-demo-2026"
                       aria-invalid={invalid}
                       required
                     />
@@ -173,7 +173,7 @@ export default function LoginForm({ callbackUrl }: LoginFormProps) {
 
             <Field>
               <FieldDescription className="text-center">
-                test@example.com / password123
+                demo@securecart.dev / secure-demo-2026
               </FieldDescription>
             </Field>
           </FieldGroup>

@@ -5,7 +5,7 @@
  * 使用 React `cache` 避免同一次 render 中重複讀取 cookie。
  *
  * 注意：目前 getCurrentUser 使用 mock 資料。
- * 未來接入後端後，應改為帶 token 呼叫後端 API 取得用戶資料。
+ * 接入後端後，應改為帶 token 呼叫後端 API 取得用戶資料。
  *
  * @module lib/auth/dal
  */
@@ -21,36 +21,30 @@ import type { UserProfile } from "./types";
 // ---------------------------------------------------------------------------
 
 const MOCK_USER_DB: Record<string, UserProfile> = {
-  "user-001": {
-    id: "user-001",
-    name: "測試用戶",
-    email: "test@example.com",
-    phone: "0912345678",
-  },
-  "user-third-party": {
-    id: "user-third-party",
-    name: "第三方用戶",
-    email: "third-party@example.com",
-    phone: "0987654321",
+  "user-securecart-demo": {
+    id: "user-securecart-demo",
+    name: "林品安",
+    email: "demo@securecart.dev",
+    phone: "0918-246-135",
   },
   // 綁定 Email 後的新用戶（token: mock-jwt-token-bind-{provider}）
   "bind-Google": {
     id: "user-new-google",
-    name: "Google 新用戶",
-    email: "google@example.com",
-    phone: "0912345678",
+    name: "Google 試用成員",
+    email: "google.member@securecart.dev",
+    phone: "0936-582-714",
   },
   "bind-Facebook": {
     id: "user-new-facebook",
-    name: "Facebook 新用戶",
-    email: "facebook@example.com",
-    phone: "0912345677",
+    name: "Facebook 試用成員",
+    email: "facebook.member@securecart.dev",
+    phone: "0952-468-137",
   },
   "bind-LINE": {
     id: "user-new-line",
-    name: "LINE 新用戶",
-    email: "line@example.com",
-    phone: "0912345676",
+    name: "LINE 試用成員",
+    email: "line.member@securecart.dev",
+    phone: "0971-824-653",
   },
 };
 
@@ -58,14 +52,6 @@ const MOCK_USER_DB: Record<string, UserProfile> = {
 // Session Verification
 // ---------------------------------------------------------------------------
 
-/**
- * 驗證當前 session 是否有效
- *
- * - 有 token：回傳 `{ isAuth: true, token }`
- * - 無 token：redirect 到 `/login`
- *
- * 使用 React `cache` 確保同一次 server render 只讀一次 cookie。
- */
 export const verifySession = cache(async () => {
   const token = await getSession();
 
@@ -80,20 +66,6 @@ export const verifySession = cache(async () => {
 // User Data
 // ---------------------------------------------------------------------------
 
-/**
- * 取得當前登入用戶的 profile
- *
- * - 有 session：回傳 UserProfile
- * - 無 session：回傳 null（不做 redirect，讓呼叫方自行決定）
- *
- * TODO: 可替換為帶 token 呼叫後端 API 取得用戶資料
- * ```ts
- * const res = await fetch(`${API_BASE}/auth/me`, {
- *   headers: { Authorization: `Bearer ${token}` },
- * });
- * return res.json();
- * ```
- */
 export const getCurrentUser = cache(async (): Promise<UserProfile | null> => {
   const token = await getSession();
 
@@ -108,7 +80,7 @@ export const getCurrentUser = cache(async (): Promise<UserProfile | null> => {
   if (user) return user;
 
   // Fallback：動態註冊的用戶（userId 不在靜態 mock DB 中）
-  // TODO: 未來接後端 API 後，此 fallback 可移除
+  // 接後端 API 後，此 fallback 可移除
   if (token.startsWith("mock-jwt-token-")) {
     return {
       id: userId,
