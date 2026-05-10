@@ -1,8 +1,19 @@
-import type { Preview } from "@storybook/nextjs-vite";
+// https://storybook.js.org/docs/essentials/themes 自定義 Storybook 主題
+import type { Preview, Renderer } from "@storybook/nextjs-vite";
+import { withThemeByClassName } from "@storybook/addon-themes";
 
 import "../src/app/globals.css";
 
 const preview: Preview = {
+  decorators: [
+    withThemeByClassName<Renderer>({
+      themes: {
+        light: "",
+        dark: "dark",
+      },
+      defaultTheme: "dark",
+    }),
+  ],
   parameters: {
     controls: {
       matchers: {
