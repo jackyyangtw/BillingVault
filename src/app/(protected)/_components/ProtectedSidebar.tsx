@@ -18,23 +18,23 @@ import type { UserProfile } from "@/lib/auth/types";
 
 const primaryLinks = [
   {
-    label: "Overview",
+    label: "帳務管理",
     href: "/account",
     icon: LayoutDashboard,
   },
   {
-    label: "Checkout",
+    label: "模擬 SaaS 訂閱結帳",
     href: "/checkout",
     icon: CreditCard,
   },
   {
-    label: "Payment Methods",
+    label: "付款方式管理",
     href: "/payment",
     icon: Receipt,
   },
   {
-    label: "Billing Records",
-    href: "/account#invoices",
+    label: "訂閱管理",
+    href: "/subscription",
     icon: FileText,
   },
 ];

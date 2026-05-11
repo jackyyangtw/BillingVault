@@ -1,23 +1,15 @@
 import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import BillingSummary from "./_components/BillingSummary";
-import CurrentSubscription from "./_components/CurrentSubscription";
 import InvoiceHistory from "./_components/InvoiceHistory";
 import PaymentMethodPanel from "./_components/PaymentMethodPanel";
-import PlanChangePanel from "./_components/PlanChangePanel";
-import SubscriptionDangerZone from "./_components/SubscriptionDangerZone";
 import { getPrimaryPaymentMethod } from "@/mocks/fixtures/payment-methods";
-import {
-  billingSummary,
-  currentSubscription,
-  invoices,
-  planOptions,
-} from "./_components/data";
+import { billingSummary, invoices } from "./_components/data";
 
 export const metadata: Metadata = {
   title: "Billing | SecureCart",
   description:
-    "Manage SecureCart subscription status, payment methods, invoice history, and plan changes.",
+    "Manage SecureCart billing overview, payment methods, and invoice history.",
 };
 
 export default function AccountPage() {
@@ -34,7 +26,7 @@ export default function AccountPage() {
             帳務管理
           </h1>
           <p className="text-muted-foreground mt-5 max-w-3xl text-lg leading-8">
-            管理目前訂閱、付款方式、帳單紀錄，以及升級、降級或取消方案。
+            管理本期帳務狀態、付款方式與帳單紀錄。
           </p>
         </div>
       </section>
@@ -43,19 +35,13 @@ export default function AccountPage() {
         <div className="mx-auto grid max-w-7xl gap-6 px-6 lg:grid-cols-[minmax(0,1.45fr)_minmax(320px,0.55fr)] lg:px-8">
           <div className="flex flex-col gap-6">
             <BillingSummary summary={billingSummary} />
-            <CurrentSubscription subscription={currentSubscription} />
-            <PlanChangePanel
-              currentPlanId={currentSubscription.planId}
-              plans={planOptions}
-            />
+            <InvoiceHistory invoices={invoices} />
           </div>
 
           <aside className="flex flex-col gap-6">
             {primaryPaymentMethod && (
               <PaymentMethodPanel paymentMethod={primaryPaymentMethod} />
             )}
-            <InvoiceHistory invoices={invoices} />
-            <SubscriptionDangerZone subscription={currentSubscription} />
           </aside>
         </div>
       </section>

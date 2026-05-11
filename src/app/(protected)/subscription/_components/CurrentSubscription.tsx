@@ -61,7 +61,7 @@ export default function CurrentSubscription({
             icon={ShieldCheck}
             label="安全狀態"
             value="已啟用"
-            detail="帳務操作保留稽核紀錄"
+            detail="訂閱操作保留稽核紀錄"
           />
         </div>
       </CardContent>

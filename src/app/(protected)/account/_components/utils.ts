@@ -1,4 +1,4 @@
-import type { InvoiceData, SubscriptionStatus } from "./types";
+import type { InvoiceData } from "./types";
 
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -18,18 +18,6 @@ export function formatCurrency(amount: number) {
 
 export function formatDate(date: string) {
   return dateFormatter.format(new Date(date));
-}
-
-export function getSubscriptionStatusLabel(status: SubscriptionStatus) {
-  const labels: Record<SubscriptionStatus, string> = {
-    trialing: "試用中",
-    active: "訂閱正常",
-    past_due: "付款逾期",
-    canceled: "已取消",
-    incomplete: "尚未完成",
-  };
-
-  return labels[status];
 }
 
 export function getInvoiceStatusLabel(status: InvoiceData["status"]) {
