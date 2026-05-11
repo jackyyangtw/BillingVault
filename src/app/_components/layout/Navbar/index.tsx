@@ -53,9 +53,11 @@ export default function Navbar() {
           <ThemeToggle />
           {isAuthenticated ? (
             <>
-              <span className="text-muted-foreground max-w-36 truncate text-sm">
-                {user.name}
-              </span>
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/account" className="max-w-36 truncate">
+                  {user.name}
+                </Link>
+              </Button>
               <Button
                 type="submit"
                 variant="outline"
@@ -106,9 +108,11 @@ export default function Navbar() {
         <div className="flex flex-col gap-2 pt-2">
           {isAuthenticated ? (
             <>
-              <p className="text-muted-foreground truncate text-sm">
-                已登入：{user.name}
-              </p>
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/account" className="max-w-36 truncate">
+                  {user.name}
+                </Link>
+              </Button>
               <Button
                 type="submit"
                 variant="outline"

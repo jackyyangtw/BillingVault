@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Noto_Sans } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/tailwind-css/utils";
-import Navbar from "./_components/layout/Navbar";
-import Footer from "./_components/layout/Footer";
 import { headers } from "next/headers";
 import ThemeProvider from "@/providers/ThemeProvider";
 import { getCurrentUser } from "@/lib/auth/dal";
@@ -57,11 +55,7 @@ export default async function RootLayout({
           nonce={nonce}
         >
           <AuthProvider user={user}>
-            <QueryProvider>
-              <Navbar />
-              {children}
-              <Footer />
-            </QueryProvider>
+            <QueryProvider>{children}</QueryProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

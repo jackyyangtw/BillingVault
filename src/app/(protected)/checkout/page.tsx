@@ -29,7 +29,7 @@ export default async function CheckoutPage({
   const cycle: BillingCycle = params.cycle === "yearly" ? "yearly" : "monthly";
 
   return (
-    <main className="pt-24">
+    <main>
       <section className="border-border/60 border-b py-14">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <Badge variant="secondary" className="mb-4">
