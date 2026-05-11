@@ -10,7 +10,7 @@ import { getCurrentUser } from "@/lib/auth/dal";
 import AuthProvider from "@/providers/AuthProvider";
 import QueryProvider from "@/providers/QueryProvider";
 
-const notoSans = Noto_Sans({ subsets: ["latin"], variable: "--font-sans" });
+const notoSans = Noto_Sans({ subsets: ["latin"], variable: "--font-app-sans" });
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
