@@ -1,6 +1,7 @@
 // https://storybook.js.org/docs/essentials/themes 自定義 Storybook 主題
 import type { Preview, ReactRenderer } from "@storybook/nextjs-vite";
 import { withThemeByClassName } from "@storybook/addon-themes";
+import { themes } from "storybook/theming";
 
 import "../src/app/globals.css";
 
@@ -15,6 +16,10 @@ const preview: Preview = {
     }),
   ],
   parameters: {
+    docs: {
+      theme: themes.dark,
+    },
+
     controls: {
       matchers: {
         color: /(background|color)$/i,
