@@ -31,6 +31,15 @@ const meta = {
     orientation: {
       control: "select",
       options: ["vertical", "horizontal", "responsive"],
+      description: "控制欄位標籤、控制項與輔助文字的排列方式。",
+      table: {
+        type: {
+          summary: '"vertical" | "horizontal" | "responsive"',
+        },
+        defaultValue: {
+          summary: '"vertical"',
+        },
+      },
     },
     children: {
       control: false,

@@ -21,9 +21,23 @@ const meta = {
     size: {
       control: "select",
       options: ["default", "sm"],
+      description: "控制卡片的尺寸樣式。",
+      table: {
+        type: {
+          summary: '"default" | "sm"',
+        },
+        defaultValue: {
+          summary: '"default"',
+        },
+      },
     },
     children: {
       control: false,
+      table: {
+        type: {
+          summary: "React.ReactNode",
+        },
+      },
     },
   },
   args: {
