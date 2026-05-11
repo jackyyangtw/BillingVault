@@ -16,6 +16,7 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "storybook-static/**",
   ]),
   // Custom Zustand rules — 禁止在 store 中使用 async function。
   {
