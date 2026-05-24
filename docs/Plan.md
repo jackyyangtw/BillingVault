@@ -161,9 +161,7 @@ src/
         page.tsx
       subscription/
         page.tsx
-      payment-methods/
-        page.tsx
-      invoices/
+      payment/
         page.tsx
       team/
         page.tsx
