@@ -51,3 +51,5 @@ skills-lock.json
 # storybook
 *storybook.log
 storybook-static
+
+/src/generated/prisma
