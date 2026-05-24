@@ -1,13 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { LogOut, Menu, ShieldCheck, X } from "lucide-react";
+import { CircleUserRound, LogOut, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/tailwind-css/utils";
 import { useAuthStore } from "@/stores/auth-store";
-import { logoutAction } from "./actions";
+import { logoutAction } from "@/actions/logout";
 import ThemeToggle from "../ThemeToggle";
+import MobileNavSheet from "./MobileNavSheet";
 
 const navLinks = [
   { label: "產品", href: "/#products" },
@@ -17,13 +16,11 @@ const navLinks = [
 ];
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
   const user = useAuthStore((state) => state.user);
   const isAuthenticated = user !== null;
 
   const handleLogout = async () => {
     await logoutAction();
-    setOpen(false);
   };
 
   return (
@@ -54,9 +51,7 @@ export default function Navbar() {
           {isAuthenticated ? (
             <>
               <Button variant="ghost" size="sm" asChild>
-                <Link href="/account" className="max-w-36 truncate">
-                  {user.name}
-                </Link>
+                <AccountLink userName={user.name} />
               </Button>
               <Button
                 type="submit"
@@ -82,59 +77,29 @@ export default function Navbar() {
         {/* mobile menu toggle */}
         <div className="flex items-center gap-2 md:hidden">
           <ThemeToggle />
-          <button onClick={() => setOpen(!open)} aria-label="開啟選單">
-            {open ? <X className="size-5" /> : <Menu className="size-5" />}
-          </button>
+          <MobileNavSheet
+            isAuthenticated={isAuthenticated}
+            navLinks={navLinks}
+            userName={user?.name}
+          />
         </div>
       </nav>
-      {/* mobile menu */}
-      <div
-        className={cn(
-          "border-border/50 bg-background/70 flex flex-col gap-4 border-t px-6 pt-4 pb-6 shadow-sm backdrop-blur-xl transition-all duration-300 md:hidden",
-          open ? "block" : "hidden",
-        )}
-      >
-        {navLinks.map((link) => (
-          <Button
-            key={link.label}
-            variant="ghost"
-            className="w-full justify-start"
-            asChild
-            onClick={() => setOpen(false)}
-          >
-            <Link href={link.href}>{link.label}</Link>
-          </Button>
-        ))}
-        <div className="flex flex-col gap-2 pt-2">
-          {isAuthenticated ? (
-            <>
-              <Button variant="ghost" size="sm" asChild>
-                <Link href="/account" className="max-w-36 truncate">
-                  {user.name}
-                </Link>
-              </Button>
-              <Button
-                type="submit"
-                variant="outline"
-                className="w-full"
-                onClick={handleLogout}
-              >
-                <LogOut data-icon="inline-start" />
-                登出
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button variant="outline" asChild>
-                <Link href="/login">登入</Link>
-              </Button>
-              <Button asChild>
-                <Link href="/pricing">免費開始試用</Link>
-              </Button>
-            </>
-          )}
-        </div>
-      </div>
     </header>
+  );
+}
+
+type AccountLinkProps = {
+  userName: string;
+};
+
+function AccountLink({ userName }: AccountLinkProps) {
+  return (
+    <Link
+      href="/account"
+      className="flex max-w-36 min-w-0 items-center gap-1.5"
+    >
+      <CircleUserRound data-icon="inline-start" />
+      <span className="truncate">{userName}</span>
+    </Link>
   );
 }

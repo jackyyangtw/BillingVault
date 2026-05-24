@@ -13,7 +13,7 @@ export default async function ProtectedLayout({
     <div className="bg-background min-h-screen lg:pl-64">
       <ProtectedSidebar user={user} />
       <div className="min-w-0">
-        <ProtectedTopbar />
+        <ProtectedTopbar user={user} />
         <div className="min-h-[calc(100vh-57px)]">{children}</div>
       </div>
     </div>
