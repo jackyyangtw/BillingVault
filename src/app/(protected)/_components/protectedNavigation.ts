@@ -12,7 +12,7 @@ export const protectedPrimaryLinks = [
   {
     label: "帳務管理",
     mobileLabel: "帳務",
-    href: "/account",
+    href: "/account/billing",
     icon: LayoutDashboard,
   },
   {
@@ -24,13 +24,13 @@ export const protectedPrimaryLinks = [
   {
     label: "付款方式管理",
     mobileLabel: "付款",
-    href: "/payment",
+    href: "/account/payment",
     icon: Receipt,
   },
   {
     label: "訂閱管理",
     mobileLabel: "訂閱",
-    href: "/subscription",
+    href: "/account/subscription",
     icon: FileText,
   },
 ] satisfies ProtectedNavLink[];

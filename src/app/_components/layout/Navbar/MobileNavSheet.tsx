@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { CircleUserRound, LogOut, Menu } from "lucide-react";
+import { LogOut, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -12,6 +12,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { logoutAction } from "@/actions/logout";
+import AccountLink from "./AccountLink";
 
 type NavLink = {
   label: string;
@@ -94,21 +95,5 @@ export default function MobileNavSheet({
         </div>
       </SheetContent>
     </Sheet>
-  );
-}
-
-type AccountLinkProps = {
-  userName: string;
-};
-
-function AccountLink({ userName }: AccountLinkProps) {
-  return (
-    <Link
-      href="/account"
-      className="flex max-w-36 min-w-0 items-center gap-1.5"
-    >
-      <CircleUserRound data-icon="inline-start" />
-      <span className="truncate">{userName}</span>
-    </Link>
   );
 }

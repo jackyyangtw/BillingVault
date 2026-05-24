@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { CircleUserRound, LogOut, ShieldCheck } from "lucide-react";
+import { LogOut, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/stores/auth-store";
 import { logoutAction } from "@/actions/logout";
 import ThemeToggle from "../ThemeToggle";
+import AccountLink from "./AccountLink";
 import MobileNavSheet from "./MobileNavSheet";
 
 const navLinks = [
@@ -85,21 +86,5 @@ export default function Navbar() {
         </div>
       </nav>
     </header>
-  );
-}
-
-type AccountLinkProps = {
-  userName: string;
-};
-
-function AccountLink({ userName }: AccountLinkProps) {
-  return (
-    <Link
-      href="/account"
-      className="flex max-w-36 min-w-0 items-center gap-1.5"
-    >
-      <CircleUserRound data-icon="inline-start" />
-      <span className="truncate">{userName}</span>
-    </Link>
   );
 }
