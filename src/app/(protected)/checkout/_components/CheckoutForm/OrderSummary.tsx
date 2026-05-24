@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { FieldError } from "@/components/ui/field";
 import { Separator } from "@/components/ui/separator";
 import type { CheckoutSummary } from "./types";
 import { SummaryRow } from "./fields";
@@ -15,6 +16,7 @@ type OrderSummaryProps = {
   summary: CheckoutSummary;
   isValid: boolean;
   isSubmitting: boolean;
+  paymentError: string;
   onFailure: () => void;
 };
 
@@ -22,6 +24,7 @@ export default function OrderSummary({
   summary,
   isValid,
   isSubmitting,
+  paymentError,
   onFailure,
 }: OrderSummaryProps) {
   return (
@@ -56,6 +59,7 @@ export default function OrderSummary({
           <CreditCard data-icon="inline-start" />
           {isSubmitting ? "處理中" : "確認訂閱"}
         </Button>
+        {paymentError && <FieldError>{paymentError}</FieldError>}
         <Button
           type="button"
           variant="outline"

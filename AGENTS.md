@@ -34,6 +34,8 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 [狀態管理]：優先檢查是否能用 Derived State（衍生狀態）解決，嚴禁為了同步狀態而在 useEffect 裡 setState（這會導致 Compiler 負擔過重）。
 
+[Import 路徑]：相對路徑最多只允許到 `../../`。若需要 `../../../` 或更深層級，必須改用 `@/` alias，避免深層相對路徑降低可讀性與維護性。
+
 ## 4. 元件結構檢查（200 行拆分規則）
 
 修改完成後，檢查目標元件檔案是否超過 **200 行**。若超過，必須將其拆分為資料夾結構：

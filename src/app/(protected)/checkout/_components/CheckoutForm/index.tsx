@@ -2,7 +2,7 @@
 
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useRouter } from "next/navigation";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { products } from "@/mocks/fixtures/products";
 import {
@@ -17,6 +17,7 @@ import OrderSummary from "./OrderSummary";
 import PaymentMethodCard from "./PaymentMethodCard";
 import PlanSelector from "./PlanSelector";
 import { type CheckoutFormValues, checkoutFormSchema } from "./schema";
+import { getTapPayPrime } from "@/providers/tappay/tappay";
 
 type CheckoutFormProps = {
   initialPlanId: string;
@@ -34,6 +35,8 @@ export default function CheckoutForm({
   initialBillingEmail,
 }: CheckoutFormProps) {
   const router = useRouter();
+  const [canGetTapPayPrime, setCanGetTapPayPrime] = useState(false);
+  const [paymentError, setPaymentError] = useState("");
   const defaultValues = useMemo<CheckoutFormValues>(
     () => ({
       planId: initialPlanId,
@@ -43,9 +46,6 @@ export default function CheckoutForm({
       billingEmail: initialBillingEmail,
       taxId: "",
       billingAddress: "",
-      cardNumber: "",
-      cardExpiry: "",
-      cardCvc: "",
     }),
     [
       initialBillingEmail,
@@ -87,8 +87,27 @@ export default function CheckoutForm({
     total,
   };
 
-  function handleValidSubmit() {
-    router.replace("/checkout/success");
+  function handleTapPayStatusChange(canGetPrime: boolean) {
+    setCanGetTapPayPrime(canGetPrime);
+    if (canGetPrime) {
+      setPaymentError("");
+    }
+  }
+
+  async function handleValidSubmit() {
+    if (!canGetTapPayPrime) {
+      setPaymentError("請確認信用卡欄位都已正確填寫。");
+      return;
+    }
+
+    try {
+      await getTapPayPrime();
+      router.replace("/checkout/success");
+    } catch (error) {
+      setPaymentError(
+        error instanceof Error ? error.message : "TapPay prime 取得失敗。",
+      );
+    }
   }
 
   function handleFailure() {
@@ -105,13 +124,14 @@ export default function CheckoutForm({
           <CheckoutSteps />
           <PlanSelector />
           <BillingInfoCard />
-          <PaymentMethodCard />
+          <PaymentMethodCard onStatusChange={handleTapPayStatusChange} />
         </div>
 
         <OrderSummary
           summary={summary}
-          isValid={form.formState.isValid}
+          isValid={form.formState.isValid && canGetTapPayPrime}
           isSubmitting={form.formState.isSubmitting}
+          paymentError={paymentError}
           onFailure={handleFailure}
         />
       </form>
