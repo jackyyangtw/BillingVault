@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useSyncExternalStore } from "react";
+import { useTheme } from "next-themes";
 import {
   Card,
   CardContent,
@@ -9,10 +10,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { FieldError, FieldGroup } from "@/components/ui/field";
-import {
-  type TapPayCardUpdate,
-  tappayCardSetupConfig,
-} from "@/providers/tappay/tappay";
+import { type TapPayCardUpdate } from "@/providers/tappay/tappay";
+import { getTappayCardSetupConfig } from "@/providers/tappay/cardSetup";
 import { useTapPay } from "@/providers/tappay";
 import {
   getTapPayCardStatusSnapshot,
@@ -32,6 +31,8 @@ export default function PaymentMethodCard({
   onStatusChange = noopTapPayStatusChange,
 }: PaymentMethodCardProps) {
   const tapPay = useTapPay();
+  const { resolvedTheme } = useTheme();
+  const colorMode = resolvedTheme === "light" ? "light" : "dark";
   const cardStatus = useSyncExternalStore(
     subscribeTapPayCardStatus,
     getTapPayCardStatusSnapshot,
@@ -45,7 +46,7 @@ export default function PaymentMethodCard({
 
     let isMounted = true;
 
-    window.TPDirect.card.setup(tappayCardSetupConfig);
+    window.TPDirect.card.setup(getTappayCardSetupConfig(colorMode));
     updateTapPayCardStatus(window.TPDirect.card.getTappayFieldsStatus());
     window.TPDirect.card.onUpdate((update: TapPayCardUpdate) => {
       if (!isMounted) {
@@ -59,7 +60,7 @@ export default function PaymentMethodCard({
       isMounted = false;
       resetTapPayCardStatus();
     };
-  }, [tapPay.isReady]);
+  }, [colorMode, tapPay.isReady]);
 
   useEffect(() => {
     onStatusChange(cardStatus.canGetPrime);

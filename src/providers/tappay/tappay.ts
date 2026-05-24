@@ -39,7 +39,7 @@ type TapPayDirect = {
   card: TapPayCard;
 };
 
-type TapPayCardSetupConfig = {
+export type TapPayCardSetupConfig = {
   fields: {
     number: TapPayFieldConfig;
     expirationDate: TapPayFieldConfig;
@@ -53,12 +53,12 @@ type TapPayCardSetupConfig = {
   };
 };
 
-type TapPayFieldStyles = Record<
+export type TapPayFieldStyles = Record<
   string,
   Record<string, string | Record<string, string>>
 >;
 
-type TapPayFieldConfig = {
+export type TapPayFieldConfig = {
   element: string;
   placeholder: string;
 };
@@ -70,86 +70,6 @@ declare global {
 }
 
 export const TAPPAY_SDK_URL = "https://js.tappaysdk.com/sdk/tpdirect/v5.20.0";
-
-export const TAPPAY_CARD_FIELDS = {
-  number: "tappay-card-number",
-  expirationDate: "tappay-card-expiration-date",
-  ccv: "tappay-card-ccv",
-} as const;
-
-const tappayFieldStyles = {
-  html: {
-    "background-color": "#000000",
-    background: "#000000",
-    "color-scheme": "dark",
-  },
-  body: {
-    margin: "0",
-    "background-color": "#000000",
-    background: "#000000",
-    "color-scheme": "dark",
-  },
-  input: {
-    color: "hsl(0 0% 98%)",
-    "background-color": "#000000",
-    background: "#000000",
-    border: "0",
-    margin: "0",
-    padding: "0",
-    outline: "0",
-    width: "100%",
-    height: "24px",
-    "line-height": "24px",
-    "font-size": "16px",
-    "font-family": "inherit",
-  },
-  "::placeholder": {
-    color: "hsl(0 0% 60%)",
-  },
-  ":focus": {
-    color: "hsl(0 0% 98%)",
-    "background-color": "#000000",
-    background: "#000000",
-  },
-  ".valid": {
-    color: "hsl(0 0% 98%)",
-    "background-color": "#000000",
-    background: "#000000",
-  },
-  ".invalid": {
-    color: "hsl(0 84% 60%)",
-    "background-color": "#000000",
-    background: "#000000",
-  },
-  "@media screen and (max-width: 640px)": {
-    input: {
-      "font-size": "16px",
-    },
-  },
-};
-
-export const tappayCardSetupConfig: TapPayCardSetupConfig = {
-  fields: {
-    number: {
-      element: `#${TAPPAY_CARD_FIELDS.number}`,
-      placeholder: "**** **** **** ****",
-    },
-    expirationDate: {
-      element: `#${TAPPAY_CARD_FIELDS.expirationDate}`,
-      placeholder: "MM / YY",
-    },
-    ccv: {
-      element: `#${TAPPAY_CARD_FIELDS.ccv}`,
-      placeholder: "CVC",
-    },
-  },
-  styles: tappayFieldStyles,
-  isMaskCreditCardNumber: true,
-  maskCreditCardNumberRange: {
-    beginIndex: 6,
-    endIndex: 11,
-  },
-};
 
 export function getTapPayConfig() {
   const appId = Number(process.env.NEXT_PUBLIC_TAPPAY_APP_ID);

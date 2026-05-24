@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { LogOut, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import ThemeToggle from "@/components/shared/ThemeToggle";
 import { useAuthStore } from "@/stores/auth-store";
 import { logoutAction } from "@/actions/logout";
-import ThemeToggle from "../ThemeToggle";
 import AccountLink from "./AccountLink";
 import MobileNavSheet from "./MobileNavSheet";
 

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import ThemeToggle from "@/components/shared/ThemeToggle";
 import type { UserProfile } from "@/lib/auth/types";
 import ProtectedMobileNavSheet from "./ProtectedMobileNavSheet";
 
@@ -26,6 +27,7 @@ export default function ProtectedTopbar({ user }: ProtectedTopbarProps) {
         </div>
 
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           <Button variant="outline" size="sm" asChild>
             <Link href="/">
               <ArrowUpRight data-icon="inline-start" />
