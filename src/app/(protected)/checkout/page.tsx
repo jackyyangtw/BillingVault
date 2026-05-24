@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
+import { getCurrentUser } from "@/lib/auth/dal";
 import { products } from "@/mocks/fixtures/products";
 import { type BillingCycle, plans } from "@/mocks/fixtures/plans";
 import CheckoutForm from "./_components/CheckoutForm";
@@ -22,6 +23,7 @@ export default async function CheckoutPage({
   searchParams,
 }: CheckoutPageProps) {
   const params = await searchParams;
+  const user = await getCurrentUser();
   const planExists = plans.some((plan) => plan.id === params.plan);
   const productExists = products.some(
     (product) => product.id === params.product,
@@ -50,6 +52,8 @@ export default async function CheckoutPage({
             initialPlanId={planExists ? params.plan! : "pro"}
             initialProductId={productExists ? params.product! : products[0].id}
             initialCycle={cycle}
+            initialCompanyName={user?.name ?? ""}
+            initialBillingEmail={user?.email ?? ""}
           />
         </div>
       </section>

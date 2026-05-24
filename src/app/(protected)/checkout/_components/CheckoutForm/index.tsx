@@ -1,7 +1,8 @@
 "use client";
 
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
-import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useMemo } from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { products } from "@/mocks/fixtures/products";
 import {
@@ -12,7 +13,6 @@ import {
 } from "@/mocks/fixtures/plans";
 import BillingInfoCard from "./BillingInfoCard";
 import CheckoutSteps from "./CheckoutSteps";
-import CheckoutSuccess from "./CheckoutSuccess";
 import OrderSummary from "./OrderSummary";
 import PaymentMethodCard from "./PaymentMethodCard";
 import PlanSelector from "./PlanSelector";
@@ -22,28 +22,38 @@ type CheckoutFormProps = {
   initialPlanId: string;
   initialProductId: string;
   initialCycle: BillingCycle;
+  initialCompanyName: string;
+  initialBillingEmail: string;
 };
 
 export default function CheckoutForm({
   initialPlanId,
   initialProductId,
   initialCycle,
+  initialCompanyName,
+  initialBillingEmail,
 }: CheckoutFormProps) {
-  const [finished, setFinished] = useState(false);
+  const router = useRouter();
   const defaultValues = useMemo<CheckoutFormValues>(
     () => ({
       planId: initialPlanId,
       productId: initialProductId,
       cycle: initialCycle,
-      companyName: "",
-      billingEmail: "",
+      companyName: initialCompanyName,
+      billingEmail: initialBillingEmail,
       taxId: "",
       billingAddress: "",
       cardNumber: "",
       cardExpiry: "",
       cardCvc: "",
     }),
-    [initialCycle, initialPlanId, initialProductId],
+    [
+      initialBillingEmail,
+      initialCompanyName,
+      initialCycle,
+      initialPlanId,
+      initialProductId,
+    ],
   );
   const form = useForm<CheckoutFormValues>({
     resolver: standardSchemaResolver(checkoutFormSchema),
@@ -77,18 +87,12 @@ export default function CheckoutForm({
     total,
   };
 
-  function handleValidSubmit(values: CheckoutFormValues) {
-    void values;
-    setFinished(true);
+  function handleValidSubmit() {
+    router.replace("/checkout/success");
   }
 
-  function handleReset() {
-    form.reset(defaultValues);
-    setFinished(false);
-  }
-
-  if (finished) {
-    return <CheckoutSuccess summary={summary} onReset={handleReset} />;
+  function handleFailure() {
+    router.replace("/checkout/failure");
   }
 
   return (
@@ -108,6 +112,7 @@ export default function CheckoutForm({
           summary={summary}
           isValid={form.formState.isValid}
           isSubmitting={form.formState.isSubmitting}
+          onFailure={handleFailure}
         />
       </form>
     </FormProvider>

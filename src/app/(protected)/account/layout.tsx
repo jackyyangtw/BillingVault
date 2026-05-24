@@ -1,8 +1,8 @@
 import { getCurrentUser } from "@/lib/auth/dal";
-import ProtectedSidebar from "./_components/ProtectedSidebar";
-import ProtectedTopbar from "./_components/ProtectedTopbar";
+import ProtectedSidebar from "../_components/ProtectedSidebar";
+import ProtectedTopbar from "../_components/ProtectedTopbar";
 
-export default async function ProtectedLayout({
+export default async function AccountLayout({
   children,
 }: {
   children: React.ReactNode;

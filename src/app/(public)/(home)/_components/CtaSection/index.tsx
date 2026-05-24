@@ -25,14 +25,6 @@ export default function CtaSection() {
                   <ArrowRight data-icon="inline-end" />
                 </Link>
               </Button>
-              <Button
-                size="lg"
-                variant="ghost"
-                className="text-primary-foreground hover:text-primary-foreground hover:bg-white/20"
-                asChild
-              >
-                <Link href="/auth/login">登入帳號</Link>
-              </Button>
             </div>
           </div>
         </div>
