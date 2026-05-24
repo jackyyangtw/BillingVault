@@ -52,7 +52,7 @@ export default function PaymentMethodPanel({
       </CardContent>
       <CardFooter>
         <Button variant="outline" className="w-full" asChild>
-          <Link href="/payment">管理付款方式</Link>
+          <Link href="/account/payment">管理付款方式</Link>
         </Button>
       </CardFooter>
     </Card>

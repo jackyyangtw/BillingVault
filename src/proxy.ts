@@ -26,12 +26,7 @@ import { buildCspHeader } from "@/proxy/buildCspHeader";
 // ---------------------------------------------------------------------------
 
 /** 需要登入才能訪問的路徑前綴 */
-const protectedRoutePrefixes = [
-  "/checkout",
-  "/account",
-  "/payment",
-  "/subscription",
-];
+const protectedRoutePrefixes = ["/checkout", "/account"];
 
 /** 已登入用戶應被導離的路徑（避免重複登入） */
 const guestOnlyRoutes = ["/login"];
