@@ -1,4 +1,4 @@
-import { getCurrentUser } from "@/lib/auth/dal";
+import { getCurrentUser, verifySession } from "@/lib/auth/dal";
 import ProtectedTopbar from "../_components/ProtectedTopbar";
 
 export default async function CheckoutLayout({
@@ -6,6 +6,7 @@ export default async function CheckoutLayout({
 }: {
   children: React.ReactNode;
 }) {
+  await verifySession();
   const user = await getCurrentUser();
 
   return (

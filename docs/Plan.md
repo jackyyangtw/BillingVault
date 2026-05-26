@@ -6,7 +6,7 @@
 
 這不是一般商品商城，而是用來展示：
 
-- 安全的登入驗證流程
+- 安全的登入驗證流程（Supabase Auth Email 登入）
 - SaaS 訂閱方案
 - 結帳流程
 - 模擬付款 / 信用卡綁定
@@ -79,19 +79,19 @@ SecureCart 可以想像成一個「安全 SaaS 訂閱結帳平台」，販售開
 
 ## MVP 功能範圍
 
-| 狀態 | 優先級 | 功能            | 說明                                              |
-| ---- | ------ | --------------- | ------------------------------------------------- |
-| ✅   | P0     | 訂閱方案頁      | 顯示 Starter / Pro / Business / Enterprise 方案   |
-| ✅   | P0     | 模擬登入        | 模擬登入流程、OAuth 綁定流程與 Session 狀態       |
-| ✅   | P0     | 結帳流程        | 選方案、填寫帳務資料、TapPay 信用卡欄位、送出訂閱 |
-| ✅   | P0     | 帳務頁面        | 顯示目前方案、付款方式與帳務資訊                  |
-| ✅   | P0     | 訂閱狀態        | active / trialing / past_due / canceled           |
-| ✅   | P1     | 升級 / 降級     | 方案升級與降級流程 UI                             |
-| ✅   | P1     | 取消訂閱        | 取消訂閱流程與確認彈窗                            |
-| 🟡   | P1     | TapPay 付款方式 | 結帳頁已串 TapPay hosted fields；管理頁尚待接入   |
-| ✅   | P1     | 帳單紀錄        | 帳單紀錄與付款狀態                                |
-| ⬜   | P2     | 團隊席位        | 團隊成員與席位計費                                |
-| ⬜   | P2     | 稽核紀錄        | 帳務與安全操作紀錄                                |
+| 狀態 | 優先級 | 功能            | 說明                                                  |
+| ---- | ------ | --------------- | ----------------------------------------------------- |
+| ✅   | P0     | 訂閱方案頁      | 顯示 Starter / Pro / Business / Enterprise 方案       |
+| 🟡   | P0     | 真實 Email 登入 | 使用 Supabase Auth Email/Password；僅保留一組測試帳號 |
+| ✅   | P0     | 結帳流程        | 選方案、填寫帳務資料、TapPay 信用卡欄位、送出訂閱     |
+| ✅   | P0     | 帳務頁面        | 顯示目前方案、付款方式與帳務資訊                      |
+| ✅   | P0     | 訂閱狀態        | active / trialing / past_due / canceled               |
+| ✅   | P1     | 升級 / 降級     | 方案升級與降級流程 UI                                 |
+| ✅   | P1     | 取消訂閱        | 取消訂閱流程與確認彈窗                                |
+| 🟡   | P1     | TapPay 付款方式 | 結帳頁已串 TapPay hosted fields；管理頁尚待接入       |
+| ✅   | P1     | 帳單紀錄        | 帳單紀錄與付款狀態                                    |
+| ⬜   | P2     | 團隊席位        | 團隊成員與席位計費                                    |
+| ⬜   | P2     | 稽核紀錄        | 帳務與安全操作紀錄                                    |
 
 ---
 
@@ -102,7 +102,7 @@ SecureCart 可以想像成一個「安全 SaaS 訂閱結帳平台」，販售開
 | ✅   | `/`                     | 首頁       | 產品介紹與 CTA                    |
 | ✅   | `/pricing`              | 方案頁     | 方案比較、月繳 / 年繳切換         |
 | ✅   | `/product/[id]`         | 產品詳情頁 | SaaS 產品介紹與方案導流           |
-| ✅   | `/login`                | 登入頁     | 模擬登入與第三方登入綁定          |
+| 🟡   | `/login`                | 登入頁     | Supabase Auth Email/Password 登入 |
 | ✅   | `/checkout`             | 結帳頁     | 選方案、帳務資料、TapPay 欄位     |
 | ✅   | `/checkout/success`     | 結帳成功頁 | 成功結果                          |
 | ✅   | `/checkout/failure`     | 結帳失敗頁 | 失敗結果                          |
@@ -117,22 +117,23 @@ SecureCart 可以想像成一個「安全 SaaS 訂閱結帳平台」，販售開
 
 ## 技術棧
 
-| 類型         | 技術 / 現況                                        |
-| ------------ | -------------------------------------------------- |
-| 框架         | Next.js 16 App Router                              |
-| React        | React 19 + React Compiler                          |
-| 程式語言     | TypeScript                                         |
-| 套件管理工具 | pnpm                                               |
-| 樣式         | Tailwind CSS v4 + shadcn/ui                        |
-| 表單         | React Hook Form                                    |
-| 驗證         | Zod                                                |
-| 伺服器狀態   | TanStack Query                                     |
-| 客戶端狀態   | Zustand                                            |
-| 付款 SDK     | TapPay Web SDK hosted fields                       |
-| 外部狀態訂閱 | `useSyncExternalStore` 管理 TapPay card status     |
-| 測試         | Vitest                                             |
-| 資安         | CSP nonce、safe callback URL、httpOnly Cookie 假設 |
-| CI           | 尚待規劃                                           |
+| 類型         | 技術 / 現況                                           |
+| ------------ | ----------------------------------------------------- |
+| 框架         | Next.js 16 App Router                                 |
+| React        | React 19 + React Compiler                             |
+| 程式語言     | TypeScript                                            |
+| 套件管理工具 | pnpm                                                  |
+| 樣式         | Tailwind CSS v4 + shadcn/ui                           |
+| 表單         | React Hook Form                                       |
+| 驗證         | Zod                                                   |
+| 驗證服務     | Supabase Auth（Email/Password only）                  |
+| 伺服器狀態   | TanStack Query                                        |
+| 客戶端狀態   | Zustand                                               |
+| 付款 SDK     | TapPay Web SDK hosted fields                          |
+| 外部狀態訂閱 | `useSyncExternalStore` 管理 TapPay card status        |
+| 測試         | Vitest                                                |
+| 資安         | CSP nonce、safe callback URL、Supabase session cookie |
+| CI           | 尚待規劃                                              |
 
 ---
 
@@ -197,6 +198,7 @@ src/
 
   lib/
     auth/
+    supabase/
     tailwind-css/
 
   proxy/
@@ -227,26 +229,65 @@ docs/
 - TapPay SDK、hosted fields 設定、prime 取得與 card status external store 集中在 `src/providers/tappay/`，不放在 `app/` 內。
 - Checkout 的付款卡元件已依 200 行規則拆為 `PaymentMethodCard/index.tsx` 與 `TapPayHostedField.tsx`。
 - 跨多層目錄的 import 使用 `@/` alias；相對路徑最多保留到 `../../`。
+- 登入流程下一步改為 Supabase Auth Email/Password；先不做 OAuth、不開放註冊，只使用一組測試帳號完成真實 session flow。
+
+---
+
+## Supabase Auth 登入規劃
+
+### MVP 範圍
+
+| 狀態 | 項目         | 說明                                                      |
+| ---- | ------------ | --------------------------------------------------------- |
+| 🟡   | Email 登入   | `/login` 使用 Supabase Auth `signInWithPassword`          |
+| 🟡   | Session 管理 | 使用 Supabase SSR cookie flow，server-side 讀取目前使用者 |
+| 🟡   | 登出         | 呼叫 Supabase Auth `signOut` 後導回首頁或登入頁           |
+| 🟡   | 測試帳號     | 僅建立一組測試帳號，供 demo / 面試展示使用                |
+| ⬜   | 註冊         | MVP 不開放註冊，避免 demo 使用者自行建立帳號              |
+| ⬜   | OAuth        | MVP 不接 Google / Facebook / LINE，保留為後續擴充         |
+
+### 測試帳號策略
+
+```txt
+Email: demo@securecart.dev
+Password: 由 Supabase Dashboard 建立與管理，不提交到 repo
+```
+
+- 測試帳號只存在於 Supabase Auth。
+- `.env.local` 僅保存 Supabase URL / anon key 等環境變數。
+- 文件與程式碼不硬編碼測試密碼。
+- 登入 UI 可提示「使用專案提供的 demo 帳號」，但不在公開 repo 暴露密碼。
+
+### 實作方向
+
+| 模組                                | 說明                                                        |
+| ----------------------------------- | ----------------------------------------------------------- |
+| `src/lib/supabase/client.ts`        | Client Component 使用的 Supabase browser client             |
+| `src/lib/supabase/server.ts`        | Server Action / Server Component 使用的 server client       |
+| `src/app/(public)/login/actions.ts` | 改用 Supabase Auth email/password 登入                      |
+| `src/actions/logout.ts`             | 改用 Supabase Auth signOut                                  |
+| `src/lib/auth/dal.ts`               | 改由 Supabase session 取得目前使用者                        |
+| `src/proxy.ts`                      | 維持快速樂觀檢查與 safe callback URL，不做完整 session 驗證 |
 
 ---
 
 ## Mock API 規劃
 
-> 目前主要以 `src/mocks/fixtures`、login server action、proxy route guard 模擬資料與流程；以下 Route Handlers 尚待後續補齊。
+> 登入將改為 Supabase Auth；Mock API 保留給 pricing、checkout、subscription、invoice 等尚未接後端的產品資料流程。
 
-| 狀態 | API                             | 方法 | 說明             |
-| ---- | ------------------------------- | ---- | ---------------- |
-| ⬜   | `/api/auth/login`               | POST | 模擬登入         |
-| ⬜   | `/api/auth/logout`              | POST | 模擬登出         |
-| ⬜   | `/api/pricing/plans`            | GET  | 取得方案列表     |
-| ⬜   | `/api/checkout`                 | POST | 建立訂閱         |
-| ⬜   | `/api/subscription/current`     | GET  | 取得目前訂閱狀態 |
-| ⬜   | `/api/subscription/change-plan` | POST | 升級 / 降級方案  |
-| ⬜   | `/api/subscription/cancel`      | POST | 取消訂閱         |
-| ⬜   | `/api/payment-methods`          | GET  | 取得付款方式     |
-| ⬜   | `/api/payment-methods`          | POST | 新增付款方式     |
-| ⬜   | `/api/invoices`                 | GET  | 取得帳單紀錄     |
-| ⬜   | `/api/team/members`             | GET  | 取得團隊成員     |
+| 狀態 | API                             | 方法 | 說明                         |
+| ---- | ------------------------------- | ---- | ---------------------------- |
+| ❌   | `/api/auth/login`               | POST | 不再規劃；改用 Supabase Auth |
+| ❌   | `/api/auth/logout`              | POST | 不再規劃；改用 Supabase Auth |
+| ⬜   | `/api/pricing/plans`            | GET  | 取得方案列表                 |
+| ⬜   | `/api/checkout`                 | POST | 建立訂閱                     |
+| ⬜   | `/api/subscription/current`     | GET  | 取得目前訂閱狀態             |
+| ⬜   | `/api/subscription/change-plan` | POST | 升級 / 降級方案              |
+| ⬜   | `/api/subscription/cancel`      | POST | 取消訂閱                     |
+| ⬜   | `/api/payment-methods`          | GET  | 取得付款方式                 |
+| ⬜   | `/api/payment-methods`          | POST | 新增付款方式                 |
+| ⬜   | `/api/invoices`                 | GET  | 取得帳單紀錄                 |
+| ⬜   | `/api/team/members`             | GET  | 取得團隊成員                 |
 
 ---
 
@@ -303,49 +344,51 @@ TapPay hosted fields 驗證信用卡
 
 ## 資安展示點
 
-| 功能                 | 展示內容                       |
-| -------------------- | ------------------------------ |
-| 安全回調 URL         | 防止外站 redirect              |
-| CSP nonce            | 展示基本 CSP header 設計       |
-| httpOnly Cookie 假設 | Token 不直接暴露給前端         |
-| 表單驗證             | 所有表單使用 Zod schema        |
-| 錯誤碼對應           | 後端 error code 對應 i18n 訊息 |
-| 送出鎖定             | 避免重複送出付款               |
-| 冪等鍵概念           | 避免重複建立訂閱               |
-| 受保護路由           | account / dashboard 需要登入   |
-| Session 過期處理     | Session 過期時自動導回登入頁   |
+| 功能             | 展示內容                                |
+| ---------------- | --------------------------------------- |
+| 安全回調 URL     | 防止外站 redirect                       |
+| CSP nonce        | 展示基本 CSP header 設計                |
+| Supabase Session | 使用 Supabase Auth 管理 session cookie  |
+| 表單驗證         | 所有表單使用 Zod schema                 |
+| 錯誤碼對應       | 後端 error code 對應 i18n 訊息          |
+| 送出鎖定         | 避免重複送出付款                        |
+| 冪等鍵概念       | 避免重複建立訂閱                        |
+| 受保護路由       | account / checkout / dashboard 需要登入 |
+| Session 過期處理 | Session 過期時自動導回登入頁            |
 
 ---
 
 ## 測試項目
 
-| 狀態 | 測試目標     | 範例                                                 |
-| ---- | ------------ | ---------------------------------------------------- |
-| ✅   | 安全回調 URL | 擋掉 `https://evil.com`、`javascript:`、`//evil.com` |
-| ✅   | CSP header   | nonce、TapPay script/frame 白名單                    |
-| ⬜   | 價格計算     | 月繳 / 年繳折扣計算                                  |
-| ⬜   | 方案比較     | 不同方案功能顯示                                     |
-| ⬜   | 訂閱狀態     | 不同狀態顯示正確 UI                                  |
-| ⬜   | 結帳驗證     | 必填欄位、格式錯誤                                   |
-| 🟡   | TapPay 付款  | hosted fields 驗證、prime 取得、成功 / 失敗流程      |
-| ⬜   | 帳單格式化   | 金額、日期、狀態格式化                               |
+| 狀態 | 測試目標      | 範例                                                 |
+| ---- | ------------- | ---------------------------------------------------- |
+| ✅   | 安全回調 URL  | 擋掉 `https://evil.com`、`javascript:`、`//evil.com` |
+| ✅   | CSP header    | nonce、TapPay script/frame 白名單                    |
+| ⬜   | Supabase Auth | email/password 登入、登出、session 過期              |
+| ⬜   | 價格計算      | 月繳 / 年繳折扣計算                                  |
+| ⬜   | 方案比較      | 不同方案功能顯示                                     |
+| ⬜   | 訂閱狀態      | 不同狀態顯示正確 UI                                  |
+| ⬜   | 結帳驗證      | 必填欄位、格式錯誤                                   |
+| 🟡   | TapPay 付款   | hosted fields 驗證、prime 取得、成功 / 失敗流程      |
+| ⬜   | 帳單格式化    | 金額、日期、狀態格式化                               |
 
 ---
 
 ## README 可以強調的技術決策
 
-| 主題                         | 說明                                            |
-| ---------------------------- | ----------------------------------------------- |
-| 為何選 SaaS 訂閱             | 比一般商城更適合展示帳務、訂閱、付款與權限流程  |
-| 為何用 Route Handler 模擬    | 不依賴真後端，但保留真實 API flow               |
-| 為何假設 httpOnly Cookie     | 避免 token 暴露於 client-side JavaScript        |
-| 為何用 Zod + React Hook Form | 集中管理表單驗證與型別                          |
-| 為何用 TanStack Query        | 管理 server state、loading、error、retry        |
-| 為何用 Zustand               | 管理少量 client-side 結帳 / UI 狀態             |
-| 為何做安全回調 URL           | 避免 open redirect                              |
-| 為何實作 CSP                 | 展示基本資安 header 意識                        |
-| 為何集中 TapPay Provider     | SDK 初始化與 card status store 不混入 app route |
-| 為何要寫測試                 | 驗證付款、callback、價格、訂閱狀態等核心邏輯    |
+| 主題                         | 說明                                             |
+| ---------------------------- | ------------------------------------------------ |
+| 為何選 SaaS 訂閱             | 比一般商城更適合展示帳務、訂閱、付款與權限流程   |
+| 為何用 Supabase Auth         | 以最小後端成本展示真實 Email 登入與 session flow |
+| 為何用 Route Handler 模擬    | 非 auth 資料暫不依賴真後端，但保留真實 API flow  |
+| 為何使用 session cookie      | 避免 token 暴露於 client-side JavaScript         |
+| 為何用 Zod + React Hook Form | 集中管理表單驗證與型別                           |
+| 為何用 TanStack Query        | 管理 server state、loading、error、retry         |
+| 為何用 Zustand               | 管理少量 client-side 結帳 / UI 狀態              |
+| 為何做安全回調 URL           | 避免 open redirect                               |
+| 為何實作 CSP                 | 展示基本資安 header 意識                         |
+| 為何集中 TapPay Provider     | SDK 初始化與 card status store 不混入 app route  |
+| 為何要寫測試                 | 驗證付款、callback、價格、訂閱狀態等核心邏輯     |
 
 ---
 
@@ -400,6 +443,10 @@ SecureCart 是我做的一個 SaaS 訂閱結帳 side project。
 - [x] 安全回調 URL
 - [x] CSP header 模擬
 - [x] 受保護路由守衛
+- [ ] Supabase Auth Email 登入
+- [ ] Supabase Auth 登出
+- [ ] Supabase session server-side 讀取
+- [ ] 移除 mock login API 依賴
 - [x] Vitest 測試基礎
 - [ ] 價格計算測試
 - [ ] 結帳驗證測試

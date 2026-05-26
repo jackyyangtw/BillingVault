@@ -27,7 +27,7 @@ export const cspTrustedDomains = {
   scriptSrc: ["https://js.tappaysdk.com"],
 
   /** 允許載入圖片的域名（產品圖片 CDN） */
-  imgSrc: ["https://platform.uanalyze.com.tw", "https://pro.uanalyze.com.tw"],
+  imgSrc: [],
 
   /** 允許 fetch/XHR 連線的域名（TapPay API） */
   connectSrc: ["https://js.tappaysdk.com"],

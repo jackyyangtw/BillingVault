@@ -19,8 +19,8 @@ type LoginPageProps = {
 const trustItems = [
   {
     icon: LockKeyhole,
-    title: "HttpOnly Session",
-    description: "Token 僅由伺服器寫入 cookie，前端不接觸敏感資訊。",
+    title: "Supabase Session",
+    description: "由 Supabase Auth 管理 session cookie，前端不保存敏感 token。",
   },
   {
     icon: ShieldCheck,
@@ -29,8 +29,8 @@ const trustItems = [
   },
   {
     icon: Sparkles,
-    title: "Mock Ready",
-    description: "後端 API 尚未接上時，也能先完成端到端體驗。",
+    title: "Email Only",
+    description: "MVP 僅支援一組 Email 測試帳號，暫不開放註冊與 OAuth。",
   },
 ];
 
@@ -58,7 +58,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
               登入後，繼續完成你的安全訂閱結帳。
             </h1>
             <p className="text-muted-foreground mt-5 max-w-xl text-lg leading-8">
-              這個登入流程使用 Server Action 驗證帳密，成功後建立 HttpOnly
+              這個登入流程使用 Server Action 呼叫 Supabase Auth，成功後建立
               session，並回到你原本準備前往的受保護頁面。
             </p>
           </div>

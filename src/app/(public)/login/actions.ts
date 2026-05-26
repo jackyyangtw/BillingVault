@@ -1,12 +1,12 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { loginAPI } from "@/lib/auth/api";
-import { createSession } from "@/lib/auth/session";
-import { isSafeCallbackUrl } from "@/proxy/isSafeCallbackUrl";
+import { isSafeCallbackUrl } from "@/proxy/helpers/isSafeCallbackUrl";
+import { getSupabaseEnv } from "@/lib/supabase/env";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loginFormSchema, type LoginFormState } from "./schema";
 
-const DEFAULT_LOGIN_REDIRECT = "/checkout";
+const DEFAULT_LOGIN_REDIRECT = "/account/billing";
 
 function resolveCallbackUrl(value: string | undefined): string {
   if (!value) return DEFAULT_LOGIN_REDIRECT;
@@ -43,18 +43,32 @@ export async function loginAction(
   }
 
   const { email, password, callbackUrl } = parsed.data;
-  const response = await loginAPI(email, password);
 
-  if (!response.success || !response.token) {
+  if (!getSupabaseEnv()) {
     return {
       fields: {
         email,
         callbackUrl: callbackUrl ?? "",
       },
-      message: response.error ?? "登入失敗，請稍後再試。",
+      message: "Supabase 尚未設定，請先補上環境變數。",
     };
   }
 
-  await createSession(response.token);
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (error) {
+    return {
+      fields: {
+        email,
+        callbackUrl: callbackUrl ?? "",
+      },
+      message: "帳號或密碼錯誤，請確認測試帳號後再試。",
+    };
+  }
+
   redirect(resolveCallbackUrl(callbackUrl));
 }

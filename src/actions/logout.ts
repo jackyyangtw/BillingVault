@@ -1,9 +1,14 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { deleteSession } from "@/lib/auth/session";
+import { getSupabaseEnv } from "@/lib/supabase/env";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export async function logoutAction(): Promise<void> {
-  await deleteSession();
+  if (getSupabaseEnv()) {
+    const supabase = await createSupabaseServerClient();
+    await supabase.auth.signOut();
+  }
+
   redirect("/");
 }

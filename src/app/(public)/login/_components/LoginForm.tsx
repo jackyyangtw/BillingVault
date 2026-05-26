@@ -73,7 +73,7 @@ export default function LoginForm({ callbackUrl }: LoginFormProps) {
       <CardHeader>
         <CardTitle className="text-2xl">登入 SecureCart</CardTitle>
         <CardDescription>
-          使用測試帳號登入，繼續完成安全結帳流程。
+          使用專案提供的測試帳號登入，繼續完成安全結帳流程。
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -135,7 +135,7 @@ export default function LoginForm({ callbackUrl }: LoginFormProps) {
                       id={field.name}
                       type="password"
                       autoComplete="current-password"
-                      placeholder="secure-demo-2026"
+                      placeholder="請輸入測試帳號密碼"
                       aria-invalid={invalid}
                       required
                     />
@@ -173,7 +173,7 @@ export default function LoginForm({ callbackUrl }: LoginFormProps) {
 
             <Field>
               <FieldDescription className="text-center">
-                demo@securecart.dev / secure-demo-2026
+                Email: demo@securecart.dev。密碼由 Supabase Dashboard 管理。
               </FieldDescription>
             </Field>
           </FieldGroup>
@@ -187,7 +187,7 @@ export default function LoginForm({ callbackUrl }: LoginFormProps) {
           </Link>
         </Button>
         <p className="text-muted-foreground text-center text-sm">
-          還沒有帳號？目前可先使用 mock 帳號體驗完整流程。
+          目前不開放註冊與 OAuth，請使用唯一測試帳號體驗完整流程。
         </p>
       </CardFooter>
     </Card>

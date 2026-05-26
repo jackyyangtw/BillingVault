@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { buildCspHeader } from "./buildCspHeader";
+import { buildCspHeader } from "../helpers/buildCspHeader";
 
 describe("buildCspHeader", () => {
   it("產出的 CSP 包含 nonce", () => {
@@ -33,13 +33,6 @@ describe("buildCspHeader", () => {
 
     expect(csp).toContain("https://js.tappaysdk.com");
     expect(csp).toContain("frame-src 'self' https://*.tappaysdk.com");
-  });
-
-  it("包含圖片 CDN 域名", () => {
-    const csp = buildCspHeader("nonce");
-
-    expect(csp).toContain("https://platform.uanalyze.com.tw");
-    expect(csp).toContain("https://pro.uanalyze.com.tw");
   });
 
   it("產出為單行字串（無多餘空白）", () => {

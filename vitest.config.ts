@@ -37,6 +37,7 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          name: "unit",
           // 使用 jsdom 模擬瀏覽器環境（Zustand / React 測試需要）
           environment: "jsdom",
           // 測試檔案位置

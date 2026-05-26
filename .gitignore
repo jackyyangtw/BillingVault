@@ -12,6 +12,8 @@
 
 # testing
 /coverage
+/playwright-report
+/test-results
 
 # next.js
 /.next/
@@ -53,3 +55,7 @@ skills-lock.json
 storybook-static
 
 /src/generated/prisma
+
+# e2e
+playwright-report
+test-results
