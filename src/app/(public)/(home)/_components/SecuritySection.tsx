@@ -17,9 +17,9 @@ import {
 const securityItems = [
   {
     icon: Lock,
-    title: "httpOnly Cookie 驗證",
+    title: "Server-side Session 驗證",
     description:
-      "Token 不暴露給 JavaScript，完全存放在 httpOnly Cookie 中，有效防範 XSS 攻擊。",
+      "登入狀態由 Supabase SSR 與 Server DAL 驗證，敏感資料只在伺服器端讀取並回傳最小必要欄位。",
   },
   {
     icon: ShieldCheck,
