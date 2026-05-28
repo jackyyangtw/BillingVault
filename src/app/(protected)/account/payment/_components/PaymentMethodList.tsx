@@ -1,4 +1,4 @@
-import { CreditCard, MoreHorizontal } from "lucide-react";
+import { CreditCard } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,6 +12,7 @@ import type {
   PaymentMethod,
   PaymentMethodStatus,
 } from "@/lib/payment-methods/types";
+import PaymentMethodActions from "./PaymentMethodActions";
 
 type PaymentMethodListProps = {
   paymentMethods: PaymentMethod[];
@@ -95,9 +96,7 @@ function PaymentMethodItem({ method }: PaymentMethodItemProps) {
             設為預設
           </Button>
         )}
-        <Button variant="ghost" size="icon-sm" aria-label="卡片操作">
-          <MoreHorizontal />
-        </Button>
+        <PaymentMethodActions method={method} />
       </div>
     </div>
   );
