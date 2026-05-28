@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { verifySession } from "@/lib/auth/dal";
-import { listPaymentMethods } from "@/lib/payment-methods/dal";
+import { listPaymentMethods } from "@/lib/payment-methods/dal/listPaymentMethods";
 import AddPaymentMethodCard from "./_components/AddPaymentMethodCard";
 import PaymentIntegrationPanel from "./_components/PaymentIntegrationPanel";
 import PaymentMethodList from "./_components/PaymentMethodList";

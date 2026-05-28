@@ -36,6 +36,8 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 [Import 路徑]：相對路徑最多只允許到 `../../`。若需要 `../../../` 或更深層級，必須改用 `@/` alias，避免深層相對路徑降低可讀性與維護性。
 
+[Barrel 檔案]：禁止新增 barrel 檔案（例如 `index.ts` 只用來 re-export 其他模組）。Import 必須指向實際功能檔案，例如 `@/lib/payment-methods/dal/listPaymentMethods`，避免透過資料夾入口隱藏依賴來源。既有 barrel 若因重構碰到，應優先移除並改成明確 import。
+
 ## 4. 元件結構檢查（200 行拆分規則）
 
 修改完成後，檢查目標元件檔案是否超過 **200 行**。若超過，必須將其拆分為資料夾結構：
