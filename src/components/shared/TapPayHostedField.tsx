@@ -34,6 +34,7 @@ type TapPayHostedFieldProps = {
   status: number;
   canGetPrime: boolean;
   hasInteracted: boolean;
+  isHostedFieldVisible?: boolean;
   className?: string;
 };
 
@@ -42,6 +43,7 @@ export default function TapPayHostedField({
   status,
   canGetPrime,
   hasInteracted,
+  isHostedFieldVisible = true,
   className,
 }: TapPayHostedFieldProps) {
   const statusCode = Number(status);
@@ -62,9 +64,10 @@ export default function TapPayHostedField({
         id={fieldElementIds[name]}
         aria-invalid={isInvalid}
         className={cn(
-          "bg-input/50 ring-offset-background h-9 overflow-hidden rounded-3xl border border-transparent px-3 py-1 text-base transition-[color,box-shadow,background-color] md:text-sm",
+          "tappay-field bg-input/50 ring-offset-background h-9 overflow-hidden rounded-3xl border border-transparent px-3 py-1 text-base transition-[color,box-shadow,background-color] md:text-sm",
           "focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px]",
-          "[&_iframe]:block [&_iframe]:h-full [&_iframe]:w-full [&_iframe]:border-0",
+          "[&_iframe]:block [&_iframe]:h-full [&_iframe]:w-full [&_iframe]:border-0 [&_iframe]:transition-opacity",
+          !isHostedFieldVisible && "[&_iframe]:opacity-0",
           isValid && "border-green-500 ring-3 ring-green-500/30",
           isInvalid && "border-destructive ring-destructive/20",
         )}

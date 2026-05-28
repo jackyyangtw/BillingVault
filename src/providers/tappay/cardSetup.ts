@@ -2,6 +2,9 @@ import type { TapPayCardSetupConfig, TapPayFieldStyles } from "./tappay";
 
 type TapPayColorMode = "dark" | "light";
 
+const tappayFontFamily =
+  '-apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", "Helvetica Neue", Arial, sans-serif';
+
 export const TAPPAY_CARD_FIELDS = {
   number: "tappay-card-number",
   expirationDate: "tappay-card-expiration-date",
@@ -58,10 +61,23 @@ function getTappayFieldStyles(colorMode: TapPayColorMode): TapPayFieldStyles {
       height: "24px",
       "line-height": "24px",
       "font-size": "16px",
-      "font-family": "inherit",
+      "font-family": tappayFontFamily,
     },
-    "::placeholder": {
+    "input::placeholder": {
       color: colors.placeholder,
+      "font-family": tappayFontFamily,
+    },
+    "input.card-number::placeholder": {
+      color: colors.placeholder,
+      "font-family": tappayFontFamily,
+    },
+    "input.expiration-date::placeholder": {
+      color: colors.placeholder,
+      "font-family": tappayFontFamily,
+    },
+    "input.ccv::placeholder": {
+      color: colors.placeholder,
+      "font-family": tappayFontFamily,
     },
     ":focus": {
       color: colors.foreground,

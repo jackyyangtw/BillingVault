@@ -1,6 +1,6 @@
 import type { TapPayCardUpdate, TapPayFieldStatus } from "./tappay";
 
-type CardStatusSnapshot = {
+export type TapPayCardStatusSnapshot = {
   canGetPrime: boolean;
   hasInteracted: boolean;
   status: TapPayFieldStatus;
@@ -12,7 +12,7 @@ const initialStatus: TapPayFieldStatus = {
   ccv: -1,
 };
 
-const initialSnapshot: CardStatusSnapshot = {
+const initialSnapshot: TapPayCardStatusSnapshot = {
   canGetPrime: false,
   hasInteracted: false,
   status: initialStatus,

@@ -18,6 +18,10 @@ export type TapPayPrimeResult = {
   msg?: string;
   card?: {
     prime: string;
+    lastfour?: string;
+    issuer?: string;
+    issuer_zh_tw?: string;
+    type?: number;
   } & Record<string, unknown>;
   clientip?: string;
   card_identifier?: string;

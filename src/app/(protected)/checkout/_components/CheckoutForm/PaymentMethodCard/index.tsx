@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useSyncExternalStore } from "react";
-import { useTheme } from "next-themes";
+import { useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -9,17 +8,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import TapPayHostedField from "@/components/shared/TapPayHostedField";
 import { FieldError, FieldGroup } from "@/components/ui/field";
-import { type TapPayCardUpdate } from "@/providers/tappay/tappay";
-import { getTappayCardSetupConfig } from "@/providers/tappay/cardSetup";
-import { useTapPay } from "@/providers/tappay";
-import {
-  getTapPayCardStatusSnapshot,
-  resetTapPayCardStatus,
-  subscribeTapPayCardStatus,
-  updateTapPayCardStatus,
-} from "@/providers/tappay/cardStatusStore";
-import TapPayHostedField from "./TapPayHostedField";
+import { useTapPayCardFields } from "@/providers/tappay/useTapPayCardFields";
 
 type PaymentMethodCardProps = {
   onStatusChange: (canGetPrime: boolean) => void;
@@ -30,37 +21,9 @@ function noopTapPayStatusChange() {}
 export default function PaymentMethodCard({
   onStatusChange = noopTapPayStatusChange,
 }: PaymentMethodCardProps) {
-  const tapPay = useTapPay();
-  const { resolvedTheme } = useTheme();
-  const colorMode = resolvedTheme === "light" ? "light" : "dark";
-  const cardStatus = useSyncExternalStore(
-    subscribeTapPayCardStatus,
-    getTapPayCardStatusSnapshot,
-    getTapPayCardStatusSnapshot,
-  );
-
-  useEffect(() => {
-    if (!tapPay.isReady || !window.TPDirect) {
-      return;
-    }
-
-    let isMounted = true;
-
-    window.TPDirect.card.setup(getTappayCardSetupConfig(colorMode));
-    updateTapPayCardStatus(window.TPDirect.card.getTappayFieldsStatus());
-    window.TPDirect.card.onUpdate((update: TapPayCardUpdate) => {
-      if (!isMounted) {
-        return;
-      }
-
-      updateTapPayCardStatus(update);
-    });
-
-    return () => {
-      isMounted = false;
-      resetTapPayCardStatus();
-    };
-  }, [colorMode, tapPay.isReady]);
+  const { cardStatus, error, isHostedFieldVisible } = useTapPayCardFields({
+    revealDelay: 180,
+  });
 
   useEffect(() => {
     onStatusChange(cardStatus.canGetPrime);
@@ -82,23 +45,24 @@ export default function PaymentMethodCard({
             status={cardStatus.status.number}
             canGetPrime={cardStatus.canGetPrime}
             hasInteracted={cardStatus.hasInteracted}
+            isHostedFieldVisible={isHostedFieldVisible}
           />
           <TapPayHostedField
             name="expiry"
             status={cardStatus.status.expiry}
             canGetPrime={cardStatus.canGetPrime}
             hasInteracted={cardStatus.hasInteracted}
+            isHostedFieldVisible={isHostedFieldVisible}
           />
           <TapPayHostedField
             name="ccv"
             status={cardStatus.status.ccv}
             canGetPrime={cardStatus.canGetPrime}
             hasInteracted={cardStatus.hasInteracted}
+            isHostedFieldVisible={isHostedFieldVisible}
           />
         </FieldGroup>
-        {tapPay.error && (
-          <FieldError className="mt-4">{tapPay.error}</FieldError>
-        )}
+        {error && <FieldError className="mt-4">{error}</FieldError>}
       </CardContent>
     </Card>
   );
