@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   DialogContent,
   DialogDescription,
@@ -19,6 +20,7 @@ type AddPaymentDialogProps = {
 export default function AddPaymentDialog({
   onOpenChange,
 }: AddPaymentDialogProps) {
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState("");
   const { cardStatus, error, isHostedFieldVisible } = useTapPayCardFields({
@@ -71,6 +73,7 @@ export default function AddPaymentDialog({
       event.currentTarget.reset();
       resetTapPayCardStatus();
       onOpenChange(false);
+      router.refresh();
     } catch (error) {
       setFormError(
         error instanceof Error ? error.message : "付款方式新增失敗。",

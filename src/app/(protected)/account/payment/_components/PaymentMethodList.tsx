@@ -11,7 +11,7 @@ import {
 import type {
   PaymentMethod,
   PaymentMethodStatus,
-} from "@/mocks/fixtures/payment-methods";
+} from "@/lib/payment-methods/types";
 
 type PaymentMethodListProps = {
   paymentMethods: PaymentMethod[];
@@ -41,11 +41,17 @@ export default function PaymentMethodList({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid gap-4">
-          {paymentMethods.map((method) => (
-            <PaymentMethodItem key={method.id} method={method} />
-          ))}
-        </div>
+        {paymentMethods.length > 0 ? (
+          <div className="grid gap-4">
+            {paymentMethods.map((method) => (
+              <PaymentMethodItem key={method.id} method={method} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-muted-foreground rounded-3xl border border-dashed p-6 text-sm leading-6">
+            目前沒有卡片
+          </div>
+        )}
       </CardContent>
     </Card>
   );

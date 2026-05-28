@@ -4,10 +4,43 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
+  previewFeatures = ["partialIndexes"]
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+enum PaymentProvider {
+  tappay
+}
+
+enum TapPayPrimeState {
+  ready
+  requires_refresh
+  unavailable
+}
+
+model PaymentMethod {
+  id                      String           @id @default(uuid()) @db.Uuid
+  userId                  String           @unique(map: "payment_methods_one_default_per_user_idx", where: raw("(is_default = true)")) @map("user_id") @db.Uuid
+  provider                PaymentProvider  @default(tappay)
+  providerPaymentMethodId String?          @map("provider_payment_method_id")
+  cardIdentifier          String?          @map("card_identifier")
+  brand                   String
+  last4                   String           @db.VarChar(4)
+  holder                  String
+  billingEmail            String           @map("billing_email")
+  expMonth                Int?             @map("exp_month")
+  expYear                 Int?             @map("exp_year")
+  tappayPrimeState        TapPayPrimeState @default(ready) @map("tappay_prime_state")
+  isDefault               Boolean          @default(false) @map("is_default")
+  createdAt               DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt               DateTime         @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@index([userId, createdAt])
+  @@index([userId, isDefault])
+  @@map("payment_methods")
 }
