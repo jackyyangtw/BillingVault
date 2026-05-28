@@ -15,6 +15,7 @@ import {
 import { resetTapPayCardStatus } from "@/providers/tappay/cardStatusStore";
 import { getTapPayPrime } from "@/providers/tappay/tappay";
 import { useTapPayCardFields } from "@/providers/tappay/useTapPayCardFields";
+import { createPaymentMethodAction } from "../../_actions/createPaymentMethod";
 import AddPaymentFormFields from "./AddPaymentFormFields";
 import { addPaymentFormSchema, type AddPaymentFormValues } from "./schema";
 
@@ -44,31 +45,18 @@ export default function AddPaymentDialog({
   const addPaymentMutation = useMutation({
     mutationFn: async (values: AddPaymentFormValues) => {
       const primeResult = await getTapPayPrime();
-      const response = await fetch("/api/payment-methods", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      return createPaymentMethodAction({
+        prime: primeResult.card?.prime ?? "",
+        cardHolder: values.cardHolder,
+        billingEmail: values.billingEmail,
+        card: {
+          last4: primeResult.card?.lastfour,
+          type: primeResult.card?.type,
+          issuer: primeResult.card?.issuer,
+          issuerZhTw: primeResult.card?.issuer_zh_tw,
+          cardIdentifier: primeResult.card_identifier,
         },
-        body: JSON.stringify({
-          prime: primeResult.card?.prime,
-          cardHolder: values.cardHolder,
-          billingEmail: values.billingEmail,
-          card: {
-            last4: primeResult.card?.lastfour,
-            type: primeResult.card?.type,
-            issuer: primeResult.card?.issuer,
-            issuerZhTw: primeResult.card?.issuer_zh_tw,
-            cardIdentifier: primeResult.card_identifier,
-          },
-        }),
       });
-      const payload = (await response.json()) as { message?: string };
-
-      if (!response.ok) {
-        throw new Error(payload.message ?? "付款方式新增失敗。");
-      }
-
-      return payload;
     },
     onSuccess: () => {
       form.reset();

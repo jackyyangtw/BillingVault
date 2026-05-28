@@ -23,7 +23,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { PaymentMethod } from "@/lib/payment-methods/types";
-import { deletePaymentMethodAction } from "../actions";
+import { deletePaymentMethodAction } from "../_actions/deletePaymentMethod";
 
 type PaymentMethodActionsProps = {
   method: Pick<PaymentMethod, "id" | "brand" | "last4">;

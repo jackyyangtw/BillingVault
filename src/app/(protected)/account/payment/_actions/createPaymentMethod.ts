@@ -1,9 +1,10 @@
-import { NextResponse } from "next/server";
-import { z } from "zod";
-import { getCurrentUser } from "@/lib/auth/dal";
+"use server";
+
+import { z } from "zod/v4";
+import { verifySession } from "@/lib/auth/dal";
 import { createPaymentMethod } from "@/lib/payment-methods/dal";
 
-const bindPaymentMethodSchema = z.object({
+const createPaymentMethodSchema = z.object({
   prime: z.string().min(1),
   cardHolder: z.string().min(1),
   billingEmail: z.string().email(),
@@ -26,33 +27,19 @@ const cardBrandByType: Record<number, string> = {
   5: "AMEX",
 };
 
-export async function POST(request: Request) {
-  const user = await getCurrentUser();
-
-  if (!user) {
-    return NextResponse.json(
-      { message: "Please sign in before binding a payment method." },
-      {
-        status: 401,
-      },
-    );
-  }
-
-  const json = await request.json().catch(() => null);
-  const parsed = bindPaymentMethodSchema.safeParse(json);
+export async function createPaymentMethodAction(
+  input: z.infer<typeof createPaymentMethodSchema>,
+) {
+  const parsed = createPaymentMethodSchema.safeParse(input);
 
   if (!parsed.success) {
-    return NextResponse.json(
-      { message: "Payment method payload is invalid." },
-      {
-        status: 400,
-      },
-    );
+    throw new Error("付款方式資料無效。");
   }
 
+  const { userId } = await verifySession();
   const { card, billingEmail, cardHolder } = parsed.data;
   const brand = card.type ? cardBrandByType[card.type] : undefined;
-  const paymentMethod = await createPaymentMethod(user.id, {
+  const paymentMethod = await createPaymentMethod(userId, {
     brand: brand ?? card.issuer ?? card.issuerZhTw ?? "Card",
     last4: card.last4 ?? "0000",
     holder: cardHolder,
@@ -62,13 +49,8 @@ export async function POST(request: Request) {
     expYear: card.expYear,
   });
 
-  return NextResponse.json(
-    {
-      message: "Payment method has been saved.",
-      paymentMethod,
-    },
-    {
-      status: 201,
-    },
-  );
+  return {
+    message: "Payment method has been saved.",
+    paymentMethod,
+  };
 }
