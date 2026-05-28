@@ -52,18 +52,13 @@ function toUserProfile(user: {
 // ---------------------------------------------------------------------------
 
 export const verifySession = cache(async () => {
-  if (!getSupabaseEnv()) {
+  const user = await getCurrentUser();
+
+  if (!user) {
     redirect("/login");
   }
 
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase.auth.getClaims();
-
-  if (error || !data?.claims?.sub) {
-    redirect("/login");
-  }
-
-  return { isAuth: true as const, userId: data.claims.sub };
+  return { isAuth: true as const, userId: user.id, user };
 });
 
 // ---------------------------------------------------------------------------

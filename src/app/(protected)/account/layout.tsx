@@ -1,4 +1,4 @@
-import { getCurrentUser, verifySession } from "@/lib/auth/dal";
+import { verifySession } from "@/lib/auth/dal";
 import ProtectedSidebar from "../_components/ProtectedSidebar";
 import ProtectedTopbar from "../_components/ProtectedTopbar";
 
@@ -7,8 +7,7 @@ export default async function AccountLayout({
 }: {
   children: React.ReactNode;
 }) {
-  await verifySession();
-  const user = await getCurrentUser();
+  const { user } = await verifySession();
 
   return (
     <div className="bg-background min-h-screen lg:pl-64">
