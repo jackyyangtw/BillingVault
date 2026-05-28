@@ -1,7 +1,11 @@
 "use client";
 
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { FormProvider, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import {
   DialogContent,
   DialogDescription,
@@ -12,39 +16,33 @@ import { resetTapPayCardStatus } from "@/providers/tappay/cardStatusStore";
 import { getTapPayPrime } from "@/providers/tappay/tappay";
 import { useTapPayCardFields } from "@/providers/tappay/useTapPayCardFields";
 import AddPaymentFormFields from "./AddPaymentFormFields";
+import { addPaymentFormSchema, type AddPaymentFormValues } from "./schema";
 
 type AddPaymentDialogProps = {
   onOpenChange: (open: boolean) => void;
+};
+
+const addPaymentDefaultValues: AddPaymentFormValues = {
+  cardHolder: "",
+  billingEmail: "",
 };
 
 export default function AddPaymentDialog({
   onOpenChange,
 }: AddPaymentDialogProps) {
   const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState("");
+  const form = useForm<AddPaymentFormValues>({
+    resolver: standardSchemaResolver(addPaymentFormSchema),
+    mode: "onTouched",
+    defaultValues: addPaymentDefaultValues,
+  });
   const { cardStatus, error, isHostedFieldVisible } = useTapPayCardFields({
     revealDelay: 180,
     onReadyToPrime: () => setFormError(""),
   });
-  const displayError = error || formError;
-
-  async function handleCardSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    if (!cardStatus.canGetPrime) {
-      setFormError("請確認信用卡欄位都已正確填寫。");
-      return;
-    }
-
-    const formData = new FormData(event.currentTarget);
-    const cardHolder = String(formData.get("cardHolder") ?? "");
-    const billingEmail = String(formData.get("billingEmail") ?? "");
-
-    setIsSubmitting(true);
-    setFormError("");
-
-    try {
+  const addPaymentMutation = useMutation({
+    mutationFn: async (values: AddPaymentFormValues) => {
       const primeResult = await getTapPayPrime();
       const response = await fetch("/api/payment-methods", {
         method: "POST",
@@ -53,8 +51,8 @@ export default function AddPaymentDialog({
         },
         body: JSON.stringify({
           prime: primeResult.card?.prime,
-          cardHolder,
-          billingEmail,
+          cardHolder: values.cardHolder,
+          billingEmail: values.billingEmail,
           card: {
             last4: primeResult.card?.lastfour,
             type: primeResult.card?.type,
@@ -70,17 +68,31 @@ export default function AddPaymentDialog({
         throw new Error(payload.message ?? "付款方式新增失敗。");
       }
 
-      event.currentTarget.reset();
+      return payload;
+    },
+    onSuccess: () => {
+      form.reset();
       resetTapPayCardStatus();
       onOpenChange(false);
+      toast.success("綁卡成功");
       router.refresh();
-    } catch (error) {
+    },
+    onError: (error) => {
       setFormError(
         error instanceof Error ? error.message : "付款方式新增失敗。",
       );
-    } finally {
-      setIsSubmitting(false);
+    },
+  });
+  const displayError = error || formError;
+
+  function handleValidSubmit(values: AddPaymentFormValues) {
+    if (!cardStatus.canGetPrime) {
+      setFormError("請確認信用卡欄位都已正確填寫。");
+      return;
     }
+
+    setFormError("");
+    addPaymentMutation.mutate(values);
   }
 
   return (
@@ -93,14 +105,16 @@ export default function AddPaymentDialog({
         </DialogDescription>
       </DialogHeader>
 
-      <form onSubmit={handleCardSubmit}>
-        <AddPaymentFormFields
-          cardStatus={cardStatus}
-          error={displayError}
-          areFieldsVisible={isHostedFieldVisible}
-          isSubmitting={isSubmitting}
-        />
-      </form>
+      <FormProvider {...form}>
+        <form onSubmit={form.handleSubmit(handleValidSubmit)}>
+          <AddPaymentFormFields
+            cardStatus={cardStatus}
+            error={displayError}
+            areFieldsVisible={isHostedFieldVisible}
+            isSubmitting={addPaymentMutation.isPending}
+          />
+        </form>
+      </FormProvider>
     </DialogContent>
   );
 }

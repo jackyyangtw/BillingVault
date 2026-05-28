@@ -7,6 +7,7 @@ import ThemeProvider from "@/providers/ThemeProvider";
 import { getCurrentUser } from "@/lib/auth/dal";
 import AuthProvider from "@/providers/AuthProvider";
 import QueryProvider from "@/providers/QueryProvider";
+import { Toaster } from "@/components/ui/sonner";
 
 const notoSans = Noto_Sans({ subsets: ["latin"], variable: "--font-app-sans" });
 
@@ -57,6 +58,7 @@ export default async function RootLayout({
           <AuthProvider user={user}>
             <QueryProvider>{children}</QueryProvider>
           </AuthProvider>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

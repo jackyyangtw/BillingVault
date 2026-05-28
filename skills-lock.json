@@ -12,6 +12,11 @@
       "sourceType": "github",
       "skillPath": "skills/supabase-postgres-best-practices/SKILL.md",
       "computedHash": "292c93e5a86e2429204bc37abe26b3c9023c4760eb02418462887f2082f118ce"
+    },
+    "tanstack-query": {
+      "source": "smithery.ai",
+      "sourceType": "well-known",
+      "computedHash": "be55d2665a2644210c94f5986afe5e391be94c1df256b18cb94861ff2b597685"
     }
   }
 }
