@@ -44,9 +44,7 @@ export default async function AccountPage() {
           </div>
 
           <aside className="flex flex-col gap-6">
-            {primaryPaymentMethod && (
-              <PaymentMethodPanel paymentMethod={primaryPaymentMethod} />
-            )}
+            <PaymentMethodPanel paymentMethod={primaryPaymentMethod ?? null} />
           </aside>
         </div>
       </section>

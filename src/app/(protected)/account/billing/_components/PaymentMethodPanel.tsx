@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,9 +9,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import type { PaymentMethod } from "@/mocks/fixtures/payment-methods";
+import PaymentCardBrandMark from "../../payment/_components/PaymentMethodList/PaymentCardBrandMark";
 
 type PaymentMethodPanelProps = {
-  paymentMethod: PaymentMethod;
+  paymentMethod: PaymentMethod | null;
 };
 
 export default function PaymentMethodPanel({
@@ -27,28 +27,32 @@ export default function PaymentMethodPanel({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="bg-muted/40 flex flex-col gap-5 rounded-3xl border p-4">
-          <div className="flex items-center gap-3">
-            <div className="bg-primary text-primary-foreground flex size-10 items-center justify-center rounded-2xl">
-              <CreditCard />
+        {paymentMethod ? (
+          <div className="border-primary/30 bg-primary/3 ring-primary/10 dark:border-primary/25 dark:bg-primary/8 dark:ring-primary/10 flex flex-col gap-5 rounded-3xl border p-4 ring-1">
+            <div className="flex items-center gap-3">
+              <PaymentCardBrandMark brand={paymentMethod.brand} isPrimary />
+              <div>
+                <p className="font-semibold">
+                  {paymentMethod.brand} ending in {paymentMethod.last4}
+                </p>
+                <p className="text-muted-foreground text-sm">
+                  Expires {paymentMethod.expiresAt}
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="font-medium">
-                {paymentMethod.brand} ending in {paymentMethod.last4}
-              </p>
-              <p className="text-muted-foreground text-sm">
-                Expires {paymentMethod.expiresAt}
-              </p>
+            <div className="grid gap-3 text-sm">
+              <PaymentDetail label="持卡人" value={paymentMethod.holder} />
+              <PaymentDetail
+                label="帳務 Email"
+                value={paymentMethod.billingEmail}
+              />
             </div>
           </div>
-          <div className="grid gap-3 text-sm">
-            <PaymentDetail label="持卡人" value={paymentMethod.holder} />
-            <PaymentDetail
-              label="帳務 Email"
-              value={paymentMethod.billingEmail}
-            />
+        ) : (
+          <div className="text-muted-foreground rounded-3xl border border-dashed p-6 text-sm leading-6">
+            尚無卡片。請前往付款方式頁新增。
           </div>
-        </div>
+        )}
       </CardContent>
       <CardFooter>
         <Button variant="outline" className="w-full" asChild>

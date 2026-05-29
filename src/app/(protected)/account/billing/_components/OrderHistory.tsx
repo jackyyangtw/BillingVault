@@ -6,7 +6,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import type { OrderData } from "./types";
 import {
   formatCurrency,
@@ -29,47 +28,47 @@ export default function OrderHistory({ orders }: OrderHistoryProps) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="flex flex-col">
-          {orders.map((order, index) => (
-            <div key={order.id}>
-              <div className="grid gap-4 py-4 first:pt-0 last:pb-0 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
-                <div className="min-w-0">
-                  <div className="flex min-w-0 flex-wrap items-center gap-2">
-                    <p className="max-w-full min-w-0 truncate font-medium">
-                      {order.orderNumber}
-                    </p>
-                    <Badge
-                      variant={
-                        order.status === "paid"
-                          ? "secondary"
-                          : order.status === "failed"
-                            ? "destructive"
-                            : "outline"
-                      }
-                    >
-                      {getOrderStatusLabel(order.status)}
-                    </Badge>
-                  </div>
-                  <p className="text-muted-foreground mt-1 text-sm">
-                    {order.planName} / {order.productName} ·{" "}
-                    {formatDate(order.date)}
+        <div className="flex flex-col gap-1">
+          {orders.map((order) => (
+            <div
+              key={order.id}
+              className="hover:bg-muted/50 hover:border-primary/40 grid gap-4 rounded-lg border-l-2 border-transparent px-3 py-3 transition-colors md:grid-cols-[minmax(0,1fr)_auto] md:items-center"
+            >
+              <div className="min-w-0">
+                <div className="flex min-w-0 flex-wrap items-center gap-2">
+                  <p className="max-w-full min-w-0 truncate font-semibold">
+                    {order.orderNumber}
                   </p>
-                  {order.providerTradeId && (
-                    <p className="text-muted-foreground mt-1 max-w-full truncate text-xs">
-                      {order.providerTradeId}
-                    </p>
-                  )}
+                  <Badge
+                    variant={
+                      order.status === "paid"
+                        ? "secondary"
+                        : order.status === "failed"
+                          ? "destructive"
+                          : "outline"
+                    }
+                  >
+                    {getOrderStatusLabel(order.status)}
+                  </Badge>
                 </div>
-                <div className="flex flex-col gap-2 md:items-end">
-                  <span className="font-medium">
-                    {formatCurrency(order.amount)}
-                  </span>
-                  <span className="text-muted-foreground text-sm">
-                    {getPaymentStatusLabel(order.paymentStatus)}
-                  </span>
-                </div>
+                <p className="text-muted-foreground mt-1 text-sm">
+                  {order.planName} / {order.productName} ·{" "}
+                  {formatDate(order.date)}
+                </p>
+                {order.providerTradeId && (
+                  <p className="text-muted-foreground mt-1 max-w-full truncate text-xs">
+                    {order.providerTradeId}
+                  </p>
+                )}
               </div>
-              {index < orders.length - 1 && <Separator />}
+              <div className="flex flex-col gap-1 md:items-end">
+                <span className="text-base font-semibold">
+                  {formatCurrency(order.amount)}
+                </span>
+                <span className="text-muted-foreground text-sm">
+                  {getPaymentStatusLabel(order.paymentStatus)}
+                </span>
+              </div>
             </div>
           ))}
           {orders.length === 0 && (
