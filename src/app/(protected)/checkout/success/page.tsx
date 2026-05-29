@@ -125,7 +125,7 @@ function ResultDetail({ label, value }: ResultDetailProps) {
   return (
     <div className="bg-muted/40 rounded-3xl border p-4">
       <p className="text-muted-foreground text-xs font-medium">{label}</p>
-      <p className="mt-1 font-semibold">{value}</p>
+      <p className="mt-1 font-semibold break-all">{value}</p>
     </div>
   );
 }
