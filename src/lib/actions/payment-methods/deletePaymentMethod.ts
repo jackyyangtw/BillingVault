@@ -2,7 +2,7 @@
 
 import { z } from "zod/v4";
 import { verifySession } from "@/lib/auth/dal";
-import { deletePaymentMethod } from "@/lib/payment-methods/dal/deletePaymentMethod";
+import { deletePaymentMethod } from "@/lib/dals/payment-methods/deletePaymentMethod";
 
 const deletePaymentMethodSchema = z.object({
   id: z.string().uuid(),

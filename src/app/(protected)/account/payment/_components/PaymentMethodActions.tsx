@@ -1,8 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
 import { LoaderCircle, MoreHorizontal, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -22,8 +20,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { PaymentMethod } from "@/lib/payment-methods/types";
-import { deletePaymentMethodAction } from "../_actions/deletePaymentMethod";
+import type { PaymentMethod } from "@/lib/dals/payment-methods/types";
+import { useDeletePaymentMethodMutation } from "@/lib/queries/payment-methods/useDeletePaymentMethodMutation";
 
 type PaymentMethodActionsProps = {
   method: Pick<PaymentMethod, "id" | "brand" | "last4">;
@@ -32,24 +30,25 @@ type PaymentMethodActionsProps = {
 export default function PaymentMethodActions({
   method,
 }: PaymentMethodActionsProps) {
-  const router = useRouter();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const deleteMutation = useMutation({
-    mutationKey: ["payment-methods", "delete", method.id],
-    mutationFn: deletePaymentMethodAction,
-    onSuccess: () => {
-      setIsConfirmOpen(false);
-      toast.success("卡片已刪除");
-      router.refresh();
-    },
-    onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "卡片刪除失敗。");
-    },
-  });
+  const deleteMutation = useDeletePaymentMethodMutation(method.id);
   const isDeleting = deleteMutation.isPending;
 
   function handleDelete() {
-    deleteMutation.mutate({ id: method.id });
+    deleteMutation.mutate(
+      { id: method.id },
+      {
+        onSuccess: () => {
+          setIsConfirmOpen(false);
+          toast.success("卡片已刪除");
+        },
+        onError: (error) => {
+          toast.error(
+            error instanceof Error ? error.message : "卡片刪除失敗。",
+          );
+        },
+      },
+    );
   }
 
   return (

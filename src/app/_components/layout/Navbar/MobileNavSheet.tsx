@@ -11,7 +11,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { logoutAction } from "@/actions/logout";
+import { logoutAction } from "@/lib/actions/logout";
 import AccountLink from "./AccountLink";
 
 type NavLink = {

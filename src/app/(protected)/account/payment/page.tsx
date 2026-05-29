@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
-import { verifySession } from "@/lib/auth/dal";
-import { listPaymentMethods } from "@/lib/payment-methods/dal/listPaymentMethods";
 import AddPaymentMethodCard from "./_components/AddPaymentMethodCard";
 import PaymentMethodList from "./_components/PaymentMethodList";
 
@@ -11,10 +9,7 @@ export const metadata: Metadata = {
     "Manage SecureCart payment methods and prepare for TapPay multi-card billing integration.",
 };
 
-export default async function PaymentPage() {
-  const { userId } = await verifySession();
-  const paymentMethods = await listPaymentMethods(userId);
-
+export default function PaymentPage() {
   return (
     <main>
       <section className="border-border/60 border-b py-14">
@@ -34,7 +29,7 @@ export default async function PaymentPage() {
 
       <section className="py-12">
         <div className="mx-auto grid max-w-7xl gap-6 px-6 lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.65fr)] lg:px-8">
-          <PaymentMethodList paymentMethods={paymentMethods} />
+          <PaymentMethodList />
           <aside className="flex flex-col gap-6">
             <AddPaymentMethodCard />
           </aside>

@@ -1,5 +1,5 @@
 import type { PaymentMethod as PrismaPaymentMethod } from "@/generated/prisma/client";
-import type { PaymentMethod, PaymentMethodStatus } from "../types";
+import type { PaymentMethod, PaymentMethodStatus } from "./types";
 
 function isExpired(method: Pick<PrismaPaymentMethod, "expMonth" | "expYear">) {
   if (!method.expMonth || !method.expYear) {

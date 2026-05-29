@@ -5,7 +5,7 @@ import { LogOut, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ThemeToggle from "@/components/shared/ThemeToggle";
 import { useAuthStore } from "@/stores/auth-store";
-import { logoutAction } from "@/actions/logout";
+import { logoutAction } from "@/lib/actions/logout";
 import AccountLink from "./AccountLink";
 import MobileNavSheet from "./MobileNavSheet";
 

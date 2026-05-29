@@ -2,7 +2,7 @@
 
 import { z } from "zod/v4";
 import { verifySession } from "@/lib/auth/dal";
-import { createPaymentMethod } from "@/lib/payment-methods/dal/createPaymentMethod";
+import { createPaymentMethod } from "@/lib/dals/payment-methods/createPaymentMethod";
 
 const createPaymentMethodSchema = z.object({
   prime: z.string().min(1),
