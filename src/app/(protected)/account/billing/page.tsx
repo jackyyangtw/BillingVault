@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
+import { listBillingOverview } from "@/features/billing/dal/listBillingOverview";
+import { verifySession } from "@/lib/auth/dal";
+import { getPrimaryPaymentMethod } from "@/mocks/fixtures/payment-methods";
 import BillingSummary from "./_components/BillingSummary";
 import InvoiceHistory from "./_components/InvoiceHistory";
+import OrderHistory from "./_components/OrderHistory";
 import PaymentMethodPanel from "./_components/PaymentMethodPanel";
-import { getPrimaryPaymentMethod } from "@/mocks/fixtures/payment-methods";
-import { billingSummary, invoices } from "./_components/data";
 
 export const metadata: Metadata = {
   title: "Billing | SecureCart",
@@ -12,7 +14,9 @@ export const metadata: Metadata = {
     "Manage SecureCart billing overview, payment methods, and invoice history.",
 };
 
-export default function AccountPage() {
+export default async function AccountPage() {
+  const { userId } = await verifySession();
+  const billingOverview = await listBillingOverview(userId);
   const primaryPaymentMethod = getPrimaryPaymentMethod();
 
   return (
@@ -34,8 +38,9 @@ export default function AccountPage() {
       <section className="py-12">
         <div className="mx-auto grid max-w-7xl gap-6 px-6 lg:grid-cols-[minmax(0,1.45fr)_minmax(320px,0.55fr)] lg:px-8">
           <div className="flex flex-col gap-6">
-            <BillingSummary summary={billingSummary} />
-            <InvoiceHistory invoices={invoices} />
+            <BillingSummary summary={billingOverview.summary} />
+            <OrderHistory orders={billingOverview.orders} />
+            <InvoiceHistory invoices={billingOverview.invoices} />
           </div>
 
           <aside className="flex flex-col gap-6">

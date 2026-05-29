@@ -2,8 +2,9 @@
 
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
+import { useSubmitCheckout } from "@/features/checkout/queries/useSubmitCheckout";
 import { products } from "@/mocks/fixtures/products";
 import {
   type BillingCycle,
@@ -11,13 +12,13 @@ import {
   getPlanById,
   plans,
 } from "@/mocks/fixtures/plans";
+import { getTapPayPrime } from "@/providers/tappay/tappay";
 import BillingInfoCard from "./BillingInfoCard";
 import CheckoutSteps from "./CheckoutSteps";
 import OrderSummary from "./OrderSummary";
 import PaymentMethodCard from "./PaymentMethodCard";
 import PlanSelector from "./PlanSelector";
 import { type CheckoutFormValues, checkoutFormSchema } from "./schema";
-import { getTapPayPrime } from "@/providers/tappay/tappay";
 
 type CheckoutFormProps = {
   initialPlanId: string;
@@ -37,6 +38,7 @@ export default function CheckoutForm({
   const router = useRouter();
   const [canGetTapPayPrime, setCanGetTapPayPrime] = useState(false);
   const [paymentError, setPaymentError] = useState("");
+  const submitCheckoutMutation = useSubmitCheckout();
   const defaultValues = useMemo<CheckoutFormValues>(
     () => ({
       planId: initialPlanId,
@@ -78,40 +80,68 @@ export default function CheckoutForm({
             ? selectedPlan.monthlyPrice
             : (selectedPlan.yearlyPrice ?? 0)) + productPrice
         }`;
-  const summary = {
-    selectedPlan,
-    selectedProduct,
-    cycle,
-    planPrice,
-    productPrice,
-    total,
-  };
+  const summary = useMemo(
+    () => ({
+      selectedPlan,
+      selectedProduct,
+      cycle,
+      planPrice,
+      productPrice,
+      total,
+    }),
+    [cycle, planPrice, productPrice, selectedPlan, selectedProduct, total],
+  );
+  const isSubmitting =
+    form.formState.isSubmitting || submitCheckoutMutation.isPending;
 
-  function handleTapPayStatusChange(canGetPrime: boolean) {
+  const handleTapPayStatusChange = useCallback((canGetPrime: boolean) => {
     setCanGetTapPayPrime(canGetPrime);
     if (canGetPrime) {
       setPaymentError("");
     }
-  }
+  }, []);
 
-  async function handleValidSubmit() {
+  async function submitCheckout(
+    values: CheckoutFormValues,
+    simulatePaymentFailure: boolean,
+  ) {
     if (!canGetTapPayPrime) {
       setPaymentError("請確認信用卡欄位都已正確填寫。");
       return;
     }
 
     try {
-      await getTapPayPrime();
-      router.replace("/checkout/success");
+      const primeResult = await getTapPayPrime();
+      const result = await submitCheckoutMutation.mutateAsync({
+        ...values,
+        prime: primeResult.card?.prime ?? "",
+        card: {
+          last4: primeResult.card?.lastfour,
+          cardIdentifier: primeResult.card_identifier,
+        },
+        simulatePaymentFailure,
+      });
+      const query = `order=${encodeURIComponent(result.orderNumber)}`;
+
+      if (result.status === "failed") {
+        router.replace(`/checkout/failure?${query}`);
+        return;
+      }
+
+      router.replace(`/checkout/success?${query}`);
     } catch (error) {
       setPaymentError(
-        error instanceof Error ? error.message : "TapPay prime 取得失敗。",
+        error instanceof Error ? error.message : "結帳流程建立失敗。",
       );
     }
   }
 
+  async function handleValidSubmit(values: CheckoutFormValues) {
+    await submitCheckout(values, false);
+  }
+
   function handleFailure() {
-    router.replace("/checkout/failure");
+    form.handleSubmit((values) => submitCheckout(values, true))();
   }
 
   return (
@@ -130,7 +160,7 @@ export default function CheckoutForm({
         <OrderSummary
           summary={summary}
           isValid={form.formState.isValid && canGetTapPayPrime}
-          isSubmitting={form.formState.isSubmitting}
+          isSubmitting={isSubmitting}
           paymentError={paymentError}
           onFailure={handleFailure}
         />

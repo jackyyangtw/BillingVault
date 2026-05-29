@@ -29,7 +29,7 @@ export default function InvoiceHistory({ invoices }: InvoiceHistoryProps) {
                 <div className="min-w-0">
                   <p className="truncate font-medium">{invoice.id}</p>
                   <p className="text-muted-foreground text-sm">
-                    {formatDate(invoice.date)}
+                    {invoice.orderNumber} · {formatDate(invoice.date)}
                   </p>
                 </div>
                 <div className="flex shrink-0 flex-col items-end gap-2">
@@ -38,7 +38,11 @@ export default function InvoiceHistory({ invoices }: InvoiceHistoryProps) {
                   </span>
                   <Badge
                     variant={
-                      invoice.status === "paid" ? "secondary" : "outline"
+                      invoice.status === "paid"
+                        ? "secondary"
+                        : invoice.status === "failed"
+                          ? "destructive"
+                          : "outline"
                     }
                   >
                     {getInvoiceStatusLabel(invoice.status)}
@@ -48,6 +52,11 @@ export default function InvoiceHistory({ invoices }: InvoiceHistoryProps) {
               {index < invoices.length - 1 && <Separator />}
             </div>
           ))}
+          {invoices.length === 0 && (
+            <div className="text-muted-foreground rounded-3xl border border-dashed p-6 text-sm leading-6">
+              完成 sandbox 結帳後，invoice 會出現在這裡。
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>

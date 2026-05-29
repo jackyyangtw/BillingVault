@@ -1,4 +1,4 @@
-import type { InvoiceData } from "./types";
+import type { InvoiceData, OrderData } from "./types";
 
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -25,6 +25,27 @@ export function getInvoiceStatusLabel(status: InvoiceData["status"]) {
     paid: "已付款",
     open: "待付款",
     failed: "付款失敗",
+  };
+
+  return labels[status];
+}
+
+export function getOrderStatusLabel(status: OrderData["status"]) {
+  const labels: Record<OrderData["status"], string> = {
+    pending: "處理中",
+    paid: "已付款",
+    failed: "付款失敗",
+    canceled: "已取消",
+  };
+
+  return labels[status];
+}
+
+export function getPaymentStatusLabel(status: OrderData["paymentStatus"]) {
+  const labels: Record<OrderData["paymentStatus"], string> = {
+    pending: "等待授權",
+    succeeded: "授權成功",
+    failed: "授權失敗",
   };
 
   return labels[status];

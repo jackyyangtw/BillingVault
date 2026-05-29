@@ -23,6 +23,33 @@ enum TapPayPrimeState {
   unavailable
 }
 
+enum OrderStatus {
+  pending
+  paid
+  failed
+  canceled
+}
+
+enum PaymentRecordStatus {
+  pending
+  succeeded
+  failed
+}
+
+enum InvoiceStatus {
+  paid
+  failed
+  void
+}
+
+enum SubscriptionStatus {
+  trialing
+  active
+  past_due
+  canceled
+  incomplete
+}
+
 model PaymentMethod {
   id                      String           @id @default(uuid()) @db.Uuid
   userId                  String           @unique(map: "payment_methods_one_default_per_user_idx", where: raw("(is_default = true)")) @map("user_id") @db.Uuid
@@ -44,4 +71,95 @@ model PaymentMethod {
   @@index([userId, createdAt])
   @@index([userId, isDefault])
   @@map("payment_methods")
+}
+
+model Order {
+  id             String          @id @default(uuid()) @db.Uuid
+  userId         String          @map("user_id") @db.Uuid
+  orderNumber    String          @unique @map("order_number")
+  planId         String          @map("plan_id")
+  productId      String          @map("product_id")
+  cycle          String          @db.VarChar(16)
+  companyName    String          @map("company_name")
+  billingEmail   String          @map("billing_email")
+  taxId          String?         @map("tax_id")
+  billingAddress String          @map("billing_address")
+  amountCents    Int             @map("amount_cents")
+  currency       String          @default("USD") @db.VarChar(3)
+  status         OrderStatus     @default(pending)
+  createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime        @updatedAt @map("updated_at") @db.Timestamptz(6)
+  payments       PaymentRecord[]
+  invoices       Invoice[]
+  subscription   Subscription?
+
+  @@index([userId, createdAt])
+  @@index([userId, status])
+  @@map("orders")
+}
+
+model PaymentRecord {
+  id                 String              @id @default(uuid()) @db.Uuid
+  orderId            String              @map("order_id") @db.Uuid
+  provider           PaymentProvider     @default(tappay)
+  providerTradeId    String?             @map("provider_trade_id")
+  orderNumber        String              @map("order_number")
+  amountCents        Int                 @map("amount_cents")
+  currency           String              @default("USD") @db.VarChar(3)
+  status             PaymentRecordStatus @default(pending)
+  cardIdentifier     String?             @map("card_identifier")
+  cardLast4          String?             @map("card_last4") @db.VarChar(4)
+  failureCode        String?             @map("failure_code")
+  failureMessage     String?             @map("failure_message")
+  providerStatusCode String?             @map("provider_status_code")
+  providerMessage    String?             @map("provider_message")
+  createdAt          DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime            @updatedAt @map("updated_at") @db.Timestamptz(6)
+  order              Order               @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  invoices           Invoice[]
+
+  @@index([orderId])
+  @@index([orderNumber])
+  @@index([providerTradeId])
+  @@map("payment_records")
+}
+
+model Invoice {
+  id              String         @id @default(uuid()) @db.Uuid
+  userId          String         @map("user_id") @db.Uuid
+  orderId         String         @map("order_id") @db.Uuid
+  paymentRecordId String?        @map("payment_record_id") @db.Uuid
+  invoiceNumber   String         @unique @map("invoice_number")
+  amountCents     Int            @map("amount_cents")
+  currency        String         @default("USD") @db.VarChar(3)
+  status          InvoiceStatus  @default(paid)
+  issuedAt        DateTime       @default(now()) @map("issued_at") @db.Timestamptz(6)
+  createdAt       DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime       @updatedAt @map("updated_at") @db.Timestamptz(6)
+  order           Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  paymentRecord   PaymentRecord? @relation(fields: [paymentRecordId], references: [id], onDelete: SetNull)
+
+  @@index([userId, issuedAt])
+  @@index([orderId])
+  @@index([paymentRecordId])
+  @@map("invoices")
+}
+
+model Subscription {
+  id                 String             @id @default(uuid()) @db.Uuid
+  userId             String             @map("user_id") @db.Uuid
+  orderId            String             @unique @map("order_id") @db.Uuid
+  planId             String             @map("plan_id")
+  productId          String             @map("product_id")
+  cycle              String             @db.VarChar(16)
+  status             SubscriptionStatus @default(active)
+  currentPeriodStart DateTime           @map("current_period_start") @db.Timestamptz(6)
+  currentPeriodEnd   DateTime           @map("current_period_end") @db.Timestamptz(6)
+  createdAt          DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime           @updatedAt @map("updated_at") @db.Timestamptz(6)
+  order              Order              @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+  @@index([userId, currentPeriodEnd])
+  @@map("subscriptions")
 }

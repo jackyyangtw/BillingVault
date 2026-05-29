@@ -26,7 +26,18 @@ export const metadata: Metadata = {
     "Your SecureCart subscription checkout could not be completed. Review the payment details and try again.",
 };
 
-export default function CheckoutFailurePage() {
+type CheckoutFailurePageProps = {
+  searchParams: Promise<{
+    order?: string;
+  }>;
+};
+
+export default async function CheckoutFailurePage({
+  searchParams,
+}: CheckoutFailurePageProps) {
+  const params = await searchParams;
+  const orderNumber = params.order ?? "Sandbox order";
+
   return (
     <main>
       <section className="border-border/60 border-b py-14">
@@ -53,10 +64,11 @@ export default function CheckoutFailurePage() {
               <CardTitle className="text-2xl">訂閱尚未建立</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-6">
-              <div className="grid gap-3 sm:grid-cols-3">
+              <div className="grid gap-3 sm:grid-cols-4">
                 <ResultDetail label="狀態" value="Failed" />
+                <ResultDetail label="訂單" value={orderNumber} />
                 <ResultDetail label="訂閱" value="未啟用" />
-                <ResultDetail label="付款" value="授權未完成" />
+                <ResultDetail label="付款" value="sandbox 授權失敗" />
               </div>
 
               <Separator />

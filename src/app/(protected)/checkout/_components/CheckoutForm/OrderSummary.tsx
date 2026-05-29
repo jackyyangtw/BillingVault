@@ -31,7 +31,7 @@ export default function OrderSummary({
     <Card className="h-fit lg:sticky lg:top-28">
       <CardHeader>
         <CardTitle>確認訂單</CardTitle>
-        <CardDescription>送出後會顯示模擬成功結果。</CardDescription>
+        <CardDescription>送出後會建立 sandbox 訂單與付款紀錄。</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-5">
         <SummaryRow label="方案" value={summary.selectedPlan.name} />
@@ -48,7 +48,8 @@ export default function OrderSummary({
         <SummaryRow label="總計" value={summary.total} strong />
         <div className="bg-muted/40 text-muted-foreground rounded-3xl border p-4 text-sm">
           <LockKeyhole className="text-primary mb-2 size-4" />
-          模擬 tokenization、送出鎖定與安全付款回調，保留之後接 API 的介面位置。
+          TapPay hosted fields 只交換 prime，後端保存本地訂單與 sandbox
+          交易狀態。
         </div>
         <Button
           type="submit"
@@ -65,6 +66,7 @@ export default function OrderSummary({
           variant="outline"
           className="w-full"
           onClick={onFailure}
+          disabled={isSubmitting}
         >
           <ShieldAlert data-icon="inline-start" />
           模擬付款失敗

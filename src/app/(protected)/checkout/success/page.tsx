@@ -26,7 +26,18 @@ export const metadata: Metadata = {
     "Your SecureCart subscription checkout has been completed successfully.",
 };
 
-export default function CheckoutSuccessPage() {
+type CheckoutSuccessPageProps = {
+  searchParams: Promise<{
+    order?: string;
+  }>;
+};
+
+export default async function CheckoutSuccessPage({
+  searchParams,
+}: CheckoutSuccessPageProps) {
+  const params = await searchParams;
+  const orderNumber = params.order ?? "Sandbox order";
+
   return (
     <main>
       <section className="border-border/60 border-b py-14">
@@ -54,10 +65,11 @@ export default function CheckoutSuccessPage() {
               <CardTitle className="text-2xl">付款流程已完成</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-6">
-              <div className="grid gap-3 sm:grid-cols-3">
+              <div className="grid gap-3 sm:grid-cols-4">
                 <ResultDetail label="狀態" value="Active" />
+                <ResultDetail label="訂單" value={orderNumber} />
                 <ResultDetail label="類型" value="SaaS 訂閱" />
-                <ResultDetail label="付款" value="模擬授權成功" />
+                <ResultDetail label="付款" value="sandbox 授權成功" />
               </div>
 
               <Separator />

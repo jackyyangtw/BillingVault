@@ -21,18 +21,21 @@ export const billingSummary: BillingSummaryItem[] = [
 export const invoices: InvoiceData[] = [
   {
     id: "INV-2026-006",
+    orderNumber: "SC20260511DEMO",
     date: "2026-05-11",
     amount: 29,
     status: "paid",
   },
   {
     id: "INV-2026-005",
+    orderNumber: "SC20260411DEMO",
     date: "2026-04-11",
     amount: 29,
     status: "paid",
   },
   {
     id: "INV-2026-004",
+    orderNumber: "SC20260311DEMO",
     date: "2026-03-11",
     amount: 29,
     status: "paid",

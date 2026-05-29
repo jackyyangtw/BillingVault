@@ -25,14 +25,14 @@ export default function BillingSummary({ summary }: BillingSummaryProps) {
           {summary.map((item) => (
             <div
               key={item.label}
-              className="bg-muted/40 flex min-h-36 flex-col justify-between rounded-3xl border p-4"
+              className="bg-muted/40 flex min-h-36 min-w-0 flex-col justify-between rounded-3xl border p-4"
             >
               <p className="text-muted-foreground text-sm">{item.label}</p>
-              <div className="flex flex-col gap-2">
-                <p className="text-3xl font-semibold tracking-tight">
+              <div className="flex min-w-0 flex-col gap-2">
+                <p className="truncate text-3xl font-semibold tracking-tight">
                   {item.value}
                 </p>
-                <p className="text-muted-foreground text-sm leading-6">
+                <p className="text-muted-foreground line-clamp-2 text-sm leading-6 break-words">
                   {item.description}
                 </p>
               </div>
