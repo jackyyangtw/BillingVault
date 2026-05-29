@@ -5,6 +5,7 @@ import { toPaymentMethod } from "./mapper";
 
 type CreatePaymentMethodInput = {
   brand: string;
+  binCode?: string;
   last4: string;
   holder: string;
   billingEmail: string;
@@ -28,6 +29,7 @@ export async function createPaymentMethod(
       data: {
         userId,
         brand: input.brand,
+        binCode: input.binCode,
         last4: input.last4,
         holder: input.holder,
         billingEmail: input.billingEmail,

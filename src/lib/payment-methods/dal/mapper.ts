@@ -34,6 +34,7 @@ export function toPaymentMethod(method: PrismaPaymentMethod): PaymentMethod {
   return {
     id: method.id,
     brand: method.brand,
+    binCode: method.binCode ?? undefined,
     last4: method.last4,
     holder: method.holder,
     expiresAt: formatExpiresAt(method),

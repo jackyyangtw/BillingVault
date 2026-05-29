@@ -9,6 +9,7 @@ const createPaymentMethodSchema = z.object({
   cardHolder: z.string().min(1),
   billingEmail: z.string().email(),
   card: z.object({
+    binCode: z.string().length(6).optional(),
     last4: z.string().length(4).optional(),
     type: z.number().optional(),
     issuer: z.string().optional(),
@@ -41,6 +42,7 @@ export async function createPaymentMethodAction(
   const brand = card.type ? cardBrandByType[card.type] : undefined;
   const paymentMethod = await createPaymentMethod(userId, {
     brand: brand ?? card.issuer ?? card.issuerZhTw ?? "Card",
+    binCode: card.binCode,
     last4: card.last4 ?? "0000",
     holder: cardHolder,
     billingEmail,

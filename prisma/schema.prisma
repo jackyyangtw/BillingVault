@@ -30,6 +30,7 @@ model PaymentMethod {
   providerPaymentMethodId String?          @map("provider_payment_method_id")
   cardIdentifier          String?          @map("card_identifier")
   brand                   String
+  binCode                 String?          @map("bin_code") @db.VarChar(6)
   last4                   String           @db.VarChar(4)
   holder                  String
   billingEmail            String           @map("billing_email")

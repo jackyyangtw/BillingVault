@@ -18,6 +18,7 @@ export type TapPayPrimeResult = {
   msg?: string;
   card?: {
     prime: string;
+    bincode?: string;
     lastfour?: string;
     issuer?: string;
     issuer_zh_tw?: string;

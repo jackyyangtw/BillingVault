@@ -3,6 +3,7 @@ export type PaymentMethodStatus = "primary" | "backup" | "expired";
 export type PaymentMethod = {
   id: string;
   brand: string;
+  binCode?: string;
   last4: string;
   holder: string;
   expiresAt: string;

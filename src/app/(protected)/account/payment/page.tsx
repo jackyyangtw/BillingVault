@@ -3,7 +3,6 @@ import { Badge } from "@/components/ui/badge";
 import { verifySession } from "@/lib/auth/dal";
 import { listPaymentMethods } from "@/lib/payment-methods/dal/listPaymentMethods";
 import AddPaymentMethodCard from "./_components/AddPaymentMethodCard";
-import PaymentIntegrationPanel from "./_components/PaymentIntegrationPanel";
 import PaymentMethodList from "./_components/PaymentMethodList";
 
 export const metadata: Metadata = {
@@ -38,7 +37,6 @@ export default async function PaymentPage() {
           <PaymentMethodList paymentMethods={paymentMethods} />
           <aside className="flex flex-col gap-6">
             <AddPaymentMethodCard />
-            <PaymentIntegrationPanel />
           </aside>
         </div>
       </section>

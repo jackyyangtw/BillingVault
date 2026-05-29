@@ -50,6 +50,7 @@ export default function AddPaymentDialog({
         cardHolder: values.cardHolder,
         billingEmail: values.billingEmail,
         card: {
+          binCode: primeResult.card?.bincode,
           last4: primeResult.card?.lastfour,
           type: primeResult.card?.type,
           issuer: primeResult.card?.issuer,
