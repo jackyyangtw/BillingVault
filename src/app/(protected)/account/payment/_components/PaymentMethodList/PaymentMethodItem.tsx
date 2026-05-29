@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import type { PaymentMethod } from "@/lib/dals/payment-methods/types";
+import type { PaymentMethod } from "@/features/payment-methods/dal/types";
 import { cn } from "@/lib/tailwind-css/utils";
 import PaymentMethodActions from "../PaymentMethodActions";
 import PaymentMethodDefaultButton from "../PaymentMethodDefaultButton";

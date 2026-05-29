@@ -3,7 +3,7 @@
 import { refresh } from "next/cache";
 import { z } from "zod/v4";
 import { verifySession } from "@/lib/auth/dal";
-import { setDefaultPaymentMethod } from "@/lib/dals/payment-methods/setDefaultPaymentMethod";
+import { setDefaultPaymentMethod } from "@/features/payment-methods/dal/setDefaultPaymentMethod";
 
 const setDefaultPaymentMethodSchema = z.object({
   id: z.string().uuid(),

@@ -10,7 +10,7 @@ import {
 import type {
   PaymentMethod,
   PaymentMethodStatus,
-} from "@/lib/dals/payment-methods/types";
+} from "@/features/payment-methods/dal/types";
 
 type PaymentCardIcon = ComponentType<SVGProps<SVGSVGElement>>;
 

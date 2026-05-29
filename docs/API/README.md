@@ -15,15 +15,15 @@ UI Component
 ## 目錄約定
 
 ```txt
-src/lib/dals/<domain>/
-src/lib/actions/<domain>/
-src/lib/queries/<domain>/
+src/features/<domain>/dal/
+src/features/<domain>/actions/
+src/features/<domain>/queries/
 ```
 
 以付款方式為例：
 
 ```txt
-src/lib/dals/payment-methods/
+src/features/payment-methods/dal/
   createPaymentMethod.ts
   deletePaymentMethod.ts
   listPaymentMethods.ts
@@ -31,23 +31,23 @@ src/lib/dals/payment-methods/
   setDefaultPaymentMethod.ts
   types.ts
 
-src/lib/actions/payment-methods/
+src/features/payment-methods/actions/
   createPaymentMethod.ts
   deletePaymentMethod.ts
   listPaymentMethods.ts
   setDefaultPaymentMethod.ts
 
-src/lib/queries/payment-methods/
+src/features/payment-methods/queries/
   keys.ts
-  useCreatePaymentMethodMutation.ts
-  useDeletePaymentMethodMutation.ts
+  useCreatePaymentMethod.ts
+  useDeletePaymentMethod.ts
   usePaymentMethodsListQuery.ts
-  useSetDefaultPaymentMethodMutation.ts
+  useSetDefaultPaymentMethod.ts
 ```
 
 ## DAL
 
-DAL 放在 `src/lib/dals/<domain>/`，只允許 server side 使用。
+DAL 放在 `src/features/<domain>/dal/`，只允許 server side 使用。
 
 規範：
 
@@ -70,7 +70,7 @@ Mapper 應留在 DAL domain 內，例如 `mapper.ts` 將 Prisma model 轉成 UI 
 
 ## Server Actions
 
-Server Action 放在 `src/lib/actions/<domain>/`。
+Server Action 放在 `src/features/<domain>/actions/`。
 
 規範：
 
@@ -90,7 +90,7 @@ Server Action 是安全邊界。即使 action 只會從 UI 按鈕呼叫，也要
 
 import { z } from "zod/v4";
 import { verifySession } from "@/lib/auth/dal";
-import { deletePaymentMethod } from "@/lib/dals/payment-methods/deletePaymentMethod";
+import { deletePaymentMethod } from "@/features/payment-methods/dal/deletePaymentMethod";
 
 const deletePaymentMethodSchema = z.object({
   id: z.string().uuid(),
@@ -112,11 +112,12 @@ export async function deletePaymentMethodAction(input: { id: string }) {
 
 ## TanStack Query
 
-TanStack Query hooks 放在 `src/lib/queries/<domain>/`。
+TanStack Query hooks 放在 `src/features/<domain>/queries/`。
 
 規範：
 
-- Hook 名稱使用 `useXXXQuery` 或 `useXXXMutation`。
+- Query hook 名稱保留 `Query` 後綴，例如 `usePaymentMethodsListQuery`。
+- Mutation hook 用動詞命名，不加 `Mutation` 後綴，例如 `useDeletePaymentMethod`。
 - Query key 集中在同 domain 的 `keys.ts`。
 - `useQuery` / `useMutation` / `useQueryClient` 只放在 query hook 裡。
 - Mutation 成功後，由 query hook 統一 invalidate 相關 query。
@@ -126,18 +127,18 @@ TanStack Query hooks 放在 `src/lib/queries/<domain>/`。
 
 ```ts
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deletePaymentMethodAction } from "@/lib/actions/payment-methods/deletePaymentMethod";
-import { paymentMethodsQueryKey } from "./keys";
+import { deletePaymentMethodAction } from "@/features/payment-methods/actions/deletePaymentMethod";
+import { paymentMethodsMutationKeys, paymentMethodsQueryKeys } from "./keys";
 
-export function useDeletePaymentMethodMutation(id: string) {
+export function useDeletePaymentMethod(id: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationKey: ["payment-methods", "delete", id],
+    mutationKey: paymentMethodsMutationKeys.delete(id),
     mutationFn: deletePaymentMethodAction,
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: paymentMethodsQueryKey,
+        queryKey: paymentMethodsQueryKeys.all,
       });
     },
   });
@@ -151,7 +152,7 @@ UI 元件只負責畫面與互動。
 可以做：
 
 - 呼叫 `useXXXQuery()` 取得資料。
-- 呼叫 `useXXXMutation()` 執行 mutation。
+- 呼叫 mutation hook 執行 mutation，例如 `useDeletePaymentMethod()`。
 - 控制 dialog open state、form state、loading state。
 - 在 mutation callback 裡處理 toast、reset form、關閉 dialog。
 
@@ -165,7 +166,7 @@ UI 元件只負責畫面與互動。
 範例：
 
 ```ts
-const deleteMutation = useDeletePaymentMethodMutation(method.id);
+const deleteMutation = useDeletePaymentMethod(method.id);
 
 function handleDelete() {
   deleteMutation.mutate(
@@ -187,11 +188,11 @@ function handleDelete() {
 
 新增一個 domain API 時，依照以下順序：
 
-1. 建立 DAL：`src/lib/dals/<domain>/<operation>.ts`
+1. 建立 DAL：`src/features/<domain>/dal/<operation>.ts`
 2. 建立 domain type / mapper：必要時放在同 domain 目錄
-3. 建立 Server Action：`src/lib/actions/<domain>/<operation>.ts`
-4. 建立 query key：`src/lib/queries/<domain>/keys.ts`
-5. 建立 query hook：`useXXXQuery.ts` 或 `useXXXMutation.ts`
+3. 建立 Server Action：`src/features/<domain>/actions/<operation>.ts`
+4. 建立 query key：`src/features/<domain>/queries/keys.ts`
+5. 建立 query hook：query 使用 `useXXXQuery.ts`，mutation 使用動詞命名，例如 `useDeletePaymentMethod.ts`
 6. UI component 只 import query hook
 
 ## Import 規則
@@ -201,8 +202,8 @@ function handleDelete() {
 - Import 指向實際功能檔案，例如：
 
 ```ts
-import { listPaymentMethods } from "@/lib/dals/payment-methods/listPaymentMethods";
-import { usePaymentMethodsListQuery } from "@/lib/queries/payment-methods/usePaymentMethodsListQuery";
+import { listPaymentMethods } from "@/features/payment-methods/dal/listPaymentMethods";
+import { usePaymentMethodsListQuery } from "@/features/payment-methods/queries/usePaymentMethodsListQuery";
 ```
 
 ## React Compiler 注意事項

@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { usePaymentMethodsListQuery } from "@/lib/queries/payment-methods/usePaymentMethodsListQuery";
+import { usePaymentMethodsListQuery } from "@/features/payment-methods/queries/usePaymentMethodsListQuery";
 import PaymentMethodItem from "./PaymentMethodItem";
 import PaymentMethodListSkeleton from "./PaymentMethodListSkeleton";
 

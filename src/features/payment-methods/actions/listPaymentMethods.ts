@@ -1,7 +1,7 @@
 "use server";
 
 import { verifySession } from "@/lib/auth/dal";
-import { listPaymentMethods } from "@/lib/dals/payment-methods/listPaymentMethods";
+import { listPaymentMethods } from "@/features/payment-methods/dal/listPaymentMethods";
 
 export async function listPaymentMethodsAction() {
   const { userId } = await verifySession();

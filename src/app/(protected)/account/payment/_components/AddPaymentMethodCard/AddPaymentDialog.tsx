@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { resetTapPayCardStatus } from "@/providers/tappay/cardStatusStore";
 import { useTapPayCardFields } from "@/providers/tappay/useTapPayCardFields";
-import { useCreatePaymentMethodMutation } from "@/lib/queries/payment-methods/useCreatePaymentMethodMutation";
+import { useCreatePaymentMethod } from "@/features/payment-methods/queries/useCreatePaymentMethod";
 import AddPaymentFormFields from "./AddPaymentFormFields";
 import { addPaymentFormSchema, type AddPaymentFormValues } from "./schema";
 
@@ -38,7 +38,7 @@ export default function AddPaymentDialog({
     revealDelay: 180,
     onReadyToPrime: () => setFormError(""),
   });
-  const addPaymentMutation = useCreatePaymentMethodMutation();
+  const addPaymentMutation = useCreatePaymentMethod();
   const displayError = error || formError;
 
   function handleValidSubmit(values: AddPaymentFormValues) {

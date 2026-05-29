@@ -3,7 +3,7 @@
 import { LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { useSetDefaultPaymentMethodMutation } from "@/lib/queries/payment-methods/useSetDefaultPaymentMethodMutation";
+import { useSetDefaultPaymentMethod } from "@/features/payment-methods/queries/useSetDefaultPaymentMethod";
 
 type PaymentMethodDefaultButtonProps = {
   id: string;
@@ -14,7 +14,7 @@ export default function PaymentMethodDefaultButton({
   id,
   disabled = false,
 }: PaymentMethodDefaultButtonProps) {
-  const setDefaultMutation = useSetDefaultPaymentMethodMutation(id);
+  const setDefaultMutation = useSetDefaultPaymentMethod(id);
   const isSettingDefault = setDefaultMutation.isPending;
 
   function handleSetDefault() {

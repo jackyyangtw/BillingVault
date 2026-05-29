@@ -20,8 +20,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { PaymentMethod } from "@/lib/dals/payment-methods/types";
-import { useDeletePaymentMethodMutation } from "@/lib/queries/payment-methods/useDeletePaymentMethodMutation";
+import type { PaymentMethod } from "@/features/payment-methods/dal/types";
+import { useDeletePaymentMethod } from "@/features/payment-methods/queries/useDeletePaymentMethod";
 
 type PaymentMethodActionsProps = {
   method: Pick<PaymentMethod, "id" | "brand" | "last4">;
@@ -31,7 +31,7 @@ export default function PaymentMethodActions({
   method,
 }: PaymentMethodActionsProps) {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const deleteMutation = useDeletePaymentMethodMutation(method.id);
+  const deleteMutation = useDeletePaymentMethod(method.id);
   const isDeleting = deleteMutation.isPending;
 
   function handleDelete() {

@@ -1,17 +1,18 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createPaymentMethodAction } from "@/lib/actions/payment-methods/createPaymentMethod";
+import { createPaymentMethodAction } from "@/features/payment-methods/actions/createPaymentMethod";
 import { getTapPayPrime } from "@/providers/tappay/tappay";
-import { paymentMethodsQueryKey } from "./keys";
+import { paymentMethodsMutationKeys, paymentMethodsQueryKeys } from "./keys";
 
 type CreatePaymentMethodMutationInput = {
   cardHolder: string;
   billingEmail: string;
 };
 
-export function useCreatePaymentMethodMutation() {
+export function useCreatePaymentMethod() {
   const queryClient = useQueryClient();
 
   return useMutation({
+    mutationKey: paymentMethodsMutationKeys.create(),
     mutationFn: async (values: CreatePaymentMethodMutationInput) => {
       const primeResult = await getTapPayPrime();
 
@@ -31,7 +32,7 @@ export function useCreatePaymentMethodMutation() {
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: paymentMethodsQueryKey,
+        queryKey: paymentMethodsQueryKeys.all,
       });
     },
   });

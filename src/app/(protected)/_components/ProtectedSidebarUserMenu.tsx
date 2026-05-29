@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { logoutAction } from "@/lib/actions/logout";
+import { logoutAction } from "@/lib/auth/logout";
 import type { UserProfile } from "@/lib/auth/types";
 
 type ProtectedSidebarUserMenuProps = {
