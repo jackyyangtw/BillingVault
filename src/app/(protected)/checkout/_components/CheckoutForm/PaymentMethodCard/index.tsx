@@ -17,11 +17,9 @@ export default function PaymentMethodCard({
   paymentMethods,
   isPaymentMethodsPending,
   isPaymentMethodsError,
-  cardStatus,
-  error,
-  isHostedFieldVisible,
   selectedPayment,
   onPaymentSelectionChange,
+  onPaymentReady,
 }: CheckoutPaymentCardProps) {
   const isNewCardSelected = selectedPayment.type === "new";
 
@@ -74,11 +72,7 @@ export default function PaymentMethodCard({
           />
 
           {isNewCardSelected && (
-            <NewCardHostedFields
-              cardStatus={cardStatus}
-              error={error}
-              isHostedFieldVisible={isHostedFieldVisible}
-            />
+            <NewCardHostedFields onReadyToPrime={onPaymentReady} />
           )}
         </div>
       </CardContent>

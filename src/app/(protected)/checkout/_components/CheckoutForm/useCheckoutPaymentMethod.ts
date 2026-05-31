@@ -1,9 +1,12 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useSyncExternalStore } from "react";
 import { usePaymentMethodsListQuery } from "@/features/payment-methods/queries/usePaymentMethodsListQuery";
 import { getTapPayPrime } from "@/providers/tappay/tappay";
-import { useTapPayCardFields } from "@/providers/tappay/useTapPayCardFields";
+import {
+  getTapPayCardStatusSnapshot,
+  subscribeTapPayCardStatus,
+} from "@/providers/tappay/cardStatusStore";
 import type {
   CheckoutPaymentCardProps,
   CheckoutPaymentSelection,
@@ -38,16 +41,11 @@ export function useCheckoutPaymentMethod({
       getAvailableCheckoutPaymentMethods(paymentMethods),
     );
   }, [paymentMethods, paymentSelectionOverride]);
-  const isNewCardSelected = selectedPayment.type === "new";
-  const {
-    cardStatus,
-    error: tapPayError,
-    isHostedFieldVisible,
-  } = useTapPayCardFields({
-    enabled: isNewCardSelected,
-    revealDelay: 180,
-    onReadyToPrime: onPaymentReady,
-  });
+  const cardStatus = useSyncExternalStore(
+    subscribeTapPayCardStatus,
+    getTapPayCardStatusSnapshot,
+    getTapPayCardStatusSnapshot,
+  );
 
   const handlePaymentSelectionChange = useCallback(
     (selection: CheckoutPaymentSelection) => {
@@ -62,21 +60,17 @@ export function useCheckoutPaymentMethod({
       paymentMethods,
       isPaymentMethodsPending,
       isPaymentMethodsError,
-      cardStatus,
-      error: tapPayError,
-      isHostedFieldVisible,
       selectedPayment,
       onPaymentSelectionChange: handlePaymentSelectionChange,
+      onPaymentReady,
     }),
     [
-      cardStatus,
       handlePaymentSelectionChange,
-      isHostedFieldVisible,
       isPaymentMethodsError,
       isPaymentMethodsPending,
+      onPaymentReady,
       paymentMethods,
       selectedPayment,
-      tapPayError,
     ],
   );
 

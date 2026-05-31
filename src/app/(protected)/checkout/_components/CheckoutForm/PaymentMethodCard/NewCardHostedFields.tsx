@@ -1,18 +1,22 @@
+"use client";
+
 import { FieldError, FieldGroup } from "@/components/ui/field";
 import TapPayHostedField from "@/components/shared/TapPayHostedField";
-import type { TapPayCardStatusSnapshot } from "@/providers/tappay/cardStatusStore";
+import { useTapPayCardFields } from "@/providers/tappay/useTapPayCardFields";
 
 type NewCardHostedFieldsProps = {
-  cardStatus: TapPayCardStatusSnapshot;
-  error: string;
-  isHostedFieldVisible: boolean;
+  onReadyToPrime?: () => void;
 };
 
 export default function NewCardHostedFields({
-  cardStatus,
-  error,
-  isHostedFieldVisible,
+  onReadyToPrime,
 }: NewCardHostedFieldsProps) {
+  const { cardStatus, error, isHostedFieldVisible } = useTapPayCardFields({
+    enabled: true,
+    revealDelay: 180,
+    onReadyToPrime,
+  });
+
   return (
     <div className="rounded-3xl border p-4">
       <FieldGroup className="grid gap-4 md:grid-cols-4">
