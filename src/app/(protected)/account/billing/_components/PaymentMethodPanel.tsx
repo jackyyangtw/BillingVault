@@ -8,8 +8,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import PaymentCardBrandMark from "@/features/payment-methods/components/PaymentCardBrandMark";
 import type { PaymentMethod } from "@/mocks/fixtures/payment-methods";
-import PaymentCardBrandMark from "../../payment/_components/PaymentMethodList/PaymentCardBrandMark";
 
 type PaymentMethodPanelProps = {
   paymentMethod: PaymentMethod | null;

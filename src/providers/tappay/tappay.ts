@@ -23,6 +23,8 @@ export type TapPayPrimeResult = {
     issuer?: string;
     issuer_zh_tw?: string;
     type?: number;
+    expiry_month?: number;
+    expiry_year?: number;
   } & Record<string, unknown>;
   clientip?: string;
   card_identifier?: string;

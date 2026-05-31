@@ -3,30 +3,18 @@
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
-import { FormProvider, useForm, useWatch } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { useSubmitCheckout } from "@/features/checkout/queries/useSubmitCheckout";
-import { products } from "@/mocks/fixtures/products";
-import {
-  type BillingCycle,
-  formatPlanPrice,
-  getPlanById,
-  plans,
-} from "@/mocks/fixtures/plans";
-import { getTapPayPrime } from "@/providers/tappay/tappay";
 import BillingInfoCard from "./BillingInfoCard";
 import CheckoutSteps from "./CheckoutSteps";
 import OrderSummary from "./OrderSummary";
 import PaymentMethodCard from "./PaymentMethodCard";
 import PlanSelector from "./PlanSelector";
 import { type CheckoutFormValues, checkoutFormSchema } from "./schema";
-
-type CheckoutFormProps = {
-  initialPlanId: string;
-  initialProductId: string;
-  initialCycle: BillingCycle;
-  initialCompanyName: string;
-  initialBillingEmail: string;
-};
+import type { CheckoutFormProps } from "./types";
+import { useCheckoutPaymentMethod } from "./useCheckoutPaymentMethod";
+import { useCheckoutSummary } from "./useCheckoutSummary";
+import { getCheckoutDefaultValues } from "./utils";
 
 export default function CheckoutForm({
   initialPlanId,
@@ -36,19 +24,18 @@ export default function CheckoutForm({
   initialBillingEmail,
 }: CheckoutFormProps) {
   const router = useRouter();
-  const [canGetTapPayPrime, setCanGetTapPayPrime] = useState(false);
   const [paymentError, setPaymentError] = useState("");
-  const submitCheckoutMutation = useSubmitCheckout();
+  const { mutateAsync: submitCheckoutOrder, isPending: isCheckoutPending } =
+    useSubmitCheckout();
   const defaultValues = useMemo<CheckoutFormValues>(
-    () => ({
-      planId: initialPlanId,
-      productId: initialProductId,
-      cycle: initialCycle,
-      companyName: initialCompanyName,
-      billingEmail: initialBillingEmail,
-      taxId: "",
-      billingAddress: "",
-    }),
+    () =>
+      getCheckoutDefaultValues({
+        initialPlanId,
+        initialProductId,
+        initialCycle,
+        initialCompanyName,
+        initialBillingEmail,
+      }),
     [
       initialBillingEmail,
       initialCompanyName,
@@ -63,86 +50,50 @@ export default function CheckoutForm({
     defaultValues,
   });
 
-  const planId = useWatch({ control: form.control, name: "planId" });
-  const productId = useWatch({ control: form.control, name: "productId" });
-  const cycle = useWatch({ control: form.control, name: "cycle" });
-  const selectedPlan = getPlanById(planId) ?? plans[1];
-  const selectedProduct =
-    products.find((product) => product.id === productId) ?? products[0];
-  const planPrice = formatPlanPrice(selectedPlan, cycle);
-  const productPrice =
-    cycle === "monthly" ? selectedProduct.price : selectedProduct.price * 10;
-  const total =
-    selectedPlan.monthlyPrice === null
-      ? "洽詢報價"
-      : `$${
-          (cycle === "monthly"
-            ? selectedPlan.monthlyPrice
-            : (selectedPlan.yearlyPrice ?? 0)) + productPrice
-        }`;
-  const summary = useMemo(
-    () => ({
-      selectedPlan,
-      selectedProduct,
-      cycle,
-      planPrice,
-      productPrice,
-      total,
-    }),
-    [cycle, planPrice, productPrice, selectedPlan, selectedProduct, total],
-  );
-  const isSubmitting =
-    form.formState.isSubmitting || submitCheckoutMutation.isPending;
+  const summary = useCheckoutSummary(form.control);
+  const clearPaymentError = useCallback(() => setPaymentError(""), []);
+  const { paymentCardProps, canSubmitPayment, getSubmitPaymentInput } =
+    useCheckoutPaymentMethod({
+      onPaymentReady: clearPaymentError,
+    });
+  const isSubmitting = form.formState.isSubmitting || isCheckoutPending;
 
-  const handleTapPayStatusChange = useCallback((canGetPrime: boolean) => {
-    setCanGetTapPayPrime(canGetPrime);
-    if (canGetPrime) {
-      setPaymentError("");
-    }
-  }, []);
+  const submitCheckout = useCallback(
+    async (values: CheckoutFormValues, simulatePaymentFailure: boolean) => {
+      try {
+        const paymentInput = await getSubmitPaymentInput();
+        const result = await submitCheckoutOrder({
+          ...values,
+          ...paymentInput,
+          simulatePaymentFailure,
+        });
+        const query = `order=${encodeURIComponent(result.orderNumber)}`;
 
-  async function submitCheckout(
-    values: CheckoutFormValues,
-    simulatePaymentFailure: boolean,
-  ) {
-    if (!canGetTapPayPrime) {
-      setPaymentError("請確認信用卡欄位都已正確填寫。");
-      return;
-    }
+        if (result.status === "failed") {
+          router.replace(`/checkout/failure?${query}`);
+          return;
+        }
 
-    try {
-      const primeResult = await getTapPayPrime();
-      const result = await submitCheckoutMutation.mutateAsync({
-        ...values,
-        prime: primeResult.card?.prime ?? "",
-        card: {
-          last4: primeResult.card?.lastfour,
-          cardIdentifier: primeResult.card_identifier,
-        },
-        simulatePaymentFailure,
-      });
-      const query = `order=${encodeURIComponent(result.orderNumber)}`;
-
-      if (result.status === "failed") {
-        router.replace(`/checkout/failure?${query}`);
-        return;
+        router.replace(`/checkout/success?${query}`);
+      } catch (error) {
+        setPaymentError(
+          error instanceof Error ? error.message : "結帳流程建立失敗。",
+        );
       }
+    },
+    [getSubmitPaymentInput, router, submitCheckoutOrder],
+  );
 
-      router.replace(`/checkout/success?${query}`);
-    } catch (error) {
-      setPaymentError(
-        error instanceof Error ? error.message : "結帳流程建立失敗。",
-      );
-    }
-  }
+  const handleValidSubmit = useCallback(
+    async (values: CheckoutFormValues) => {
+      await submitCheckout(values, false);
+    },
+    [submitCheckout],
+  );
 
-  async function handleValidSubmit(values: CheckoutFormValues) {
-    await submitCheckout(values, false);
-  }
-
-  function handleFailure() {
+  const handleFailure = useCallback(() => {
     form.handleSubmit((values) => submitCheckout(values, true))();
-  }
+  }, [form, submitCheckout]);
 
   return (
     <FormProvider {...form}>
@@ -154,12 +105,12 @@ export default function CheckoutForm({
           <CheckoutSteps />
           <PlanSelector />
           <BillingInfoCard />
-          <PaymentMethodCard onStatusChange={handleTapPayStatusChange} />
+          <PaymentMethodCard {...paymentCardProps} />
         </div>
 
         <OrderSummary
           summary={summary}
-          isValid={form.formState.isValid && canGetTapPayPrime}
+          isValid={form.formState.isValid && canSubmitPayment}
           isSubmitting={isSubmitting}
           paymentError={paymentError}
           onFailure={handleFailure}

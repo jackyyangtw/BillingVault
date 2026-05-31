@@ -2,6 +2,7 @@
 
 import { z } from "zod/v4";
 import { verifySession } from "@/lib/auth/dal";
+import { getTapPayCardBrand } from "@/features/payment-methods/cardBrand";
 import { createPaymentMethod } from "@/features/payment-methods/dal/createPaymentMethod";
 
 const createPaymentMethodSchema = z.object({
@@ -20,14 +21,6 @@ const createPaymentMethodSchema = z.object({
   }),
 });
 
-const cardBrandByType: Record<number, string> = {
-  1: "Visa",
-  2: "Mastercard",
-  3: "JCB",
-  4: "Union Pay",
-  5: "AMEX",
-};
-
 export async function createPaymentMethodAction(
   input: z.infer<typeof createPaymentMethodSchema>,
 ) {
@@ -39,7 +32,7 @@ export async function createPaymentMethodAction(
 
   const { userId } = await verifySession();
   const { card, billingEmail, cardHolder } = parsed.data;
-  const brand = card.type ? cardBrandByType[card.type] : undefined;
+  const brand = getTapPayCardBrand(card);
   const paymentMethod = await createPaymentMethod(userId, {
     brand: brand ?? card.issuer ?? card.issuerZhTw ?? "Card",
     binCode: card.binCode,

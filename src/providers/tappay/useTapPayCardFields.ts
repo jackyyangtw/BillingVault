@@ -18,11 +18,13 @@ import type { TapPayCardUpdate } from "./tappay";
 import { useTapPay } from ".";
 
 type UseTapPayCardFieldsOptions = {
+  enabled?: boolean;
   revealDelay?: number;
   onReadyToPrime?: () => void;
 };
 
 export function useTapPayCardFields({
+  enabled = true,
   revealDelay = 0,
   onReadyToPrime,
 }: UseTapPayCardFieldsOptions = {}) {
@@ -43,6 +45,11 @@ export function useTapPayCardFields({
   );
 
   useEffect(() => {
+    if (!enabled) {
+      resetTapPayCardStatus();
+      return;
+    }
+
     if (!tapPay.isReady || !window.TPDirect) {
       return;
     }
@@ -121,7 +128,7 @@ export function useTapPayCardFields({
       setIsHostedFieldVisible(revealDelay === 0);
       resetTapPayCardStatus();
     };
-  }, [colorMode, revealDelay, tapPay.isReady]);
+  }, [colorMode, enabled, revealDelay, tapPay.isReady]);
 
   return {
     cardStatus,

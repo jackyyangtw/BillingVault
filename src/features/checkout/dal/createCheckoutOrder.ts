@@ -4,6 +4,7 @@ import { randomUUID } from "node:crypto";
 import { prisma } from "@/lib/prisma";
 import { calculateCheckoutPricing } from "@/features/checkout/dal/pricing";
 import { processTapPaySandboxPayment } from "@/features/checkout/payments/processTapPaySandboxPayment";
+import { getTapPayCardBrand } from "@/features/payment-methods/cardBrand";
 import type { BillingCycle } from "@/mocks/fixtures/plans";
 
 type CreateCheckoutOrderInput = {
@@ -14,10 +15,17 @@ type CreateCheckoutOrderInput = {
   billingEmail: string;
   taxId?: string;
   billingAddress: string;
-  prime: string;
+  prime?: string;
+  paymentMethodId?: string;
   card?: {
+    binCode?: string;
     last4?: string;
+    type?: number;
+    issuer?: string;
+    issuerZhTw?: string;
     cardIdentifier?: string;
+    expMonth?: number;
+    expYear?: number;
   };
   simulatePaymentFailure?: boolean;
 };
@@ -57,6 +65,7 @@ export async function createCheckoutOrder(
   const orderNumber = createOrderNumber();
   const invoiceNumber = createInvoiceNumber(orderNumber);
   const now = new Date();
+  const paymentSource = await getCheckoutPaymentSource(userId, input);
 
   const pending = await prisma.order.create({
     data: {
@@ -76,8 +85,8 @@ export async function createCheckoutOrder(
           orderNumber,
           amountCents: pricing.amountCents,
           currency: pricing.currency,
-          cardIdentifier: input.card?.cardIdentifier,
-          cardLast4: input.card?.last4,
+          cardIdentifier: paymentSource.cardIdentifier,
+          cardLast4: paymentSource.last4,
         },
       },
     },
@@ -97,7 +106,7 @@ export async function createCheckoutOrder(
   const paymentResult = await processTapPaySandboxPayment({
     orderNumber,
     amountCents: pricing.amountCents,
-    prime: input.prime,
+    prime: paymentSource.prime,
     simulateFailure: input.simulatePaymentFailure,
   });
 
@@ -131,8 +140,8 @@ export async function createCheckoutOrder(
     };
   }
 
-  await prisma.$transaction([
-    prisma.paymentRecord.update({
+  await prisma.$transaction(async (tx) => {
+    await tx.paymentRecord.update({
       where: { id: pendingPayment.id },
       data: {
         status: "succeeded",
@@ -140,14 +149,14 @@ export async function createCheckoutOrder(
         providerStatusCode: paymentResult.providerStatusCode,
         providerMessage: paymentResult.providerMessage,
       },
-    }),
+    });
 
-    prisma.order.update({
+    await tx.order.update({
       where: { id: pending.id },
       data: { status: "paid" },
-    }),
+    });
 
-    prisma.invoice.create({
+    await tx.invoice.create({
       data: {
         userId,
         orderId: pending.id,
@@ -157,9 +166,9 @@ export async function createCheckoutOrder(
         currency: pricing.currency,
         status: "paid",
       },
-    }),
+    });
 
-    prisma.subscription.create({
+    await tx.subscription.create({
       data: {
         userId,
         orderId: pending.id,
@@ -170,8 +179,22 @@ export async function createCheckoutOrder(
         currentPeriodStart: now,
         currentPeriodEnd: getPeriodEnd(now, input.cycle),
       },
-    }),
-  ]);
+    });
+
+    if (paymentSource.newPaymentMethod) {
+      const existingCount = await tx.paymentMethod.count({
+        where: { userId },
+      });
+
+      await tx.paymentMethod.create({
+        data: {
+          userId,
+          ...paymentSource.newPaymentMethod,
+          isDefault: existingCount === 0,
+        },
+      });
+    }
+  });
 
   return {
     status: "succeeded",
@@ -192,6 +215,73 @@ function createOrderNumber() {
 
 function createInvoiceNumber(orderNumber: string) {
   return `INV-${orderNumber}`;
+}
+
+async function getCheckoutPaymentSource(
+  userId: string,
+  input: CreateCheckoutOrderInput,
+) {
+  if (input.paymentMethodId) {
+    const paymentMethod = await prisma.paymentMethod.findFirst({
+      where: {
+        id: input.paymentMethodId,
+        userId,
+      },
+    });
+
+    if (!paymentMethod) {
+      throw new Error("找不到可用的付款方式。");
+    }
+
+    if (paymentMethod.tappayPrimeState !== "ready") {
+      throw new Error("此付款方式需要重新綁定後才能使用。");
+    }
+
+    if (isExpiredPaymentMethod(paymentMethod)) {
+      throw new Error("此付款方式已過期，請選擇其他卡片。");
+    }
+
+    return {
+      prime: `saved_${paymentMethod.id}`,
+      cardIdentifier: paymentMethod.cardIdentifier ?? undefined,
+      last4: paymentMethod.last4,
+    };
+  }
+
+  if (!input.prime) {
+    throw new Error("請選擇付款方式或輸入信用卡資料。");
+  }
+
+  return {
+    prime: input.prime,
+    cardIdentifier: input.card?.cardIdentifier,
+    last4: input.card?.last4,
+    newPaymentMethod: input.card
+      ? {
+          brand: getTapPayCardBrand(input.card) ?? "Card",
+          binCode: input.card.binCode,
+          last4: input.card.last4 ?? "0000",
+          holder: input.companyName,
+          billingEmail: input.billingEmail,
+          cardIdentifier: input.card.cardIdentifier,
+          expMonth: input.card.expMonth,
+          expYear: input.card.expYear,
+        }
+      : undefined,
+  };
+}
+
+function isExpiredPaymentMethod(method: {
+  expMonth: number | null;
+  expYear: number | null;
+}) {
+  if (!method.expMonth || !method.expYear) {
+    return false;
+  }
+
+  const expiresAt = new Date(method.expYear, method.expMonth, 0, 23, 59, 59);
+
+  return expiresAt < new Date();
 }
 
 function getPeriodEnd(start: Date, cycle: BillingCycle) {

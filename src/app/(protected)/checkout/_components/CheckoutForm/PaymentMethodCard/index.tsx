@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback } from "react";
 import {
   Card,
   CardContent,
@@ -8,61 +8,79 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import TapPayHostedField from "@/components/shared/TapPayHostedField";
-import { FieldError, FieldGroup } from "@/components/ui/field";
-import { useTapPayCardFields } from "@/providers/tappay/useTapPayCardFields";
-
-type PaymentMethodCardProps = {
-  onStatusChange: (canGetPrime: boolean) => void;
-};
-
-function noopTapPayStatusChange() {}
+import type { CheckoutPaymentCardProps } from "../types";
+import NewCardHostedFields from "./NewCardHostedFields";
+import NewPaymentMethodOption from "./NewPaymentMethodOption";
+import SavedPaymentMethodOption from "./SavedPaymentMethodOption";
 
 export default function PaymentMethodCard({
-  onStatusChange = noopTapPayStatusChange,
-}: PaymentMethodCardProps) {
-  const { cardStatus, error, isHostedFieldVisible } = useTapPayCardFields({
-    revealDelay: 180,
-  });
+  paymentMethods,
+  isPaymentMethodsPending,
+  isPaymentMethodsError,
+  cardStatus,
+  error,
+  isHostedFieldVisible,
+  selectedPayment,
+  onPaymentSelectionChange,
+}: CheckoutPaymentCardProps) {
+  const isNewCardSelected = selectedPayment.type === "new";
 
-  useEffect(() => {
-    onStatusChange(cardStatus.canGetPrime);
-  }, [cardStatus.canGetPrime, onStatusChange]);
+  const selectNewCard = useCallback(() => {
+    onPaymentSelectionChange({ type: "new" });
+  }, [onPaymentSelectionChange]);
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>信用卡付款方式</CardTitle>
         <CardDescription>
-          使用 TapPay 信用卡安全欄位驗證，送出時只交換 prime。
+          選擇已綁定卡片，或使用 TapPay 信用卡安全欄位新增一次性付款。
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <FieldGroup className="grid gap-4 md:grid-cols-4">
-          <TapPayHostedField
-            name="number"
-            className="md:col-span-2"
-            status={cardStatus.status.number}
-            canGetPrime={cardStatus.canGetPrime}
-            hasInteracted={cardStatus.hasInteracted}
-            isHostedFieldVisible={isHostedFieldVisible}
+        <div className="flex flex-col gap-4">
+          {isPaymentMethodsPending && (
+            <div className="text-muted-foreground rounded-3xl border border-dashed p-6 text-sm leading-6">
+              載入已綁定卡片中...
+            </div>
+          )}
+
+          {!isPaymentMethodsPending && isPaymentMethodsError && (
+            <div className="text-destructive rounded-3xl border border-dashed p-6 text-sm leading-6">
+              付款方式載入失敗，請改用新卡片付款或稍後再試。
+            </div>
+          )}
+
+          {!isPaymentMethodsPending && paymentMethods.length > 0 && (
+            <div className="grid gap-3">
+              {paymentMethods.map((method) => (
+                <SavedPaymentMethodOption
+                  key={method.id}
+                  method={method}
+                  isSelected={
+                    selectedPayment.type === "saved" &&
+                    selectedPayment.paymentMethodId === method.id
+                  }
+                  onSelect={onPaymentSelectionChange}
+                />
+              ))}
+            </div>
+          )}
+
+          <NewPaymentMethodOption
+            hasPaymentMethods={paymentMethods.length > 0}
+            isSelected={isNewCardSelected}
+            onSelect={selectNewCard}
           />
-          <TapPayHostedField
-            name="expiry"
-            status={cardStatus.status.expiry}
-            canGetPrime={cardStatus.canGetPrime}
-            hasInteracted={cardStatus.hasInteracted}
-            isHostedFieldVisible={isHostedFieldVisible}
-          />
-          <TapPayHostedField
-            name="ccv"
-            status={cardStatus.status.ccv}
-            canGetPrime={cardStatus.canGetPrime}
-            hasInteracted={cardStatus.hasInteracted}
-            isHostedFieldVisible={isHostedFieldVisible}
-          />
-        </FieldGroup>
-        {error && <FieldError className="mt-4">{error}</FieldError>}
+
+          {isNewCardSelected && (
+            <NewCardHostedFields
+              cardStatus={cardStatus}
+              error={error}
+              isHostedFieldVisible={isHostedFieldVisible}
+            />
+          )}
+        </div>
       </CardContent>
     </Card>
   );
