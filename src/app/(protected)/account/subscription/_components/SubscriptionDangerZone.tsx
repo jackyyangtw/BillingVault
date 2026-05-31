@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { CurrentSubscriptionData } from "./types";
+import type { CurrentSubscriptionData } from "@/features/subscriptions/dal/types";
 import { formatDate } from "./utils";
 import CancelSubscriptionDialog from "./CancelSubscriptionDialog";
 

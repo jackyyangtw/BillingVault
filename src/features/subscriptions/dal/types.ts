@@ -1,3 +1,5 @@
+import type { BillingCycle } from "@/mocks/fixtures/plans";
+
 export type SubscriptionStatus =
   | "trialing"
   | "active"
@@ -6,11 +8,12 @@ export type SubscriptionStatus =
   | "incomplete";
 
 export type CurrentSubscriptionData = {
+  id: string;
   planId: string;
   planName: string;
   productName: string;
   status: SubscriptionStatus;
-  cycle: "monthly" | "yearly";
+  cycle: BillingCycle;
   seats: number;
   renewalDate: string;
   nextInvoiceAmount: number;
@@ -32,4 +35,10 @@ export type PlanOptionData = {
   price: string;
   fit: string;
   action: "downgrade" | "current" | "upgrade" | "contact";
+};
+
+export type SubscriptionOverview = {
+  currentSubscription: CurrentSubscriptionData | null;
+  planOptions: PlanOptionData[];
+  subscriptionRecords: SubscriptionRecordData[];
 };

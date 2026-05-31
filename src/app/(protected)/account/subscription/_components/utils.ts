@@ -1,4 +1,7 @@
-import type { SubscriptionRecordData, SubscriptionStatus } from "./types";
+import type {
+  SubscriptionRecordData,
+  SubscriptionStatus,
+} from "@/features/subscriptions/dal/types";
 
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",

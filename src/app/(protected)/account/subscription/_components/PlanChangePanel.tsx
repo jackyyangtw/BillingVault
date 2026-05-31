@@ -13,10 +13,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { PlanOptionData } from "./types";
+import type { PlanOptionData } from "@/features/subscriptions/dal/types";
 
 type PlanChangePanelProps = {
-  currentPlanId: string;
+  currentPlanId: string | null;
   plans: PlanOptionData[];
 };
 
@@ -43,7 +43,7 @@ export default function PlanChangePanel({
       <CardHeader>
         <CardTitle>升級 / 降級方案</CardTitle>
         <CardDescription>
-          以目前 Pro 方案為基準，模擬 SaaS 帳務常見的方案切換入口。
+          依照目前訂閱方案，模擬 SaaS 帳務常見的方案切換入口。
         </CardDescription>
       </CardHeader>
       <CardContent>

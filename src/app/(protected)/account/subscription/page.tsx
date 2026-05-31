@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
+import { listSubscriptionOverview } from "@/features/subscriptions/dal/listSubscriptionOverview";
+import { verifySession } from "@/lib/auth/dal";
 import CurrentSubscription from "./_components/CurrentSubscription";
+import NoCurrentSubscription from "./_components/NoCurrentSubscription";
 import PlanChangePanel from "./_components/PlanChangePanel";
 import SubscriptionDangerZone from "./_components/SubscriptionDangerZone";
 import SubscriptionRecordHistory from "./_components/SubscriptionRecordHistory";
-import {
-  currentSubscription,
-  planOptions,
-  subscriptionRecords,
-} from "./_components/data";
 
 export const metadata: Metadata = {
   title: "Subscriptions | SecureCart",
@@ -16,7 +14,12 @@ export const metadata: Metadata = {
     "Manage SecureCart subscription status, plan changes, subscription history, and cancellation.",
 };
 
-export default function SubscriptionPage() {
+export default async function SubscriptionPage() {
+  const { userId } = await verifySession();
+  const subscriptionOverview = await listSubscriptionOverview(userId);
+  const { currentSubscription, planOptions, subscriptionRecords } =
+    subscriptionOverview;
+
   return (
     <main>
       <section className="border-border/60 border-b py-14">
@@ -36,16 +39,22 @@ export default function SubscriptionPage() {
       <section className="py-12">
         <div className="mx-auto grid max-w-7xl gap-6 px-6 lg:grid-cols-[minmax(0,1.45fr)_minmax(320px,0.55fr)] lg:px-8">
           <div className="flex flex-col gap-6">
-            <CurrentSubscription subscription={currentSubscription} />
+            {currentSubscription ? (
+              <CurrentSubscription subscription={currentSubscription} />
+            ) : (
+              <NoCurrentSubscription />
+            )}
             <PlanChangePanel
-              currentPlanId={currentSubscription.planId}
+              currentPlanId={currentSubscription?.planId ?? null}
               plans={planOptions}
             />
           </div>
 
           <aside className="flex flex-col gap-6">
             <SubscriptionRecordHistory records={subscriptionRecords} />
-            <SubscriptionDangerZone subscription={currentSubscription} />
+            {currentSubscription && (
+              <SubscriptionDangerZone subscription={currentSubscription} />
+            )}
           </aside>
         </div>
       </section>
