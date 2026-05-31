@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import PaymentCardBrandMark from "@/features/payment-methods/components/PaymentCardBrandMark";
-import type { PaymentMethod } from "@/mocks/fixtures/payment-methods";
+import type { PaymentMethod } from "@/features/payment-methods/dal/types";
 
 type PaymentMethodPanelProps = {
   paymentMethod: PaymentMethod | null;

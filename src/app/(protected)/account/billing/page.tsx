@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { listBillingOverview } from "@/features/billing/dal/listBillingOverview";
+import { listPaymentMethods } from "@/features/payment-methods/dal/listPaymentMethods";
 import { verifySession } from "@/lib/auth/dal";
-import { getPrimaryPaymentMethod } from "@/mocks/fixtures/payment-methods";
 import BillingSummary from "./_components/BillingSummary";
 import InvoiceHistory from "./_components/InvoiceHistory";
 import OrderHistory from "./_components/OrderHistory";
@@ -16,8 +16,12 @@ export const metadata: Metadata = {
 
 export default async function AccountPage() {
   const { userId } = await verifySession();
-  const billingOverview = await listBillingOverview(userId);
-  const primaryPaymentMethod = getPrimaryPaymentMethod();
+  const [billingOverview, paymentMethods] = await Promise.all([
+    listBillingOverview(userId),
+    listPaymentMethods(userId),
+  ]);
+  const primaryPaymentMethod =
+    paymentMethods.find((m) => m.status === "primary") ?? null;
 
   return (
     <main>
