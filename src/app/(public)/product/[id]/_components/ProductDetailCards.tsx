@@ -15,6 +15,9 @@ type ProductDetailCardsProps = {
 export default function ProductDetailCards({
   product,
 }: ProductDetailCardsProps) {
+  const { useCases: productUseCases, securityNotes: productSecurityNotes } =
+    product;
+
   return (
     <section className="py-16">
       <div className="mx-auto grid max-w-7xl gap-6 px-6 lg:grid-cols-2 lg:px-8">
@@ -27,7 +30,7 @@ export default function ProductDetailCards({
           </CardHeader>
           <CardContent>
             <ul className="flex flex-col gap-3">
-              {product.useCases.map((useCase) => (
+              {productUseCases.map((useCase) => (
                 <li key={useCase} className="flex items-center gap-2">
                   <CheckCircle2 className="text-primary size-4 shrink-0" />
                   <span>{useCase}</span>
@@ -46,7 +49,7 @@ export default function ProductDetailCards({
           </CardHeader>
           <CardContent>
             <ul className="flex flex-col gap-3">
-              {product.securityNotes.map((note) => (
+              {productSecurityNotes.map((note) => (
                 <li key={note} className="flex items-center gap-2">
                   <ShieldCheck className="text-primary size-4 shrink-0" />
                   <span>{note}</span>

@@ -45,13 +45,13 @@ const submitCheckoutSchema = z
 export type SubmitCheckoutInput = z.infer<typeof submitCheckoutSchema>;
 
 export async function submitCheckoutAction(input: SubmitCheckoutInput) {
+  const { userId } = await verifySession();
   const parsed = submitCheckoutSchema.safeParse(input);
 
   if (!parsed.success) {
     throw new Error("結帳資料無效。");
   }
 
-  const { userId } = await verifySession();
   const result = await createCheckoutOrder(userId, parsed.data);
 
   if (result.status === "failed") {

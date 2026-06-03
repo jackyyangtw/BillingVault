@@ -24,13 +24,13 @@ const createPaymentMethodSchema = z.object({
 export async function createPaymentMethodAction(
   input: z.infer<typeof createPaymentMethodSchema>,
 ) {
+  const { userId } = await verifySession();
   const parsed = createPaymentMethodSchema.safeParse(input);
 
   if (!parsed.success) {
     throw new Error("付款方式資料無效。");
   }
 
-  const { userId } = await verifySession();
   const { card, billingEmail, cardHolder } = parsed.data;
   const brand = getTapPayCardBrand(card);
   const paymentMethod = await createPaymentMethod(userId, {

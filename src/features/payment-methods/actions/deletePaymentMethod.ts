@@ -9,13 +9,12 @@ const deletePaymentMethodSchema = z.object({
 });
 
 export async function deletePaymentMethodAction(input: { id: string }) {
+  const { userId } = await verifySession();
   const parsed = deletePaymentMethodSchema.safeParse(input);
 
   if (!parsed.success) {
     throw new Error("付款方式資料無效。");
   }
-
-  const { userId } = await verifySession();
 
   await deletePaymentMethod(userId, parsed.data.id);
 

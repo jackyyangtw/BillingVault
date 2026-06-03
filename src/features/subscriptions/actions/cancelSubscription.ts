@@ -10,13 +10,12 @@ const cancelSubscriptionSchema = z.object({
 });
 
 export async function cancelSubscriptionAction(input: { id: string }) {
+  const { userId } = await verifySession();
   const parsed = cancelSubscriptionSchema.safeParse(input);
 
   if (!parsed.success) {
     throw new Error("訂閱資料無效。");
   }
-
-  const { userId } = await verifySession();
 
   await cancelSubscription(userId, parsed.data.id);
   refresh();

@@ -13,6 +13,8 @@ function resolveCallbackUrl(value: string | undefined): string {
   return isSafeCallbackUrl(value) ? value : DEFAULT_LOGIN_REDIRECT;
 }
 
+// Public login entrypoint: unauthenticated users must be allowed to call it.
+// react-doctor-disable-next-line react-doctor/server-auth-actions
 export async function loginAction(
   _prevState: LoginFormState,
   formData: FormData,

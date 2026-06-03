@@ -10,13 +10,12 @@ const setDefaultPaymentMethodSchema = z.object({
 });
 
 export async function setDefaultPaymentMethodAction(input: { id: string }) {
+  const { userId } = await verifySession();
   const parsed = setDefaultPaymentMethodSchema.safeParse(input);
 
   if (!parsed.success) {
     throw new Error("付款方式資料無效。");
   }
-
-  const { userId } = await verifySession();
 
   await setDefaultPaymentMethod(userId, parsed.data.id);
   refresh();
