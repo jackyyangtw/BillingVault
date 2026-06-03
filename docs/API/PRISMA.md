@@ -166,3 +166,67 @@ pnpm dev
 ```
 
 如果 dev server 正在跑，先停掉再重新啟動。
+
+## Prisma DAL 讀取模組拆分 Pattern
+
+當一個 Prisma DAL 讀取檔案同時包含 query、business rule、mapper、mock lookup、
+format helper，或接近 / 超過 200 行時，請拆成「資料夾 + `index.ts`」結構。
+
+`index.ts` 必須是主流程實作，不可以只是 re-export 的 barrel 檔。外部 import 路徑應維持不變：
+
+```ts
+import { listSubscriptionOverview } from "@/features/subscriptions/dal/listSubscriptionOverview";
+```
+
+推薦結構：
+
+```txt
+src/features/<feature>/dal/<operation>/
+├── index.ts              # 主流程：讀資料、套規則、組回傳物件
+├── query.ts              # Prisma findMany/findFirst/updateMany 的 query shape
+├── rules.ts              # domain rules，例如 current、expiring soon、trial days
+├── mappers.ts            # Prisma record -> UI / DTO data
+├── options.ts            # option list / action 判斷，例如 upgrade / downgrade
+└── utils.ts              # 小型純函式，例如 centsToAmount、format id
+```
+
+實際範例：
+
+```txt
+src/features/subscriptions/dal/listSubscriptionOverview/
+├── index.ts
+├── subscriptionQuery.ts
+├── subscriptionRules.ts
+├── mappers.ts
+├── planOptions.ts
+└── utils.ts
+```
+
+主檔案應該像目錄一樣好讀：
+
+```ts
+export async function listSubscriptionOverview(userId: string) {
+  const subscriptions = await listRecentSubscriptions(userId);
+  const currentSubscription = getCurrentSubscription(subscriptions);
+
+  return {
+    currentSubscription: currentSubscription
+      ? toCurrentSubscription(currentSubscription)
+      : null,
+    planOptions: getPlanOptions(currentSubscription?.planId ?? null),
+    subscriptionRecords: subscriptions.map(toSubscriptionRecord),
+  };
+}
+```
+
+拆分規則：
+
+- `query` 檔集中放 Prisma `findMany` / `include` / `select` / `orderBy` / `take`。
+- Prisma query shape 使用 `satisfies Prisma.<Model>Include` 或 `satisfies Prisma.<Model>Select`
+  保留型別安全。
+- `rules` 檔放 domain 判斷，不要混進 Prisma query 或 UI mapper。
+- `mappers` 檔只做資料轉換，不直接查資料庫。
+- `options` 檔放選項清單與 action 判斷，例如方案升級 / 降級。
+- `utils` 檔只放小型純函式；如果 helper 開始依賴 domain 規則，移到 `rules`。
+- 相對 import 最多到 `../../`；需要更深時改用 `@/` alias。
+- 不新增純 re-export barrel，例如只寫 `export * from "./mappers"` 的 `index.ts`。

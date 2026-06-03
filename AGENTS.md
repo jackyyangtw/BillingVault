@@ -38,6 +38,14 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 [Barrel 檔案]：禁止新增 barrel 檔案（例如 `index.ts` 只用來 re-export 其他模組）。Import 必須指向實際功能檔案，例如 `@/lib/payment-methods/dal/listPaymentMethods`，避免透過資料夾入口隱藏依賴來源。既有 barrel 若因重構碰到，應優先移除並改成明確 import。
 
+## 測試命名規範
+
+- 所有 unit test / integration test / e2e test 的 `describe()`、`it()`、`test()` 描述文字必須使用繁體中文。
+- 測試名稱應描述使用者可理解的行為，而不是只描述實作細節。
+- 範例：
+  - ✅ `it("訂閱不存在時拒絕取消")`
+  - ❌ `it("rejects when subscription is missing")`
+
 ## 4. 元件結構檢查（200 行拆分規則）
 
 修改完成後，檢查目標元件檔案是否超過 **200 行**。若超過，必須將其拆分為資料夾結構：

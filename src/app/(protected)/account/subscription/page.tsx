@@ -52,9 +52,10 @@ export default async function SubscriptionPage() {
 
           <aside className="flex flex-col gap-6">
             <SubscriptionRecordHistory records={subscriptionRecords} />
-            {currentSubscription && (
-              <SubscriptionDangerZone subscription={currentSubscription} />
-            )}
+            {currentSubscription &&
+              currentSubscription.status !== "canceled" && (
+                <SubscriptionDangerZone subscription={currentSubscription} />
+              )}
           </aside>
         </div>
       </section>

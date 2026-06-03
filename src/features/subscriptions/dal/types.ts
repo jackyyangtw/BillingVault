@@ -18,6 +18,7 @@ export type CurrentSubscriptionData = {
   renewalDate: string;
   nextInvoiceAmount: number;
   trialDaysLeft: number;
+  isExpiringSoon: boolean;
 };
 
 export type SubscriptionRecordData = {

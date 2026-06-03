@@ -22,6 +22,13 @@ type CurrentSubscriptionProps = {
 export default function CurrentSubscription({
   subscription,
 }: CurrentSubscriptionProps) {
+  const isCanceled = subscription.status === "canceled";
+  const periodDateLabel = isCanceled ? "可使用至" : "下次續訂日";
+  const periodDateDetail = isCanceled
+    ? "到期後將停止續訂"
+    : `預計收取 ${formatCurrency(subscription.nextInvoiceAmount)}`;
+  const statusBadge = getStatusBadge(subscription);
+
   return (
     <Card>
       <CardHeader>
@@ -29,11 +36,16 @@ export default function CurrentSubscription({
           <div>
             <CardTitle>目前訂閱狀態</CardTitle>
             <CardDescription>
-              {subscription.productName} 正在使用 {subscription.planName} 方案。
+              {isCanceled
+                ? `${subscription.productName} 已取消續訂，仍可使用 ${subscription.planName} 方案至 ${formatDate(subscription.renewalDate)}。`
+                : `${subscription.productName} 正在使用 ${subscription.planName} 方案。`}
             </CardDescription>
           </div>
-          <Badge variant="secondary">
-            {getSubscriptionStatusLabel(subscription.status)}
+          <Badge
+            variant={statusBadge.variant}
+            className={statusBadge.className}
+          >
+            {statusBadge.label}
           </Badge>
         </div>
       </CardHeader>
@@ -47,9 +59,9 @@ export default function CurrentSubscription({
           />
           <SubscriptionMetric
             icon={CalendarClock}
-            label="下次續訂日"
+            label={periodDateLabel}
             value={formatDate(subscription.renewalDate)}
-            detail={`預計收取 ${formatCurrency(subscription.nextInvoiceAmount)}`}
+            detail={periodDateDetail}
           />
           <SubscriptionMetric
             icon={Users}
@@ -67,6 +79,38 @@ export default function CurrentSubscription({
       </CardContent>
     </Card>
   );
+}
+
+function getStatusBadge(subscription: CurrentSubscriptionData) {
+  if (subscription.status === "canceled") {
+    return {
+      label: getSubscriptionStatusLabel(subscription.status),
+      variant: "destructive" as const,
+      className: undefined,
+    };
+  }
+
+  if (subscription.isExpiringSoon) {
+    return {
+      label: "快到期",
+      variant: "outline" as const,
+      className: "border-orange-500/20 bg-orange-500/10 text-orange-600",
+    };
+  }
+
+  if (subscription.status === "active" || subscription.status === "trialing") {
+    return {
+      label: getSubscriptionStatusLabel(subscription.status),
+      variant: "outline" as const,
+      className: "border-green-500/20 bg-green-500/10 text-green-600",
+    };
+  }
+
+  return {
+    label: getSubscriptionStatusLabel(subscription.status),
+    variant: "secondary" as const,
+    className: undefined,
+  };
 }
 
 type SubscriptionMetricProps = {

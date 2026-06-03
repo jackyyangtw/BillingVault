@@ -35,7 +35,10 @@ export default function SubscriptionDangerZone({
         </div>
       </CardContent>
       <CardFooter>
-        <CancelSubscriptionDialog renewalDateLabel={renewalDateLabel} />
+        <CancelSubscriptionDialog
+          subscriptionId={subscription.id}
+          renewalDateLabel={renewalDateLabel}
+        />
       </CardFooter>
     </Card>
   );
