@@ -6,6 +6,7 @@ import { useCallback, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useSubmitCheckout } from "@/features/checkout/queries/useSubmitCheckout";
 import BillingInfoCard from "./BillingInfoCard";
+import CheckoutPendingDialog from "./CheckoutPendingDialog";
 import CheckoutSteps from "./CheckoutSteps";
 import OrderSummary from "./OrderSummary";
 import PaymentMethodCard from "./PaymentMethodCard";
@@ -116,6 +117,7 @@ export default function CheckoutForm({
           onFailure={handleFailure}
         />
       </form>
+      <CheckoutPendingDialog isOpen={isSubmitting} />
     </FormProvider>
   );
 }
