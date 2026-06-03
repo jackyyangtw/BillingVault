@@ -11,7 +11,7 @@ export type CheckoutPricing = {
   planName: string;
   productName: string;
   amountCents: number;
-  currency: "USD";
+  currency: "TWD";
 };
 
 export function calculateCheckoutPricing({
@@ -38,6 +38,6 @@ export function calculateCheckoutPricing({
     planName: plan.name,
     productName: product.name,
     amountCents: (planPrice + productPrice) * 100,
-    currency: "USD",
+    currency: "TWD",
   };
 }
