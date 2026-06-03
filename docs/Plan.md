@@ -82,66 +82,66 @@ SecureCart 可以想像成一個「安全 SaaS 訂閱與信用卡管理平台」
 
 ## MVP 功能範圍
 
-| 狀態 | 優先級 | 功能                | 說明                                                    |
-| ---- | ------ | ------------------- | ------------------------------------------------------- |
-| ✅   | P0     | 訂閱方案頁          | 顯示 Starter / Pro / Business / Enterprise 方案         |
-| 🟡   | P0     | 真實 Email 登入     | 使用 Supabase Auth Email/Password；僅保留一組測試帳號   |
-| 🟡   | P0     | 方案選擇流程        | 選方案、填寫帳務資料、建立 sandbox 訂單與訂閱狀態       |
-| ⬜   | P0     | TapPay sandbox 付款 | hosted fields 取 prime，後端 Pay by Prime 模擬授權      |
-| ⬜   | P0     | 訂單 / 付款紀錄     | 建立本地訂單、付款交易紀錄與 TapPay `rec_trade_id` 關聯 |
-| ✅   | P0     | 帳務頁面            | 顯示目前方案、付款方式與帳務資訊                        |
-| ✅   | P0     | 訂閱狀態            | active / trialing / past_due / canceled                 |
-| ✅   | P1     | 升級 / 降級         | 方案升級與降級流程 UI                                   |
-| ✅   | P1     | 取消訂閱            | 取消訂閱流程與確認彈窗                                  |
-| 🟡   | P1     | 信用卡管理          | 顯示 / TapPay hosted fields 新增付款方式；sandbox only  |
-| ✅   | P1     | 帳單紀錄            | 帳單紀錄與 sandbox 付款狀態                             |
-| ⬜   | P2     | 團隊席位            | 團隊成員與席位計費                                      |
-| ⬜   | P2     | 稽核紀錄            | 帳務與安全操作紀錄                                      |
+| 狀態 | 優先級 | 功能                | 說明                                                   |
+| ---- | ------ | ------------------- | ------------------------------------------------------ |
+| ✅   | P0     | 訂閱方案頁          | 顯示 Starter / Pro / Business / Enterprise 方案        |
+| ✅   | P0     | 真實 Email 登入     | 使用 Supabase Auth Email/Password；僅保留一組測試帳號  |
+| ✅   | P0     | 方案選擇流程        | 選方案、填寫帳務資料、建立 sandbox 訂單與訂閱狀態      |
+| 🟡   | P0     | TapPay sandbox 付款 | hosted fields 取 prime，後端本地模擬 sandbox 授權      |
+| ✅   | P0     | 訂單 / 付款紀錄     | 建立本地訂單、付款交易紀錄與 sandbox trade id 關聯     |
+| ✅   | P0     | 帳務頁面            | 顯示目前方案、付款方式與帳務資訊                       |
+| ✅   | P0     | 訂閱狀態            | active / trialing / past_due / canceled                |
+| ✅   | P1     | 升級 / 降級         | 方案升級與降級流程 UI                                  |
+| ✅   | P1     | 取消訂閱            | 取消訂閱流程與確認彈窗                                 |
+| ✅   | P1     | 信用卡管理          | 顯示 / TapPay hosted fields 新增付款方式；sandbox only |
+| ✅   | P1     | 帳單紀錄            | 帳單紀錄與 sandbox 付款狀態                            |
+| ⬜   | P2     | 團隊席位            | 團隊成員與席位計費                                     |
+| ⬜   | P2     | 稽核紀錄            | 帳務與安全操作紀錄                                     |
 
 ---
 
 ## 頁面規劃
 
-| 狀態 | Route                   | 頁面       | 功能                                         |
-| ---- | ----------------------- | ---------- | -------------------------------------------- |
-| ✅   | `/`                     | 首頁       | 產品介紹與 CTA                               |
-| ✅   | `/pricing`              | 方案頁     | 方案比較、月繳 / 年繳切換                    |
-| ✅   | `/product/[id]`         | 產品詳情頁 | SaaS 產品介紹與方案導流                      |
-| 🟡   | `/login`                | 登入頁     | Supabase Auth Email/Password 登入            |
-| 🟡   | `/checkout`             | 方案確認頁 | 選方案、帳務資料、TapPay sandbox 模擬付款    |
-| ✅   | `/checkout/success`     | 成功頁     | sandbox 訂單與付款成功結果                   |
-| ✅   | `/checkout/failure`     | 失敗頁     | sandbox 付款失敗結果                         |
-| ✅   | `/account/billing`      | 帳務頁     | 目前方案、付款方式、帳單摘要                 |
-| ✅   | `/account/subscription` | 訂閱管理頁 | 升級、降級、取消訂閱                         |
-| 🟡   | `/account/payment`      | 付款方式頁 | 信用卡列表與 TapPay sandbox 綁卡；不真實扣款 |
-| ⬜   | `/account/team`         | 團隊管理頁 | 席位、成員、角色權限                         |
-| ⬜   | `/account/security`     | 安全設定頁 | 登入紀錄、安全設定                           |
-| ⬜   | `/dashboard`            | 儀表板     | 訂閱後的產品使用狀態                         |
+| 狀態 | Route                   | 頁面       | 功能                                       |
+| ---- | ----------------------- | ---------- | ------------------------------------------ |
+| ✅   | `/`                     | 首頁       | 產品介紹與 CTA                             |
+| ✅   | `/pricing`              | 方案頁     | 方案比較、月繳 / 年繳切換                  |
+| ✅   | `/product/[id]`         | 產品詳情頁 | SaaS 產品介紹與方案導流                    |
+| ✅   | `/login`                | 登入頁     | Supabase Auth Email/Password 登入          |
+| ✅   | `/checkout`             | 方案確認頁 | 選方案、帳務資料、TapPay sandbox 模擬付款  |
+| ✅   | `/checkout/success`     | 成功頁     | sandbox 訂單與付款成功結果                 |
+| ✅   | `/checkout/failure`     | 失敗頁     | sandbox 付款失敗結果                       |
+| ✅   | `/account/billing`      | 帳務頁     | 目前方案、付款方式、帳單摘要               |
+| ✅   | `/account/subscription` | 訂閱管理頁 | 升級、降級、取消訂閱                       |
+| ✅   | `/account/payment`      | 付款方式頁 | 信用卡列表、新增、移除與預設卡；不真實扣款 |
+| ⬜   | `/account/team`         | 團隊管理頁 | 席位、成員、角色權限                       |
+| ⬜   | `/account/security`     | 安全設定頁 | 登入紀錄、安全設定                         |
+| ⬜   | `/dashboard`            | 儀表板     | 訂閱後的產品使用狀態                       |
 
 ---
 
 ## 技術棧
 
-| 類型         | 技術 / 現況                                              |
-| ------------ | -------------------------------------------------------- |
-| 框架         | Next.js 16 App Router                                    |
-| React        | React 19 + React Compiler                                |
-| 程式語言     | TypeScript                                               |
-| 套件管理工具 | pnpm                                                     |
-| 樣式         | Tailwind CSS v4 + shadcn/ui                              |
-| 表單         | React Hook Form                                          |
-| 驗證         | Zod                                                      |
-| 驗證服務     | Supabase Auth（Email/Password only，只負責登入）         |
-| 資料庫       | Supabase Postgres                                        |
-| ORM / 資料層 | Prisma（唯一資料查詢入口）                               |
-| 伺服器狀態   | TanStack Query（僅用於非敏感 client-side UI flow）       |
-| 客戶端狀態   | Zustand                                                  |
-| 信用卡 UI    | TapPay hosted fields / sandbox prime / 付款方式管理      |
-| 金流模擬     | TapPay sandbox Pay by Prime；只模擬授權，不接 production |
-| 外部狀態訂閱 | `useSyncExternalStore` 管理 TapPay 欄位狀態              |
-| 測試         | Vitest                                                   |
-| 資安         | CSP nonce、safe callback URL、server-only data access    |
-| CI           | 尚待規劃                                                 |
+| 類型         | 技術 / 現況                                                   |
+| ------------ | ------------------------------------------------------------- |
+| 框架         | Next.js 16 App Router                                         |
+| React        | React 19 + React Compiler                                     |
+| 程式語言     | TypeScript                                                    |
+| 套件管理工具 | pnpm                                                          |
+| 樣式         | Tailwind CSS v4 + shadcn/ui                                   |
+| 表單         | React Hook Form                                               |
+| 驗證         | Zod                                                           |
+| 驗證服務     | Supabase Auth（Email/Password only，只負責登入）              |
+| 資料庫       | Supabase Postgres                                             |
+| ORM / 資料層 | Prisma（唯一資料查詢入口）                                    |
+| 伺服器狀態   | TanStack Query（僅用於非敏感 client-side UI flow）            |
+| 客戶端狀態   | Zustand                                                       |
+| 信用卡 UI    | TapPay hosted fields / sandbox prime / 付款方式管理           |
+| 金流模擬     | TapPay hosted fields + 本地 sandbox 授權模擬；不接 production |
+| 外部狀態訂閱 | `useSyncExternalStore` 管理 TapPay 欄位狀態                   |
+| 測試         | Vitest                                                        |
+| 資安         | CSP nonce、safe callback URL、server-only data access         |
+| CI           | 尚待規劃                                                      |
 
 ---
 
@@ -279,7 +279,7 @@ docs/
 - TapPay hosted fields 生命週期集中在 `src/providers/tappay/useTapPayCardFields.ts`，包含 `card.setup`、`onUpdate`、狀態同步、cleanup 與 dark mode iframe reveal。
 - TapPay 欄位 UI 提升為 `src/components/shared/TapPayHostedField.tsx`，由 checkout 與 account payment 共同使用。
 - `/account/payment` 的新增卡片元件已依 200 行規則拆為 `AddPaymentMethodCard/` 資料夾。
-- `/api/payment-methods` 已提供 POST mock route handler：驗證 session、驗證 prime payload、回傳非敏感付款方式摘要；尚未寫入 Prisma。
+- 付款方式管理已改由 Server Action + Prisma DAL 寫入、移除、設為預設與查詢，Client 只接收非敏感卡片摘要。
 - 跨多層目錄的 import 使用 `@/` alias；相對路徑最多保留到 `../../`。
 - 登入流程下一步改為 Supabase Auth Email/Password；先不做 OAuth、不開放註冊，只使用一組測試帳號完成真實 session flow。
 - 業務資料下一步改為 Prisma-only data access；Client 不直接查詢 Supabase Postgres 或敏感資料。
@@ -292,13 +292,13 @@ docs/
 
 | 狀態 | 項目         | 說明                                                                  |
 | ---- | ------------ | --------------------------------------------------------------------- |
-| 🟡   | Email 登入   | `/login` 使用 Supabase Auth `signInWithPassword`                      |
-| 🟡   | Session 管理 | 使用 Supabase SSR cookie flow，server-side 讀取目前使用者             |
-| 🟡   | 登出         | 呼叫 Supabase Auth `signOut` 後導回首頁或登入頁                       |
+| ✅   | Email 登入   | `/login` 使用 Supabase Auth `signInWithPassword`                      |
+| ✅   | Session 管理 | 使用 Supabase SSR cookie flow，server-side 讀取目前使用者             |
+| ✅   | 登出         | 呼叫 Supabase Auth `signOut` 後導回首頁或登入頁                       |
 | 🟡   | 測試帳號     | 僅建立一組測試帳號，供 demo / 面試展示使用                            |
 | ⬜   | 註冊         | MVP 不開放註冊，避免 demo 使用者自行建立帳號                          |
 | ⬜   | OAuth        | MVP 不接 Google / Facebook / LINE，保留為後續擴充                     |
-| ⬜   | 資料查詢     | Supabase Auth 不查業務資料；訂閱、帳單、付款方式等資料一律透過 Prisma |
+| ✅   | 資料查詢     | Supabase Auth 不查業務資料；訂閱、帳單、付款方式等資料一律透過 Prisma |
 
 ### 測試帳號策略
 
@@ -319,9 +319,9 @@ Password: 由 Supabase Dashboard 建立與管理，不提交到 repo
 | `src/lib/supabase/client.ts`        | Client auth 輔助；不得用於敏感資料查詢                              |
 | `src/lib/supabase/server.ts`        | Server Action / Server Component 使用的 Supabase Auth server client |
 | `src/app/(public)/login/actions.ts` | 改用 Supabase Auth email/password 登入                              |
-| `src/actions/logout.ts`             | 改用 Supabase Auth signOut                                          |
+| `src/lib/auth/logout.ts`            | 改用 Supabase Auth signOut                                          |
 | `src/lib/auth/dal.ts`               | 由 Supabase session 取得目前使用者，回傳最小 UserProfile DTO        |
-| `src/lib/prisma/`                   | Prisma client 與 server-only 業務資料查詢入口                       |
+| `src/lib/prisma.ts`                 | Prisma client 與 server-only 業務資料查詢入口                       |
 | `src/proxy.ts`                      | 維持快速樂觀檢查與 safe callback URL，不做完整資料授權              |
 
 ---
@@ -330,19 +330,21 @@ Password: 由 Supabase Dashboard 建立與管理，不提交到 repo
 
 > 登入交給 Supabase Auth；業務資料交給 Supabase Postgres + Prisma。Route Handler / Server Action 是唯一對外資料操作入口，Client 不直接查詢敏感資料。
 
-| 狀態 | 入口                            | 方法 | 資料入口                | 說明                                                          |
-| ---- | ------------------------------- | ---- | ----------------------- | ------------------------------------------------------------- |
-| ❌   | `/api/auth/login`               | POST | Supabase                | 不再規劃；改用 Supabase Auth action                           |
-| ❌   | `/api/auth/logout`              | POST | Supabase                | 不再規劃；改用 Supabase Auth action                           |
-| ⬜   | `/api/pricing/plans`            | GET  | Prisma                  | 取得公開方案列表                                              |
-| ⬜   | `/api/checkout`                 | POST | Prisma + TapPay sandbox | 驗證 session、建立本地訂單、Pay by Prime、寫入付款紀錄        |
-| ⬜   | `/api/subscription/current`     | GET  | Prisma                  | 驗證 session 後取得目前訂閱狀態                               |
-| ⬜   | `/api/subscription/change-plan` | POST | Prisma                  | 驗證 session 與訂閱所有權後升級 / 降級                        |
-| ⬜   | `/api/subscription/cancel`      | POST | Prisma                  | 驗證 session 與訂閱所有權後取消訂閱                           |
-| ⬜   | `/api/payment-methods`          | GET  | Prisma                  | 驗證 session 後取得付款方式                                   |
-| 🟡   | `/api/payment-methods`          | POST | Prisma + TapPay sandbox | 驗證 session 與 TapPay prime payload，儲存 tokenized 卡片摘要 |
-| ⬜   | `/api/invoices`                 | GET  | Prisma                  | 驗證 session 後取得帳單 / 付款紀錄                            |
-| ⬜   | `/api/team/members`             | GET  | Prisma                  | 驗證 session 與團隊權限後取得成員                             |
+| 狀態 | 入口                            | 方法          | 資料入口                | 說明                                                          |
+| ---- | ------------------------------- | ------------- | ----------------------- | ------------------------------------------------------------- |
+| ❌   | `/api/auth/login`               | POST          | Supabase                | 不再規劃；已改用 Supabase Auth action                         |
+| ❌   | `/api/auth/logout`              | POST          | Supabase                | 不再規劃；已改用 Supabase Auth action                         |
+| ⬜   | `/api/pricing/plans`            | GET           | Prisma                  | 取得公開方案列表；目前仍使用 fixture                          |
+| ✅   | `submitCheckoutAction`          | Server Action | Prisma + TapPay sandbox | 驗證 session、建立本地訂單、本地 sandbox 授權、寫入付款紀錄   |
+| ✅   | `listSubscriptionOverview`      | DAL           | Prisma                  | 驗證 session 後取得目前訂閱狀態                               |
+| ✅   | `changeSubscriptionPlanAction`  | Server Action | Prisma                  | 驗證 session 與訂閱所有權後升級 / 降級                        |
+| ✅   | `cancelSubscriptionAction`      | Server Action | Prisma                  | 驗證 session 與訂閱所有權後取消訂閱                           |
+| ✅   | `listPaymentMethodsAction`      | Server Action | Prisma                  | 驗證 session 後取得付款方式                                   |
+| ✅   | `createPaymentMethodAction`     | Server Action | Prisma + TapPay sandbox | 驗證 session 與 TapPay prime payload，儲存 tokenized 卡片摘要 |
+| ✅   | `deletePaymentMethodAction`     | Server Action | Prisma                  | 驗證 session 與付款方式所有權後移除卡片                       |
+| ✅   | `setDefaultPaymentMethodAction` | Server Action | Prisma                  | 驗證 session 與付款方式所有權後設定預設卡                     |
+| ✅   | `listBillingOverview`           | DAL           | Prisma                  | 驗證 session 後取得帳單 / 付款紀錄                            |
+| ⬜   | `/api/team/members`             | GET           | Prisma                  | 驗證 session 與團隊權限後取得成員                             |
 
 ---
 
@@ -357,7 +359,7 @@ Checkout request
   ↓
 建立 PaymentRecord（pending，含 idempotency key）
   ↓
-呼叫 TapPay sandbox Pay by Prime
+執行本地 TapPay sandbox 授權模擬
   ↓
 依 TapPay response 更新 PaymentRecord
   ↓
@@ -376,15 +378,15 @@ Checkout request
 
 ### TapPay sandbox 邊界
 
-| 項目     | 規劃                                                                 |
-| -------- | -------------------------------------------------------------------- |
-| 前端 SDK | `NEXT_PUBLIC_TAPPAY_SERVER_TYPE=sandbox`                             |
-| 後端 API | 只允許呼叫 `https://sandbox.tappaysdk.com`                           |
-| 扣款狀態 | sandbox 只模擬授權，不真實扣款                                       |
-| 訂單編號 | 由 SecureCart 產生並傳入 TapPay `order_number`                       |
-| 交易 ID  | 保存 TapPay 回傳的 `rec_trade_id` 到 `PaymentRecord.providerTradeId` |
-| 金流密鑰 | `partner_key` 只存在 server-only env，不暴露到 Client Component      |
-| 防呆     | 非 production demo 預設拒絕 TapPay production endpoint               |
+| 項目     | 規劃                                                                           |
+| -------- | ------------------------------------------------------------------------------ |
+| 前端 SDK | `NEXT_PUBLIC_TAPPAY_SERVER_TYPE=sandbox`                                       |
+| 後端 API | 目前本地模擬授權；後續若接外部 API，只允許呼叫 `https://sandbox.tappaysdk.com` |
+| 扣款狀態 | sandbox 只模擬授權，不真實扣款                                                 |
+| 訂單編號 | 由 SecureCart 產生並傳入 TapPay `order_number`                                 |
+| 交易 ID  | 保存 TapPay 回傳的 `rec_trade_id` 到 `PaymentRecord.providerTradeId`           |
+| 金流密鑰 | `partner_key` 只存在 server-only env，不暴露到 Client Component                |
+| 防呆     | 非 production demo 預設拒絕 TapPay production endpoint                         |
 
 ---
 
@@ -420,13 +422,13 @@ type SubscriptionStatus =
   ↓
 前端呼叫 TapPay `getPrime()` 取得一次性 prime
   ↓
-POST `/api/checkout`
+送出 `submitCheckoutAction`
   ↓
 後端驗證 session、方案、金額與 prime payload
   ↓
 建立本地 pending order 與 pending payment record
   ↓
-後端呼叫 TapPay sandbox Pay by Prime
+後端執行本地 TapPay sandbox 授權模擬
   ↓
 依 TapPay response 更新付款紀錄與訂單狀態
   ↓
@@ -444,9 +446,9 @@ POST `/api/checkout`
   ↓
 前端呼叫 TapPay `getPrime()` 取得一次性 prime
   ↓
-POST `/api/payment-methods`
+送出 `createPaymentMethodAction`
   ↓
-後端以 TapPay sandbox 綁定 / 記憶卡片能力交換 tokenized identifier
+後端驗證 TapPay hosted fields 回傳的非敏感卡片摘要並寫入 Prisma
   ↓
 只保存卡片品牌、末四碼、到期日、card identifier 等非敏感資料
   ↓
@@ -490,21 +492,21 @@ POST `/api/payment-methods`
 
 ## 測試項目
 
-| 狀態 | 測試目標      | 範例                                                             |
-| ---- | ------------- | ---------------------------------------------------------------- |
-| ✅   | 安全回調 URL  | 擋掉 `https://evil.com`、`javascript:`、`//evil.com`             |
-| ✅   | CSP header    | nonce 與第三方 script/frame 白名單                               |
-| ⬜   | Supabase Auth | email/password 登入、登出、session 過期                          |
-| ⬜   | Prisma DAL    | Server-only 查詢、DTO 回傳、禁止 Client 直接查敏感資料           |
-| ⬜   | 價格計算      | 月繳 / 年繳折扣計算                                              |
-| ⬜   | 方案比較      | 不同方案功能顯示                                                 |
-| ⬜   | 訂閱狀態      | 不同狀態顯示正確 UI                                              |
-| ⬜   | 方案確認驗證  | 必填欄位、格式錯誤                                               |
-| ⬜   | sandbox 付款  | Pay by Prime 成功 / 失敗、TapPay response mapping、endpoint 防呆 |
-| ⬜   | 訂單紀錄      | 建立 pending / paid / failed order 與重複送出防護                |
-| ⬜   | 付款紀錄      | 保存 `rec_trade_id`、錯誤碼、狀態與金額                          |
-| 🟡   | 信用卡管理    | TapPay hosted fields、prime 取得、sandbox 綁卡、成功 / 失敗流程  |
-| ⬜   | 帳單格式化    | 金額、日期、狀態格式化                                           |
+| 狀態 | 測試目標      | 範例                                                            |
+| ---- | ------------- | --------------------------------------------------------------- |
+| ✅   | 安全回調 URL  | 擋掉 `https://evil.com`、`javascript:`、`//evil.com`            |
+| ✅   | CSP header    | nonce 與第三方 script/frame 白名單                              |
+| ⬜   | Supabase Auth | email/password 登入、登出、session 過期                         |
+| 🟡   | Prisma DAL    | Server-only 查詢、DTO 回傳、禁止 Client 直接查敏感資料          |
+| ✅   | 價格計算      | 月繳 / 年繳折扣計算                                             |
+| ⬜   | 方案比較      | 不同方案功能顯示                                                |
+| ⬜   | 訂閱狀態      | 不同狀態顯示正確 UI                                             |
+| ⬜   | 方案確認驗證  | 必填欄位、格式錯誤                                              |
+| ✅   | sandbox 付款  | 本地 sandbox 成功 / 失敗、response mapping、endpoint 防呆       |
+| ⬜   | 訂單紀錄      | 建立 pending / paid / failed order 與重複送出防護               |
+| ⬜   | 付款紀錄      | 保存 sandbox trade id、錯誤碼、狀態與金額                       |
+| 🟡   | 信用卡管理    | TapPay hosted fields、prime 取得、sandbox 綁卡、成功 / 失敗流程 |
+| 🟡   | 帳單格式化    | 金額、日期、狀態格式化                                          |
 
 ---
 
@@ -563,11 +565,12 @@ TapPay sandbox 模擬付款、訂單與交易紀錄、
 - [x] 帳務資訊表單
 - [x] TapPay hosted fields 信用卡欄位驗證
 - [x] Checkout 使用 shared `TapPayHostedField` 與 `useTapPayCardFields`
-- [ ] Checkout 接入 TapPay sandbox Pay by Prime
-- [ ] 建立本地訂單與付款紀錄資料模型
-- [ ] sandbox 付款成功後建立 / 更新訂閱與 invoice
-- [ ] sandbox 付款失敗後保存錯誤碼與失敗紀錄
-- [ ] 信用卡管理資料寫入 Supabase Postgres
+- [x] Checkout 接入本地 TapPay sandbox 授權模擬
+- [x] 建立本地訂單與付款紀錄資料模型
+- [x] sandbox 付款成功後建立 / 更新訂閱與 invoice
+- [x] sandbox 付款失敗後保存錯誤碼與失敗紀錄
+- [x] 信用卡管理資料寫入 Supabase Postgres
+- [ ] 後端實際呼叫 TapPay sandbox Pay by Prime API
 - [x] demo 流程結果頁
 
 ### 第三階段：帳務管理
@@ -576,10 +579,9 @@ TapPay sandbox 模擬付款、訂單與交易紀錄、
 - [x] 目前訂閱狀態
 - [x] 付款方式列表 UI
 - [x] 付款方式管理頁新增 TapPay hosted fields dialog
-- [x] `/api/payment-methods` POST 初版卡片摘要寫入
-- [ ] 付款方式管理頁接入 Prisma 寫入 / 移除 / 設為預設
+- [x] 付款方式管理頁接入 Prisma 寫入 / 移除 / 設為預設
 - [x] 帳單紀錄
-- [ ] 帳單紀錄接入本地 invoice / payment record
+- [x] 帳單紀錄接入本地 invoice / payment record
 - [x] 取消訂閱
 - [x] 升級 / 降級方案
 
@@ -588,25 +590,25 @@ TapPay sandbox 模擬付款、訂單與交易紀錄、
 - [x] 安全回調 URL
 - [x] CSP header 模擬
 - [x] 受保護路由守衛
-- [ ] Supabase Auth Email 登入
-- [ ] Supabase Auth 登出
-- [ ] Supabase session server-side 讀取
-- [ ] 移除 mock login API 依賴
-- [ ] 建立 Prisma server-only data access layer
-- [ ] 將訂閱 / 帳單 / 付款方式資料改由 Prisma 讀寫
-- [ ] 確保 Client Component 不直接查詢敏感資料
+- [x] Supabase Auth Email 登入
+- [x] Supabase Auth 登出
+- [x] Supabase session server-side 讀取
+- [x] 移除 mock login API 依賴
+- [x] 建立 Prisma server-only data access layer
+- [x] 將訂閱 / 帳單 / 付款方式資料改由 Prisma 讀寫
+- [x] 確保 Client Component 不直接查詢敏感資料
 - [x] Vitest 測試基礎
-- [ ] 價格計算測試
+- [x] 價格計算測試
 - [ ] 信用卡管理驗證測試
-- [ ] TapPay sandbox response mapping 測試
+- [x] TapPay sandbox response mapping 測試
 - [ ] 訂單 / 付款紀錄 DAL 測試
 
 ### 第五階段：完善細節
 
 - [ ] 載入骨架屏
 - [x] 錯誤狀態
-- [ ] 空狀態
-- [ ] Toast / Snackbar 提示
+- [x] 空狀態
+- [x] Toast / Snackbar 提示
 - [x] 響應式版面
 - [ ] README
 - [ ] Demo 截圖
