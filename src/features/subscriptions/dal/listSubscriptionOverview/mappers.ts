@@ -1,4 +1,5 @@
 import type { CurrentSubscriptionData, SubscriptionRecordData } from "../types";
+import { calculateCheckoutPricing } from "@/features/checkout/dal/pricing";
 import { getPlanName, getPlanSeats } from "./planOptions";
 import { getIsExpiringSoon, getTrialDaysLeft } from "./subscriptionRules";
 import type { SubscriptionRecord } from "./subscriptionQuery";
@@ -21,9 +22,10 @@ export function toCurrentSubscription(
     cycle: toBillingCycle(subscription.cycle),
     seats: getPlanSeats(subscription.planId),
     renewalDate: subscription.currentPeriodEnd.toISOString(),
-    nextInvoiceAmount: centsToAmount(subscription.order.amountCents),
+    nextInvoiceAmount: getNextInvoiceAmount(subscription),
     trialDaysLeft: getTrialDaysLeft(subscription),
     isExpiringSoon: getIsExpiringSoon(subscription),
+    scheduledChange: toScheduledChange(subscription),
   };
 }
 
@@ -71,4 +73,30 @@ function getRecordEvent(
   }
 
   return "renewal";
+}
+
+function getNextInvoiceAmount(subscription: SubscriptionRecord) {
+  return centsToAmount(
+    calculateCheckoutPricing({
+      planId: subscription.planId,
+      productId: subscription.productId,
+      cycle: toBillingCycle(subscription.cycle),
+    }).amountCents,
+  );
+}
+
+function toScheduledChange(subscription: SubscriptionRecord) {
+  const scheduledChange = subscription.scheduledChanges[0];
+
+  if (!scheduledChange) {
+    return null;
+  }
+
+  return {
+    id: scheduledChange.id,
+    fromPlanName: getPlanName(scheduledChange.fromPlanId),
+    toPlanId: scheduledChange.toPlanId,
+    toPlanName: getPlanName(scheduledChange.toPlanId),
+    effectiveAt: scheduledChange.effectiveAt.toISOString(),
+  };
 }

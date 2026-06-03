@@ -45,6 +45,7 @@ export default async function SubscriptionPage() {
               <NoCurrentSubscription />
             )}
             <PlanChangePanel
+              currentSubscriptionId={currentSubscription?.id ?? null}
               currentPlanId={currentSubscription?.planId ?? null}
               plans={planOptions}
             />

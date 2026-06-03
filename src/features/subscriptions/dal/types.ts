@@ -19,6 +19,15 @@ export type CurrentSubscriptionData = {
   nextInvoiceAmount: number;
   trialDaysLeft: number;
   isExpiringSoon: boolean;
+  scheduledChange: ScheduledSubscriptionChangeData | null;
+};
+
+export type ScheduledSubscriptionChangeData = {
+  id: string;
+  fromPlanName: string;
+  toPlanId: string;
+  toPlanName: string;
+  effectiveAt: string;
 };
 
 export type SubscriptionRecordData = {

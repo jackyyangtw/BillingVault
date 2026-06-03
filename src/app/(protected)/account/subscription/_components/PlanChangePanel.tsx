@@ -1,9 +1,14 @@
+"use client";
+
+import { useState, useTransition } from "react";
 import {
   ArrowDownRight,
   ArrowUpRight,
   Check,
+  LoaderCircle,
   MessageCircle,
 } from "lucide-react";
+import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,9 +18,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { changeSubscriptionPlanAction } from "@/features/subscriptions/actions/changeSubscriptionPlan";
 import type { PlanOptionData } from "@/features/subscriptions/dal/types";
 
 type PlanChangePanelProps = {
+  currentSubscriptionId: string | null;
   currentPlanId: string | null;
   plans: PlanOptionData[];
 };
@@ -35,15 +42,51 @@ const actionLabel = {
 };
 
 export default function PlanChangePanel({
+  currentSubscriptionId,
   currentPlanId,
   plans,
 }: PlanChangePanelProps) {
+  const [pendingPlanId, setPendingPlanId] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
+
+  function handleChangePlan(plan: PlanOptionData) {
+    if (!currentSubscriptionId || plan.action === "current") {
+      return;
+    }
+
+    if (plan.action === "contact") {
+      toast.info("企業方案請聯絡銷售顧問。");
+      return;
+    }
+
+    setPendingPlanId(plan.id);
+    startTransition(async () => {
+      try {
+        const result = await changeSubscriptionPlanAction({
+          subscriptionId: currentSubscriptionId,
+          planId: plan.id,
+        });
+        toast.success(
+          result.changeType === "upgrade"
+            ? `已升級至 ${plan.name}`
+            : `已排程於本期結束後降級至 ${plan.name}`,
+        );
+      } catch (error) {
+        toast.error(
+          error instanceof Error ? error.message : "變更訂閱方案失敗。",
+        );
+      } finally {
+        setPendingPlanId(null);
+      }
+    });
+  }
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>升級 / 降級方案</CardTitle>
         <CardDescription>
-          依照目前訂閱方案，模擬 SaaS 帳務常見的方案切換入口。
+          升級會立即生效並補收本期差額，降級會排程於本期結束後生效。
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -53,6 +96,9 @@ export default function PlanChangePanel({
               key={plan.id}
               plan={plan}
               isCurrent={plan.id === currentPlanId}
+              isPending={pendingPlanId === plan.id}
+              isDisabled={!currentSubscriptionId || isPending}
+              onChangePlan={handleChangePlan}
             />
           ))}
         </div>
@@ -64,10 +110,20 @@ export default function PlanChangePanel({
 type PlanOptionProps = {
   plan: PlanOptionData;
   isCurrent: boolean;
+  isPending: boolean;
+  isDisabled: boolean;
+  onChangePlan: (plan: PlanOptionData) => void;
 };
 
-function PlanOption({ plan, isCurrent }: PlanOptionProps) {
+function PlanOption({
+  plan,
+  isCurrent,
+  isPending,
+  isDisabled,
+  onChangePlan,
+}: PlanOptionProps) {
   const Icon = actionIcon[plan.action];
+  const isButtonDisabled = isCurrent || isDisabled;
 
   return (
     <div className="flex min-h-44 flex-col justify-between rounded-3xl border p-4">
@@ -84,9 +140,14 @@ function PlanOption({ plan, isCurrent }: PlanOptionProps) {
       <Button
         variant={isCurrent ? "secondary" : "outline"}
         className="mt-5 w-full"
-        disabled={isCurrent}
+        disabled={isButtonDisabled}
+        onClick={() => onChangePlan(plan)}
       >
-        <Icon data-icon="inline-start" />
+        {isPending ? (
+          <LoaderCircle data-icon="inline-start" className="animate-spin" />
+        ) : (
+          <Icon data-icon="inline-start" />
+        )}
         {actionLabel[plan.action]}
       </Button>
     </div>

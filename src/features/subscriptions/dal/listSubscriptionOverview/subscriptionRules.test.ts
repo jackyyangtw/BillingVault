@@ -28,6 +28,7 @@ function createSubscription(
       amountCents: 2900,
       status: "paid",
     },
+    scheduledChanges: [],
     ...overrides,
   };
 }

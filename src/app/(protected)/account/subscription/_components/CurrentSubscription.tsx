@@ -28,6 +28,7 @@ export default function CurrentSubscription({
     ? "到期後將停止續訂"
     : `預計收取 ${formatCurrency(subscription.nextInvoiceAmount)}`;
   const statusBadge = getStatusBadge(subscription);
+  const scheduledChange = subscription.scheduledChange;
 
   return (
     <Card>
@@ -61,7 +62,11 @@ export default function CurrentSubscription({
             icon={CalendarClock}
             label={periodDateLabel}
             value={formatDate(subscription.renewalDate)}
-            detail={periodDateDetail}
+            detail={
+              scheduledChange
+                ? `將於 ${formatDate(scheduledChange.effectiveAt)} 改為 ${scheduledChange.toPlanName}`
+                : periodDateDetail
+            }
           />
           <SubscriptionMetric
             icon={Users}
@@ -76,6 +81,16 @@ export default function CurrentSubscription({
             detail="訂閱操作保留稽核紀錄"
           />
         </div>
+        {scheduledChange && (
+          <div className="bg-muted/40 mt-4 rounded-3xl border p-4">
+            <p className="font-medium">已排程降級</p>
+            <p className="text-muted-foreground mt-1 text-sm leading-6">
+              目前仍可使用 {scheduledChange.fromPlanName}，將於{" "}
+              {formatDate(scheduledChange.effectiveAt)} 起改為{" "}
+              {scheduledChange.toPlanName}。
+            </p>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

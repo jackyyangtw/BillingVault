@@ -5,6 +5,11 @@ const subscriptionInclude = {
   order: {
     select: { amountCents: true, status: true },
   },
+  scheduledChanges: {
+    where: { status: "pending" },
+    orderBy: { createdAt: "desc" },
+    take: 1,
+  },
 } satisfies Prisma.SubscriptionInclude;
 
 export type SubscriptionRecord = Prisma.SubscriptionGetPayload<{

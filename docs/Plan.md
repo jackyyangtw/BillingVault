@@ -402,7 +402,7 @@ type SubscriptionStatus =
 | 狀態         | UI 顯示              |
 | ------------ | -------------------- |
 | `trialing`   | 試用中，顯示剩餘天數 |
-| `active`     | 訂閱正常             |
+| `active`     | 訂閱中               |
 | `past_due`   | 付款方式需更新       |
 | `canceled`   | 已取消訂閱           |
 | `incomplete` | 訂閱尚未完成         |

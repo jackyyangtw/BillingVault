@@ -23,6 +23,7 @@ function createSubscription(
       amountCents: 99000,
       status: "paid",
     },
+    scheduledChanges: [],
     ...overrides,
   };
 }
@@ -45,9 +46,36 @@ describe("subscription mappers", () => {
       cycle: "yearly",
       seats: 25,
       renewalDate: "2026-06-10T00:00:00.000Z",
-      nextInvoiceAmount: 990,
+      nextInvoiceAmount: 1140,
       trialDaysLeft: 0,
       isExpiringSoon: true,
+      scheduledChange: null,
+    });
+  });
+
+  it("將待生效的降級排程轉換成目前訂閱提示", () => {
+    const subscription = createSubscription({
+      scheduledChanges: [
+        {
+          id: "44444444-4444-4444-8444-444444444444",
+          userId: "22222222-2222-4222-8222-222222222222",
+          subscriptionId: "11111111-1111-4111-8111-111111111111",
+          fromPlanId: "business",
+          toPlanId: "pro",
+          effectiveAt: new Date("2026-06-10T00:00:00.000Z"),
+          status: "pending",
+          createdAt: new Date("2026-06-03T00:00:00.000Z"),
+          updatedAt: new Date("2026-06-03T00:00:00.000Z"),
+        },
+      ],
+    });
+
+    expect(toCurrentSubscription(subscription).scheduledChange).toMatchObject({
+      id: "44444444-4444-4444-8444-444444444444",
+      fromPlanName: "Business",
+      toPlanId: "pro",
+      toPlanName: "Pro",
+      effectiveAt: "2026-06-10T00:00:00.000Z",
     });
   });
 

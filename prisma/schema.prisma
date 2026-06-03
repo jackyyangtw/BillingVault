@@ -50,6 +50,12 @@ enum SubscriptionStatus {
   incomplete
 }
 
+enum SubscriptionPlanChangeStatus {
+  pending
+  applied
+  canceled
+}
+
 model PaymentMethod {
   id                      String           @id @default(uuid()) @db.Uuid
   userId                  String           @unique(map: "payment_methods_one_default_per_user_idx", where: raw("(is_default = true)")) @map("user_id") @db.Uuid
@@ -158,8 +164,28 @@ model Subscription {
   createdAt          DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt          DateTime           @updatedAt @map("updated_at") @db.Timestamptz(6)
   order              Order              @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  scheduledChanges   SubscriptionPlanChange[]
 
   @@index([userId, status])
   @@index([userId, currentPeriodEnd])
   @@map("subscriptions")
+}
+
+model SubscriptionPlanChange {
+  id             String                       @id @default(uuid()) @db.Uuid
+  userId         String                       @map("user_id") @db.Uuid
+  subscriptionId String                       @map("subscription_id") @db.Uuid
+  fromPlanId     String                       @map("from_plan_id")
+  toPlanId       String                       @map("to_plan_id")
+  effectiveAt    DateTime                     @map("effective_at") @db.Timestamptz(6)
+  status         SubscriptionPlanChangeStatus @default(pending)
+  createdAt      DateTime                     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime                     @updatedAt @map("updated_at") @db.Timestamptz(6)
+  subscription   Subscription                 @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  @@unique([subscriptionId, status], map: "subscription_plan_changes_one_pending_per_subscription_idx", where: raw("(status = 'pending')"))
+  @@index([userId, status])
+  @@index([subscriptionId, status])
+  @@index([effectiveAt, status])
+  @@map("subscription_plan_changes")
 }
