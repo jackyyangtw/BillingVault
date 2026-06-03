@@ -68,8 +68,8 @@ export default function AddPaymentDialog({
       <DialogHeader>
         <DialogTitle>新增信用卡</DialogTitle>
         <DialogDescription>
-          使用 TapPay hosted fields 取得 prime，後端目前以 mock
-          流程建立付款方式。
+          使用 TapPay hosted fields 取得 prime，後端以 sandbox
+          綁卡流程保存可重複扣款 token。
         </DialogDescription>
       </DialogHeader>
 

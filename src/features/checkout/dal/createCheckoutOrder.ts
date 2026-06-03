@@ -3,7 +3,10 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import { prisma } from "@/lib/prisma";
 import { calculateCheckoutPricing } from "@/features/checkout/dal/pricing";
-import { processTapPaySandboxPayment } from "@/features/checkout/payments/processTapPaySandboxPayment";
+import {
+  processTapPaySandboxPayment,
+  processTapPaySandboxTokenPayment,
+} from "@/features/checkout/payments/processTapPaySandboxPayment";
 import { getTapPayCardBrand } from "@/features/payment-methods/cardBrand";
 import type { BillingCycle } from "@/mocks/fixtures/plans";
 
@@ -35,7 +38,7 @@ export type CheckoutOrderResult = {
   orderId: string;
   orderNumber: string;
   amountCents: number;
-  currency: "USD";
+  currency: "TWD";
   providerTradeId: string;
   failureMessage?: string;
 };
@@ -103,10 +106,16 @@ export async function createCheckoutOrder(
     throw new Error("付款紀錄建立失敗。");
   }
 
-  const paymentResult = await processTapPaySandboxPayment({
+  const paymentResult = await processTapPaySandboxCheckoutPayment({
     orderNumber,
     amountCents: pricing.amountCents,
-    prime: paymentSource.prime,
+    paymentSource,
+    details: `${pricing.productName} ${pricing.planName} subscription`,
+    cardholder: {
+      name: input.companyName,
+      email: input.billingEmail,
+      address: input.billingAddress,
+    },
     simulateFailure: input.simulatePaymentFailure,
   });
 
@@ -181,7 +190,10 @@ export async function createCheckoutOrder(
       },
     });
 
-    if (paymentSource.newPaymentMethod) {
+    const newPaymentMethod =
+      paymentSource.type === "prime" ? paymentSource.newPaymentMethod : null;
+
+    if (newPaymentMethod) {
       const existingCount = await tx.paymentMethod.count({
         where: { userId },
       });
@@ -189,7 +201,12 @@ export async function createCheckoutOrder(
       await tx.paymentMethod.create({
         data: {
           userId,
-          ...paymentSource.newPaymentMethod,
+          ...newPaymentMethod,
+          providerCardKey: paymentResult.cardSecret?.cardKey,
+          providerCardToken: paymentResult.cardSecret?.cardToken,
+          tappayPrimeState: paymentResult.cardSecret
+            ? "ready"
+            : "requires_refresh",
           isDefault: existingCount === 0,
         },
       });
@@ -222,30 +239,7 @@ async function getCheckoutPaymentSource(
   input: CreateCheckoutOrderInput,
 ) {
   if (input.paymentMethodId) {
-    const paymentMethod = await prisma.paymentMethod.findFirst({
-      where: {
-        id: input.paymentMethodId,
-        userId,
-      },
-    });
-
-    if (!paymentMethod) {
-      throw new Error("找不到可用的付款方式。");
-    }
-
-    if (paymentMethod.tappayPrimeState !== "ready") {
-      throw new Error("此付款方式需要重新綁定後才能使用。");
-    }
-
-    if (isExpiredPaymentMethod(paymentMethod)) {
-      throw new Error("此付款方式已過期，請選擇其他卡片。");
-    }
-
-    return {
-      prime: `saved_${paymentMethod.id}`,
-      cardIdentifier: paymentMethod.cardIdentifier ?? undefined,
-      last4: paymentMethod.last4,
-    };
+    return getSavedPaymentSource(userId, input.paymentMethodId);
   }
 
   if (!input.prime) {
@@ -253,6 +247,7 @@ async function getCheckoutPaymentSource(
   }
 
   return {
+    type: "prime" as const,
     prime: input.prime,
     cardIdentifier: input.card?.cardIdentifier,
     last4: input.card?.last4,
@@ -269,6 +264,80 @@ async function getCheckoutPaymentSource(
         }
       : undefined,
   };
+}
+
+async function getSavedPaymentSource(userId: string, paymentMethodId: string) {
+  const paymentMethod = await prisma.paymentMethod.findFirst({
+    where: {
+      id: paymentMethodId,
+      userId,
+    },
+  });
+
+  if (!paymentMethod) {
+    throw new Error("找不到可用的付款方式。");
+  }
+
+  if (paymentMethod.tappayPrimeState !== "ready") {
+    throw new Error("此付款方式需要重新綁定後才能使用。");
+  }
+
+  if (isExpiredPaymentMethod(paymentMethod)) {
+    throw new Error("此付款方式已過期，請選擇其他卡片。");
+  }
+
+  if (!paymentMethod.providerCardKey || !paymentMethod.providerCardToken) {
+    throw new Error("此卡片需要重新綁定後才能用於扣款。");
+  }
+
+  return {
+    type: "token" as const,
+    cardKey: paymentMethod.providerCardKey,
+    cardToken: paymentMethod.providerCardToken,
+    cardIdentifier: paymentMethod.cardIdentifier ?? undefined,
+    last4: paymentMethod.last4,
+  };
+}
+
+async function processTapPaySandboxCheckoutPayment({
+  orderNumber,
+  amountCents,
+  paymentSource,
+  details,
+  cardholder,
+  simulateFailure,
+}: {
+  orderNumber: string;
+  amountCents: number;
+  paymentSource: Awaited<ReturnType<typeof getCheckoutPaymentSource>>;
+  details: string;
+  cardholder: {
+    name: string;
+    email: string;
+    address: string;
+  };
+  simulateFailure?: boolean;
+}) {
+  if (paymentSource.type === "token") {
+    return processTapPaySandboxTokenPayment({
+      orderNumber,
+      amountCents,
+      cardKey: paymentSource.cardKey,
+      cardToken: paymentSource.cardToken,
+      details,
+      cardholder,
+      simulateFailure,
+    });
+  }
+
+  return processTapPaySandboxPayment({
+    orderNumber,
+    amountCents,
+    prime: paymentSource.prime,
+    details,
+    cardholder,
+    simulateFailure,
+  });
 }
 
 function isExpiredPaymentMethod(method: {

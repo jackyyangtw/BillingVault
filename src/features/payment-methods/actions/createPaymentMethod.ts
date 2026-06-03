@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 import { verifySession } from "@/lib/auth/dal";
 import { getTapPayCardBrand } from "@/features/payment-methods/cardBrand";
 import { createPaymentMethod } from "@/features/payment-methods/dal/createPaymentMethod";
+import { bindTapPaySandboxCard } from "@/features/payment-methods/payments/bindTapPaySandboxCard";
 
 const createPaymentMethodSchema = z.object({
   prime: z.string().min(1),
@@ -33,6 +34,13 @@ export async function createPaymentMethodAction(
 
   const { card, billingEmail, cardHolder } = parsed.data;
   const brand = getTapPayCardBrand(card);
+  const boundCard = await bindTapPaySandboxCard({
+    prime: parsed.data.prime,
+    cardholder: {
+      name: cardHolder,
+      email: billingEmail,
+    },
+  });
   const paymentMethod = await createPaymentMethod(userId, {
     brand: brand ?? card.issuer ?? card.issuerZhTw ?? "Card",
     binCode: card.binCode,
@@ -40,6 +48,8 @@ export async function createPaymentMethodAction(
     holder: cardHolder,
     billingEmail,
     cardIdentifier: card.cardIdentifier,
+    providerCardKey: boundCard.providerCardKey,
+    providerCardToken: boundCard.providerCardToken,
     expMonth: card.expMonth,
     expYear: card.expYear,
   });

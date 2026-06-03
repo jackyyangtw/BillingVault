@@ -61,6 +61,8 @@ model PaymentMethod {
   userId                  String           @unique(map: "payment_methods_one_default_per_user_idx", where: raw("(is_default = true)")) @map("user_id") @db.Uuid
   provider                PaymentProvider  @default(tappay)
   providerPaymentMethodId String?          @map("provider_payment_method_id")
+  providerCardKey         String?          @map("provider_card_key") @db.VarChar(64)
+  providerCardToken       String?          @map("provider_card_token") @db.VarChar(67)
   cardIdentifier          String?          @map("card_identifier")
   brand                   String
   binCode                 String?          @map("bin_code") @db.VarChar(6)

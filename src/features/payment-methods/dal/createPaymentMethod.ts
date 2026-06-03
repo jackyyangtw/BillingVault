@@ -11,6 +11,8 @@ type CreatePaymentMethodInput = {
   billingEmail: string;
   cardIdentifier?: string;
   providerPaymentMethodId?: string;
+  providerCardKey?: string;
+  providerCardToken?: string;
   expMonth?: number;
   expYear?: number;
 };
@@ -35,6 +37,8 @@ export async function createPaymentMethod(
         billingEmail: input.billingEmail,
         cardIdentifier: input.cardIdentifier,
         providerPaymentMethodId: input.providerPaymentMethodId,
+        providerCardKey: input.providerCardKey,
+        providerCardToken: input.providerCardToken,
         expMonth: input.expMonth,
         expYear: input.expYear,
         isDefault,
