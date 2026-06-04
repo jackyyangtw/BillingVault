@@ -19,6 +19,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { getCheckoutFailureDetails } from "@/features/checkout/dal/getCheckoutFailureDetails";
+import { verifySession } from "@/lib/auth/dal";
 
 export const metadata: Metadata = {
   title: "Checkout Failed | SecureCart",
@@ -35,8 +37,16 @@ type CheckoutFailurePageProps = {
 export default async function CheckoutFailurePage({
   searchParams,
 }: CheckoutFailurePageProps) {
-  const params = await searchParams;
+  const [{ userId }, params] = await Promise.all([
+    verifySession(),
+    searchParams,
+  ]);
   const orderNumber = params.order ?? "Sandbox order";
+  const failureDetails = params.order
+    ? await getCheckoutFailureDetails(userId, params.order)
+    : null;
+  const failureReason = getFailureReason(failureDetails);
+  const failureCode = getFailureCode(failureDetails);
 
   return (
     <main>
@@ -64,11 +74,20 @@ export default async function CheckoutFailurePage({
               <CardTitle className="text-2xl">訂閱尚未建立</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-6">
-              <div className="grid gap-3 sm:grid-cols-4">
+              <div className="grid gap-3 sm:grid-cols-5">
                 <ResultDetail label="狀態" value="Failed" />
                 <ResultDetail label="訂單" value={orderNumber} />
                 <ResultDetail label="訂閱" value="未啟用" />
                 <ResultDetail label="付款" value="sandbox 授權失敗" />
+                <ResultDetail label="TapPay" value={failureReason} />
+              </div>
+
+              <div className="border-destructive/40 bg-destructive/5 text-destructive rounded-3xl border p-4">
+                <p className="text-sm font-semibold">TapPay 回覆</p>
+                <p className="mt-2 text-sm leading-6 break-words">
+                  {failureReason}
+                  {failureCode ? ` (${failureCode})` : ""}
+                </p>
               </div>
 
               <Separator />
@@ -127,9 +146,29 @@ function ResultDetail({ label, value }: ResultDetailProps) {
   return (
     <div className="bg-muted/40 rounded-3xl border p-4">
       <p className="text-muted-foreground text-xs font-medium">{label}</p>
-      <p className="mt-1 font-semibold">{value}</p>
+      <p className="mt-1 font-semibold break-words">{value}</p>
     </div>
   );
+}
+
+function getFailureReason(
+  details: Awaited<ReturnType<typeof getCheckoutFailureDetails>>,
+) {
+  return (
+    details?.failureMessage ??
+    details?.providerMessage ??
+    "TapPay sandbox 授權失敗"
+  );
+}
+
+function getFailureCode(
+  details: Awaited<ReturnType<typeof getCheckoutFailureDetails>>,
+) {
+  if (details?.providerStatusCode && details.failureCode) {
+    return `${details.failureCode} / status ${details.providerStatusCode}`;
+  }
+
+  return details?.failureCode ?? details?.providerStatusCode;
 }
 
 type FailureReasonProps = {
