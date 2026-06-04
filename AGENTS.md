@@ -64,3 +64,15 @@ This version has breaking changes — APIs, conventions, and file structure may 
 [新增] 預測修改後 React DevTools 是否會顯示 "Memo ✨" 標籤，若會導致 Bail-out（優化失效），必須說明原因。
 
 取得使用者確認後再開始修改。
+
+## Prisma + Supabase Migration 規則
+
+本專案使用 Prisma 管理 Supabase PostgreSQL schema。
+
+當任務涉及 Supabase 後台警告、RLS、policy、schema、migration、table、index、constraint 或資料庫安全設定時：
+
+1. 不只新增 migration 檔案。
+2. 新增 migration 後必須執行 `npx prisma migrate deploy`，將 migration 實際套用到 Supabase。
+3. deploy 後必須執行 `npx prisma migrate status` 確認 `Database schema is up to date!`。
+4. 若修的是 Supabase Advisor 警告，應說明 Supabase 後台可能需要刷新或重新執行 Advisor。
+5. 除非使用者明確要求只產生檔案，否則 migration 任務視為「新增並部署」。
