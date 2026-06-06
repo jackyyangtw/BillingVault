@@ -35,6 +35,7 @@ import { createCheckoutOrder } from "./createCheckoutOrder";
 
 const userId = "22222222-2222-4222-8222-222222222222";
 const paymentMethodId = "11111111-1111-4111-8111-111111111111";
+const idempotencyKey = "55555555-5555-4555-8555-555555555555";
 
 describe("建立結帳訂單", () => {
   beforeEach(() => {
@@ -81,6 +82,7 @@ describe("建立結帳訂單", () => {
         companyName: "SecureCart",
         billingEmail: "billing@example.com",
         billingAddress: "台北市信義區",
+        idempotencyKey,
         paymentMethodId,
       }),
     ).resolves.toMatchObject({
@@ -136,10 +138,75 @@ describe("建立結帳訂單", () => {
         companyName: "SecureCart",
         billingEmail: "billing@example.com",
         billingAddress: "台北市信義區",
+        idempotencyKey,
         paymentMethodId,
       }),
     ).rejects.toThrow("此卡片需要重新綁定後才能用於扣款。");
 
+    expect(prismaMock.order.create).not.toHaveBeenCalled();
+  });
+
+  it("同一冪等鍵已完成時回傳既有訂單且不再次扣款", async () => {
+    prismaMock.order.findFirst.mockResolvedValueOnce({
+      id: "33333333-3333-4333-8333-333333333333",
+      orderNumber: "SC20260603DONE",
+      amountCents: 144000,
+      status: "paid",
+      payments: [
+        {
+          status: "succeeded",
+          providerTradeId: "SANDBOX_EXISTING_TRADE_ID",
+          failureMessage: null,
+        },
+      ],
+    });
+
+    await expect(
+      createCheckoutOrder(userId, {
+        planId: "pro",
+        productId: "codeguard",
+        cycle: "monthly",
+        companyName: "SecureCart",
+        billingEmail: "billing@example.com",
+        billingAddress: "台北市信義區",
+        idempotencyKey,
+        paymentMethodId,
+      }),
+    ).resolves.toMatchObject({
+      status: "succeeded",
+      orderNumber: "SC20260603DONE",
+      providerTradeId: "SANDBOX_EXISTING_TRADE_ID",
+    });
+
+    expect(prismaMock.paymentMethod.findFirst).not.toHaveBeenCalled();
+    expect(processTapPaySandboxTokenPayment).not.toHaveBeenCalled();
+    expect(prismaMock.order.create).not.toHaveBeenCalled();
+  });
+
+  it("同一冪等鍵仍在處理中時拒絕重複送出", async () => {
+    prismaMock.order.findFirst.mockResolvedValueOnce({
+      id: "33333333-3333-4333-8333-333333333333",
+      orderNumber: "SC20260603PENDING",
+      amountCents: 144000,
+      status: "pending",
+      payments: [{ status: "pending" }],
+    });
+
+    await expect(
+      createCheckoutOrder(userId, {
+        planId: "pro",
+        productId: "codeguard",
+        cycle: "monthly",
+        companyName: "SecureCart",
+        billingEmail: "billing@example.com",
+        billingAddress: "台北市信義區",
+        idempotencyKey,
+        paymentMethodId,
+      }),
+    ).rejects.toThrow("結帳正在處理中，請稍候再試。");
+
+    expect(prismaMock.paymentMethod.findFirst).not.toHaveBeenCalled();
+    expect(processTapPaySandboxTokenPayment).not.toHaveBeenCalled();
     expect(prismaMock.order.create).not.toHaveBeenCalled();
   });
 });

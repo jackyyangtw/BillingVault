@@ -19,6 +19,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import {
+  type CheckoutSuccessDetails,
+  getCheckoutSuccessDetails,
+} from "@/features/checkout/dal/getCheckoutSuccessDetails";
+import { verifySession } from "@/lib/auth/dal";
 
 export const metadata: Metadata = {
   title: "結帳成功 | SecureCart",
@@ -35,8 +40,14 @@ type CheckoutSuccessPageProps = {
 export default async function CheckoutSuccessPage({
   searchParams,
 }: CheckoutSuccessPageProps) {
-  const params = await searchParams;
+  const [{ userId }, params] = await Promise.all([
+    verifySession(),
+    searchParams,
+  ]);
   const orderNumber = params.order ?? "Sandbox order";
+  const successDetails = params.order
+    ? await getCheckoutSuccessDetails(userId, params.order)
+    : null;
 
   return (
     <main>
@@ -68,7 +79,18 @@ export default async function CheckoutSuccessPage({
               <div className="grid gap-3 sm:grid-cols-4">
                 <ResultDetail label="狀態" value="Active" />
                 <ResultDetail label="訂單" value={orderNumber} />
-                <ResultDetail label="類型" value="SaaS 訂閱" />
+                <ResultDetail
+                  label="購買商品"
+                  value={getProductDisplayValue(successDetails)}
+                />
+                <ResultDetail
+                  label="金額"
+                  value={successDetails?.amount ?? "已付款"}
+                />
+                <ResultDetail
+                  label="購買時間"
+                  value={successDetails?.purchasedAt ?? "已完成"}
+                />
                 <ResultDetail label="付款" value="sandbox 授權成功" />
               </div>
 
@@ -128,6 +150,14 @@ function ResultDetail({ label, value }: ResultDetailProps) {
       <p className="mt-1 font-semibold break-all">{value}</p>
     </div>
   );
+}
+
+function getProductDisplayValue(details: CheckoutSuccessDetails | null) {
+  if (!details) {
+    return "SaaS 訂閱";
+  }
+
+  return `${details.productName} / ${details.planName}`;
 }
 
 type NextStepProps = {

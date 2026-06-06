@@ -485,7 +485,7 @@ type SubscriptionStatus =
 | 金流欄位隔離     | TapPay hosted fields 接管卡號 / 到期日 / CVC，前端不保存原始卡號 |
 | 錯誤碼對應       | 後端 error code 對應 i18n 訊息                                   |
 | 送出鎖定         | 避免重複送出表單                                                 |
-| 冪等鍵概念       | 避免重複建立訂單、付款紀錄、訂閱或付款方式資料                   |
+| 冪等鍵保護       | Checkout 使用 idempotency key 與資料庫唯一約束避免重複訂單       |
 | sandbox 金流隔離 | TapPay sandbox endpoint 與 production endpoint 明確分離          |
 | 受保護路由       | account / checkout / dashboard 需要登入                          |
 | Session 過期處理 | Session 過期時自動導回登入頁                                     |
@@ -571,6 +571,7 @@ TapPay sandbox 模擬付款、訂單與交易紀錄、
 - [x] 建立本地訂單與付款紀錄資料模型
 - [x] sandbox 付款成功後建立 / 更新訂閱與 invoice
 - [x] sandbox 付款失敗後保存錯誤碼與失敗紀錄
+- [x] Checkout idempotency key 與資料庫唯一約束防重複訂單
 - [x] 信用卡管理資料寫入 Supabase Postgres
 - [x] 已儲存卡片扣款接入 TapPay Pay by Card Token API
 - [x] demo 流程結果頁

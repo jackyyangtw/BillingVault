@@ -25,6 +25,7 @@ export default function CheckoutForm({
   initialBillingEmail,
 }: CheckoutFormProps) {
   const router = useRouter();
+  const [idempotencyKey] = useState(() => crypto.randomUUID());
   const [paymentError, setPaymentError] = useState("");
   const { mutateAsync: submitCheckoutOrder, isPending: isCheckoutPending } =
     useSubmitCheckout();
@@ -66,6 +67,7 @@ export default function CheckoutForm({
         const result = await submitCheckoutOrder({
           ...values,
           ...paymentInput,
+          idempotencyKey,
           simulatePaymentFailure,
         });
         const query = `order=${encodeURIComponent(result.orderNumber)}`;
@@ -82,7 +84,7 @@ export default function CheckoutForm({
         );
       }
     },
-    [getSubmitPaymentInput, router, submitCheckoutOrder],
+    [getSubmitPaymentInput, idempotencyKey, router, submitCheckoutOrder],
   );
 
   const handleValidSubmit = useCallback(

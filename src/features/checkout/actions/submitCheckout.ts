@@ -22,6 +22,7 @@ const submitCheckoutSchema = z
     billingEmail: z.string().email(),
     taxId: z.string().optional(),
     billingAddress: z.string().min(1),
+    idempotencyKey: z.string().uuid(),
     prime: z.string().min(1).optional(),
     paymentMethodId: z.string().uuid().optional(),
     card: z
