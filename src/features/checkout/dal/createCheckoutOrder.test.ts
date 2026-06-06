@@ -31,11 +31,17 @@ vi.mock("@/features/checkout/payments/processTapPaySandboxPayment", () => ({
 }));
 
 import { processTapPaySandboxTokenPayment } from "@/features/checkout/payments/processTapPaySandboxPayment";
+import {
+  testCompletedOrderNumber,
+  testCreatedOrderNumber,
+  testIdempotencyKey,
+  testOrderId,
+  testPaymentMethodId,
+  testPaymentRecordId,
+  testPendingOrderNumber,
+  testUserId,
+} from "@/test/testIds";
 import { createCheckoutOrder } from "./createCheckoutOrder";
-
-const userId = "22222222-2222-4222-8222-222222222222";
-const paymentMethodId = "11111111-1111-4111-8111-111111111111";
-const idempotencyKey = "55555555-5555-4555-8555-555555555555";
 
 describe("建立結帳訂單", () => {
   beforeEach(() => {
@@ -43,9 +49,9 @@ describe("建立結帳訂單", () => {
     vi.stubEnv("NEXT_PUBLIC_TAPPAY_SERVER_TYPE", "sandbox");
     prismaMock.order.findFirst.mockResolvedValue(null);
     prismaMock.order.create.mockResolvedValue({
-      id: "33333333-3333-4333-8333-333333333333",
-      orderNumber: "SC20260603TEST",
-      payments: [{ id: "44444444-4444-4444-8444-444444444444" }],
+      id: testOrderId,
+      orderNumber: testCreatedOrderNumber,
+      payments: [{ id: testPaymentRecordId }],
     });
     prismaMock.$transaction.mockImplementation(async (callback) => {
       if (Array.isArray(callback)) {
@@ -58,7 +64,7 @@ describe("建立結帳訂單", () => {
 
   it("已儲存卡片有 TapPay token 時可完成扣款", async () => {
     prismaMock.paymentMethod.findFirst.mockResolvedValue({
-      id: paymentMethodId,
+      id: testPaymentMethodId,
       tappayPrimeState: "ready",
       expMonth: 12,
       expYear: 2099,
@@ -75,15 +81,15 @@ describe("建立結帳訂單", () => {
     });
 
     await expect(
-      createCheckoutOrder(userId, {
+      createCheckoutOrder(testUserId, {
         planId: "pro",
         productId: "codeguard",
         cycle: "monthly",
         companyName: "SecureCart",
         billingEmail: "billing@example.com",
         billingAddress: "台北市信義區",
-        idempotencyKey,
-        paymentMethodId,
+        idempotencyKey: testIdempotencyKey,
+        paymentMethodId: testPaymentMethodId,
       }),
     ).resolves.toMatchObject({
       status: "succeeded",
@@ -92,8 +98,8 @@ describe("建立結帳訂單", () => {
 
     expect(prismaMock.paymentMethod.findFirst).toHaveBeenCalledWith({
       where: {
-        id: paymentMethodId,
-        userId,
+        id: testPaymentMethodId,
+        userId: testUserId,
       },
     });
     expect(processTapPaySandboxTokenPayment).toHaveBeenCalledWith({
@@ -110,7 +116,7 @@ describe("建立結帳訂單", () => {
       simulateFailure: undefined,
     });
     expect(prismaMock.paymentRecord.update).toHaveBeenCalledWith({
-      where: { id: "44444444-4444-4444-8444-444444444444" },
+      where: { id: testPaymentRecordId },
       data: {
         status: "succeeded",
         providerTradeId: "SANDBOX_TOKEN_TRADE_ID",
@@ -122,7 +128,7 @@ describe("建立結帳訂單", () => {
 
   it("已儲存卡片缺少 TapPay token 時要求重新綁定", async () => {
     prismaMock.paymentMethod.findFirst.mockResolvedValue({
-      id: paymentMethodId,
+      id: testPaymentMethodId,
       tappayPrimeState: "ready",
       expMonth: 12,
       expYear: 2099,
@@ -131,15 +137,15 @@ describe("建立結帳訂單", () => {
     });
 
     await expect(
-      createCheckoutOrder(userId, {
+      createCheckoutOrder(testUserId, {
         planId: "pro",
         productId: "codeguard",
         cycle: "monthly",
         companyName: "SecureCart",
         billingEmail: "billing@example.com",
         billingAddress: "台北市信義區",
-        idempotencyKey,
-        paymentMethodId,
+        idempotencyKey: testIdempotencyKey,
+        paymentMethodId: testPaymentMethodId,
       }),
     ).rejects.toThrow("此卡片需要重新綁定後才能用於扣款。");
 
@@ -148,8 +154,8 @@ describe("建立結帳訂單", () => {
 
   it("同一冪等鍵已完成時回傳既有訂單且不再次扣款", async () => {
     prismaMock.order.findFirst.mockResolvedValueOnce({
-      id: "33333333-3333-4333-8333-333333333333",
-      orderNumber: "SC20260603DONE",
+      id: testOrderId,
+      orderNumber: testCompletedOrderNumber,
       amountCents: 144000,
       status: "paid",
       payments: [
@@ -162,19 +168,19 @@ describe("建立結帳訂單", () => {
     });
 
     await expect(
-      createCheckoutOrder(userId, {
+      createCheckoutOrder(testUserId, {
         planId: "pro",
         productId: "codeguard",
         cycle: "monthly",
         companyName: "SecureCart",
         billingEmail: "billing@example.com",
         billingAddress: "台北市信義區",
-        idempotencyKey,
-        paymentMethodId,
+        idempotencyKey: testIdempotencyKey,
+        paymentMethodId: testPaymentMethodId,
       }),
     ).resolves.toMatchObject({
       status: "succeeded",
-      orderNumber: "SC20260603DONE",
+      orderNumber: testCompletedOrderNumber,
       providerTradeId: "SANDBOX_EXISTING_TRADE_ID",
     });
 
@@ -185,23 +191,23 @@ describe("建立結帳訂單", () => {
 
   it("同一冪等鍵仍在處理中時拒絕重複送出", async () => {
     prismaMock.order.findFirst.mockResolvedValueOnce({
-      id: "33333333-3333-4333-8333-333333333333",
-      orderNumber: "SC20260603PENDING",
+      id: testOrderId,
+      orderNumber: testPendingOrderNumber,
       amountCents: 144000,
       status: "pending",
       payments: [{ status: "pending" }],
     });
 
     await expect(
-      createCheckoutOrder(userId, {
+      createCheckoutOrder(testUserId, {
         planId: "pro",
         productId: "codeguard",
         cycle: "monthly",
         companyName: "SecureCart",
         billingEmail: "billing@example.com",
         billingAddress: "台北市信義區",
-        idempotencyKey,
-        paymentMethodId,
+        idempotencyKey: testIdempotencyKey,
+        paymentMethodId: testPaymentMethodId,
       }),
     ).rejects.toThrow("結帳正在處理中，請稍候再試。");
 

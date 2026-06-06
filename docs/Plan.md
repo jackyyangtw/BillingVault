@@ -497,15 +497,15 @@ type SubscriptionStatus =
 | ✅   | 安全回調 URL  | 擋掉 `https://evil.com`、`javascript:`、`//evil.com`            |
 | ✅   | CSP header    | nonce 與第三方 script/frame 白名單                              |
 | ✅   | Supabase Auth | email/password 登入、登出、callbackUrl 與 session 失效導回登入  |
-| 🟡   | Prisma DAL    | Server-only 查詢、DTO 回傳、禁止 Client 直接查敏感資料          |
+| ✅   | Prisma DAL    | 已測 server-only Prisma 查詢、DTO 回傳、ownership 與交易流程    |
 | ✅   | 價格計算      | 月繳 / 年繳折扣計算                                             |
 | ⬜   | 方案比較      | 不同方案功能顯示                                                |
 | 🟡   | 訂閱狀態      | 已測目前訂閱選取、即將到期與 mapper；待補 UI 狀態測試           |
 | ⬜   | 方案確認驗證  | 必填欄位、格式錯誤                                              |
 | ✅   | sandbox 付款  | TapPay sandbox 成功 / 失敗、response mapping、endpoint 防呆     |
-| 🟡   | 訂單紀錄      | 已測建立成功與冪等鍵防重；待補 pending / paid / failed 顯示     |
-| 🟡   | 付款紀錄      | 已測成功更新與 TapPay 失敗 mapping；待補失敗寫入 DAL 測試       |
-| 🟡   | 信用卡管理    | TapPay hosted fields、prime 取得、sandbox 綁卡、成功 / 失敗流程 |
+| ✅   | 訂單紀錄      | 已測建立成功、冪等鍵防重、pending / paid / failed 結果查詢      |
+| ✅   | 付款紀錄      | 已測成功更新、TapPay 失敗 mapping 與失敗頁錯誤 DTO              |
+| 🟡   | 信用卡管理    | 已測 Prisma DAL 新增、查詢、刪除、設預設；待補 hosted fields UI |
 | 🟡   | 帳單格式化    | 已測台幣金額；待補日期時間與狀態 label                          |
 
 ---
@@ -600,9 +600,9 @@ TapPay sandbox 模擬付款、訂單與交易紀錄、
 - [x] 確保 Client Component 不直接查詢敏感資料
 - [x] Vitest 測試基礎
 - [x] 價格計算測試
-- [ ] 信用卡管理驗證測試
+- [x] 信用卡管理 Prisma DAL 驗證測試
 - [x] TapPay sandbox response mapping 測試
-- [ ] 訂單 / 付款紀錄 DAL 測試
+- [x] 訂單 / 付款紀錄 DAL 測試
 
 ### 第五階段：完善細節
 

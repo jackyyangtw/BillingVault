@@ -16,20 +16,19 @@ vi.mock("@/features/payment-methods/payments/bindTapPaySandboxCard", () => ({
   bindTapPaySandboxCard: bindTapPaySandboxCardMock,
 }));
 
+import { testPaymentMethodId, testUserId } from "@/test/testIds";
 import { createPaymentMethodAction } from "./createPaymentMethod";
-
-const userId = "22222222-2222-4222-8222-222222222222";
 
 describe("新增付款方式", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    verifySessionMock.mockResolvedValue({ userId });
+    verifySessionMock.mockResolvedValue({ userId: testUserId });
     bindTapPaySandboxCardMock.mockResolvedValue({
       providerCardKey: "CARD_KEY",
       providerCardToken: "CARD_TOKEN",
     });
     createPaymentMethodMock.mockResolvedValue({
-      id: "11111111-1111-4111-8111-111111111111",
+      id: testPaymentMethodId,
       brand: "Visa",
       last4: "4242",
     });
@@ -63,7 +62,7 @@ describe("新增付款方式", () => {
       },
     });
     expect(createPaymentMethodMock).toHaveBeenCalledWith(
-      userId,
+      testUserId,
       expect.objectContaining({
         brand: "Visa",
         last4: "4242",

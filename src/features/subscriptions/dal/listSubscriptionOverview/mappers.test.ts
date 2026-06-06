@@ -1,4 +1,10 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import {
+  testOrderId,
+  testScheduledChangeId,
+  testSubscriptionId,
+  testUserId,
+} from "@/test/testIds";
 import { toCurrentSubscription, toSubscriptionRecord } from "./mappers";
 import type { SubscriptionRecord } from "./subscriptionQuery";
 
@@ -8,9 +14,9 @@ function createSubscription(
   const now = new Date("2026-06-03T00:00:00.000Z");
 
   return {
-    id: "11111111-1111-4111-8111-111111111111",
-    userId: "22222222-2222-4222-8222-222222222222",
-    orderId: "33333333-3333-4333-8333-333333333333",
+    id: testSubscriptionId,
+    userId: testUserId,
+    orderId: testOrderId,
     planId: "business",
     productId: "deploywatch",
     cycle: "yearly",
@@ -38,7 +44,7 @@ describe("subscription mappers", () => {
     vi.setSystemTime(new Date("2026-06-03T00:00:00.000Z"));
 
     expect(toCurrentSubscription(createSubscription())).toMatchObject({
-      id: "11111111-1111-4111-8111-111111111111",
+      id: testSubscriptionId,
       planId: "business",
       planName: "Business",
       productName: "DeployWatch",
@@ -57,9 +63,9 @@ describe("subscription mappers", () => {
     const subscription = createSubscription({
       scheduledChanges: [
         {
-          id: "44444444-4444-4444-8444-444444444444",
-          userId: "22222222-2222-4222-8222-222222222222",
-          subscriptionId: "11111111-1111-4111-8111-111111111111",
+          id: testScheduledChangeId,
+          userId: testUserId,
+          subscriptionId: testSubscriptionId,
           fromPlanId: "business",
           toPlanId: "pro",
           effectiveAt: new Date("2026-06-10T00:00:00.000Z"),
@@ -71,7 +77,7 @@ describe("subscription mappers", () => {
     });
 
     expect(toCurrentSubscription(subscription).scheduledChange).toMatchObject({
-      id: "44444444-4444-4444-8444-444444444444",
+      id: testScheduledChangeId,
       fromPlanName: "Business",
       toPlanId: "pro",
       toPlanName: "Pro",

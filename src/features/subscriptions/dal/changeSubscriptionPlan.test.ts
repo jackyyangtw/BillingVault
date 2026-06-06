@@ -31,10 +31,13 @@ vi.mock("@/lib/prisma", () => ({
   prisma: prismaMock,
 }));
 
+import {
+  testOrderId,
+  testPaymentRecordId,
+  testSubscriptionId,
+  testUserId,
+} from "@/test/testIds";
 import { changeSubscriptionPlan } from "./changeSubscriptionPlan";
-
-const userId = "22222222-2222-4222-8222-222222222222";
-const subscriptionId = "11111111-1111-4111-8111-111111111111";
 
 describe("變更訂閱方案", () => {
   beforeEach(() => {
@@ -49,8 +52,8 @@ describe("變更訂閱方案", () => {
       callback(txMock),
     );
     txMock.order.create.mockResolvedValue({
-      id: "33333333-3333-4333-8333-333333333333",
-      payments: [{ id: "44444444-4444-4444-8444-444444444444" }],
+      id: testOrderId,
+      payments: [{ id: testPaymentRecordId }],
     });
   });
 
@@ -64,16 +67,16 @@ describe("變更訂閱方案", () => {
     );
 
     await expect(
-      changeSubscriptionPlan(userId, {
-        subscriptionId,
+      changeSubscriptionPlan(testUserId, {
+        subscriptionId: testSubscriptionId,
         planId: "pro",
       }),
     ).resolves.toEqual({ changeType: "upgrade" });
 
     expect(prismaMock.subscription.findFirst).toHaveBeenCalledWith({
       where: {
-        id: subscriptionId,
-        userId,
+        id: testSubscriptionId,
+        userId: testUserId,
         status: { in: ["active", "trialing", "past_due"] },
         currentPeriodEnd: { gte: expect.any(Date) },
       },
@@ -90,12 +93,12 @@ describe("變更訂閱方案", () => {
       },
     });
     expect(txMock.subscription.update).toHaveBeenCalledWith({
-      where: { id: subscriptionId },
+      where: { id: testSubscriptionId },
       data: { status: "canceled" },
     });
     expect(txMock.order.create).toHaveBeenCalledWith({
       data: expect.objectContaining({
-        userId,
+        userId: testUserId,
         planId: "pro",
         productId: "codeguard",
         cycle: "monthly",
@@ -121,9 +124,9 @@ describe("變更訂閱方案", () => {
     });
     expect(txMock.invoice.create).toHaveBeenCalledWith({
       data: expect.objectContaining({
-        userId,
-        orderId: "33333333-3333-4333-8333-333333333333",
-        paymentRecordId: "44444444-4444-4444-8444-444444444444",
+        userId: testUserId,
+        orderId: testOrderId,
+        paymentRecordId: testPaymentRecordId,
         amountCents: 30000,
         currency: "twd",
         status: "paid",
@@ -131,8 +134,8 @@ describe("變更訂閱方案", () => {
     });
     expect(txMock.subscription.create).toHaveBeenCalledWith({
       data: expect.objectContaining({
-        userId,
-        orderId: "33333333-3333-4333-8333-333333333333",
+        userId: testUserId,
+        orderId: testOrderId,
         planId: "pro",
         productId: "codeguard",
         cycle: "monthly",
@@ -142,7 +145,7 @@ describe("變更訂閱方案", () => {
     });
     expect(txMock.subscriptionPlanChange.updateMany).toHaveBeenCalledWith({
       where: {
-        subscriptionId,
+        subscriptionId: testSubscriptionId,
         status: "pending",
       },
       data: { status: "canceled" },
@@ -155,23 +158,23 @@ describe("變更訂閱方案", () => {
     );
 
     await expect(
-      changeSubscriptionPlan(userId, {
-        subscriptionId,
+      changeSubscriptionPlan(testUserId, {
+        subscriptionId: testSubscriptionId,
         planId: "pro",
       }),
     ).resolves.toEqual({ changeType: "downgrade" });
 
     expect(txMock.subscriptionPlanChange.updateMany).toHaveBeenCalledWith({
       where: {
-        subscriptionId,
+        subscriptionId: testSubscriptionId,
         status: "pending",
       },
       data: { status: "canceled" },
     });
     expect(txMock.subscriptionPlanChange.create).toHaveBeenCalledWith({
       data: {
-        userId,
-        subscriptionId,
+        userId: testUserId,
+        subscriptionId: testSubscriptionId,
         fromPlanId: "business",
         toPlanId: "pro",
         effectiveAt: new Date("2026-07-01T00:00:00.000Z"),
@@ -189,8 +192,8 @@ describe("變更訂閱方案", () => {
     );
 
     await expect(
-      changeSubscriptionPlan(userId, {
-        subscriptionId,
+      changeSubscriptionPlan(testUserId, {
+        subscriptionId: testSubscriptionId,
         planId: "pro",
       }),
     ).rejects.toThrow("目標方案與目前方案相同。");
@@ -200,8 +203,8 @@ describe("變更訂閱方案", () => {
 
   it("企業方案需要聯絡銷售時拒絕直接變更", async () => {
     await expect(
-      changeSubscriptionPlan(userId, {
-        subscriptionId,
+      changeSubscriptionPlan(testUserId, {
+        subscriptionId: testSubscriptionId,
         planId: "enterprise",
       }),
     ).rejects.toThrow("企業方案需聯繫業務，無法直接變更。");
@@ -213,8 +216,8 @@ describe("變更訂閱方案", () => {
     prismaMock.subscription.findFirst.mockResolvedValue(null);
 
     await expect(
-      changeSubscriptionPlan(userId, {
-        subscriptionId,
+      changeSubscriptionPlan(testUserId, {
+        subscriptionId: testSubscriptionId,
         planId: "business",
       }),
     ).rejects.toThrow("找不到可變更的訂閱。");
@@ -225,9 +228,9 @@ describe("變更訂閱方案", () => {
 
 function createCurrentSubscription({ planId }: { planId: string }) {
   return {
-    id: subscriptionId,
-    userId,
-    orderId: "55555555-5555-4555-8555-555555555555",
+    id: testSubscriptionId,
+    userId: testUserId,
+    orderId: testOrderId,
     planId,
     productId: "codeguard",
     cycle: "monthly",
