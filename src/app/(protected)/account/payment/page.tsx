@@ -4,9 +4,8 @@ import AddPaymentMethodCard from "./_components/AddPaymentMethodCard";
 import PaymentMethodList from "./_components/PaymentMethodList";
 
 export const metadata: Metadata = {
-  title: "Payment Methods | SecureCart",
-  description:
-    "Manage SecureCart payment methods and prepare for TapPay multi-card billing integration.",
+  title: "付款方式 | SecureCart",
+  description: "管理 SecureCart 付款方式，並準備接上 TapPay 多卡扣款整合。",
 };
 
 export default function PaymentPage() {

@@ -14,9 +14,9 @@ type CheckoutPageProps = {
 };
 
 export const metadata: Metadata = {
-  title: "Checkout | SecureCart",
+  title: "訂閱結帳 | SecureCart",
   description:
-    "Simulate a secure SaaS subscription checkout flow with billing details and payment method entry.",
+    "模擬安全的 SaaS 訂閱結帳流程，包含帳務資料、付款方式輸入與訂單確認。",
 };
 
 export default async function CheckoutPage({

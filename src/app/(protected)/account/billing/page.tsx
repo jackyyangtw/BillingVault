@@ -9,9 +9,8 @@ import OrderHistory from "./_components/OrderHistory";
 import PaymentMethodPanel from "./_components/PaymentMethodPanel";
 
 export const metadata: Metadata = {
-  title: "Billing | SecureCart",
-  description:
-    "Manage SecureCart billing overview, payment methods, and invoice history.",
+  title: "帳務管理 | SecureCart",
+  description: "管理 SecureCart 帳務摘要、付款方式與帳單紀錄。",
 };
 
 export default async function AccountPage() {

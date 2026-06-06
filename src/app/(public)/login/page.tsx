@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import LoginForm from "./_components/LoginForm";
 
 export const metadata: Metadata = {
-  title: "Login | SecureCart",
-  description: "Sign in to SecureCart and continue your checkout flow.",
+  title: "登入 | SecureCart",
+  description: "登入 SecureCart，繼續完成你的訂閱結帳流程。",
 };
 
 type LoginPageProps = {

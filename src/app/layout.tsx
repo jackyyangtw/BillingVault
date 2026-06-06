@@ -8,6 +8,7 @@ import { getCurrentUser } from "@/lib/auth/dal";
 import AuthProvider from "@/providers/AuthProvider";
 import QueryProvider from "@/providers/QueryProvider";
 import { Toaster } from "@/components/ui/sonner";
+import { LOCALE } from "@/settings/locale";
 
 const notoSans = Noto_Sans({ subsets: ["latin"], variable: "--font-app-sans" });
 
@@ -22,9 +23,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SecureCart — Secure SaaS Subscription Checkout",
+  title: "SecureCart — 安全 SaaS 訂閱結帳",
   description:
-    "SecureCart is a security-focused SaaS subscription checkout demo built with Next.js App Router, featuring pricing plans, mock payment flow, subscription management, billing history, and CSP-hardened frontend architecture.",
+    "SecureCart 是以安全性為核心的 SaaS 訂閱結帳範例，使用 Next.js App Router 建構，展示定價方案、模擬付款流程、訂閱管理、帳務紀錄與 CSP 強化前端架構。",
 };
 
 export default async function RootLayout({
@@ -36,7 +37,7 @@ export default async function RootLayout({
   const nonce = (await headers()).get("x-nonce") ?? undefined;
   return (
     <html
-      lang="en"
+      lang={LOCALE}
       suppressHydrationWarning
       className={cn(
         "h-full",

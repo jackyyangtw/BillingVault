@@ -23,7 +23,7 @@ export async function generateMetadata({
 
   if (!product) {
     return {
-      title: "Product not found | SecureCart",
+      title: "找不到產品 | SecureCart",
     };
   }
 

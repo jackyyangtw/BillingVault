@@ -21,9 +21,9 @@ import {
 import { Separator } from "@/components/ui/separator";
 
 export const metadata: Metadata = {
-  title: "Checkout Success | SecureCart",
+  title: "結帳成功 | SecureCart",
   description:
-    "Your SecureCart subscription checkout has been completed successfully.",
+    "你的 SecureCart 訂閱結帳已成功完成，可查看帳務摘要、訂閱方案與付款方式狀態。",
 };
 
 type CheckoutSuccessPageProps = {

@@ -9,9 +9,8 @@ import SubscriptionDangerZone from "./_components/SubscriptionDangerZone";
 import SubscriptionRecordHistory from "./_components/SubscriptionRecordHistory";
 
 export const metadata: Metadata = {
-  title: "Subscriptions | SecureCart",
-  description:
-    "Manage SecureCart subscription status, plan changes, subscription history, and cancellation.",
+  title: "訂閱管理 | SecureCart",
+  description: "管理 SecureCart 訂閱狀態、方案變更、訂閱紀錄與取消流程。",
 };
 
 export default async function SubscriptionPage() {
