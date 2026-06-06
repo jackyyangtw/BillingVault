@@ -506,7 +506,7 @@ type SubscriptionStatus =
 | ✅   | 訂單紀錄      | 已測建立成功、冪等鍵防重、pending / paid / failed 結果查詢     |
 | ✅   | 付款紀錄      | 已測成功更新、TapPay 失敗 mapping 與失敗頁錯誤 DTO             |
 | ✅   | 信用卡管理    | 已測 Prisma DAL、TapPay 綁卡、hosted fields UI 與卡片狀態顯示  |
-| 🟡   | 帳單格式化    | 已測台幣金額；待補日期時間與狀態 label                         |
+| ✅   | 帳單格式化    | 已測繁中日期時間、訂單 / 付款 / 發票 / 訂閱狀態 label          |
 
 ---
 
