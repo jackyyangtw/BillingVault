@@ -1,3 +1,5 @@
+import { formatTwdAmount } from "@/lib/currency";
+
 export type BillingCycle = "monthly" | "yearly";
 
 export type Plan = {
@@ -16,8 +18,8 @@ export const plans: Plan[] = [
   {
     id: "starter",
     name: "Starter",
-    monthlyPrice: 9,
-    yearlyPrice: 90,
+    monthlyPrice: 270,
+    yearlyPrice: 2700,
     description: "適合個人開發者",
     features: ["1 個專案", "基本分析報表", "Email 支援", "5 GB 儲存空間"],
     cta: "免費開始試用",
@@ -25,8 +27,8 @@ export const plans: Plan[] = [
   {
     id: "pro",
     name: "Pro",
-    monthlyPrice: 29,
-    yearlyPrice: 290,
+    monthlyPrice: 870,
+    yearlyPrice: 8700,
     description: "適合快速成長的小團隊",
     features: [
       "5 個專案",
@@ -42,8 +44,8 @@ export const plans: Plan[] = [
   {
     id: "business",
     name: "Business",
-    monthlyPrice: 99,
-    yearlyPrice: 990,
+    monthlyPrice: 2970,
+    yearlyPrice: 29700,
     description: "適合規模化企業團隊",
     features: [
       "無限專案",
@@ -73,7 +75,7 @@ export function formatPlanPrice(plan: Plan, cycle: BillingCycle) {
     return "洽詢報價";
   }
 
-  return `$${price}`;
+  return formatTwdAmount(price);
 }
 
 export function getPlanById(id: string) {

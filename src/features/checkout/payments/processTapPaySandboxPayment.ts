@@ -1,5 +1,7 @@
 import "server-only";
 
+import { centsToTapPayAmount, tappayCurrency } from "@/lib/currency";
+
 type TapPaySandboxPaymentInput = {
   orderNumber: string;
   amountCents: number;
@@ -80,8 +82,8 @@ export async function processTapPaySandboxPayment(
     prime,
     partner_key: credentials.partnerKey,
     merchant_id: credentials.merchantId,
-    amount: amountCents,
-    currency: "TWD",
+    amount: centsToTapPayAmount(amountCents),
+    currency: tappayCurrency,
     details,
     order_number: orderNumber,
     cardholder: toTapPayCardholder(cardholder),
@@ -115,8 +117,8 @@ export async function processTapPaySandboxTokenPayment({
     card_token: cardToken,
     partner_key: credentials.partnerKey,
     merchant_id: credentials.merchantId,
-    amount: amountCents,
-    currency: "TWD",
+    amount: centsToTapPayAmount(amountCents),
+    currency: tappayCurrency,
     details,
     order_number: orderNumber,
     cardholder: toTapPayCardholder(cardholder),

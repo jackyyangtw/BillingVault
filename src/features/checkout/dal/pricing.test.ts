@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { calculateCheckoutPricing } from "@/features/checkout/dal/pricing";
 
-describe("calculateCheckoutPricing", () => {
+describe("計算結帳價格", () => {
   it("計算月繳方案與產品總額", () => {
     expect(
       calculateCheckoutPricing({
@@ -10,8 +10,8 @@ describe("calculateCheckoutPricing", () => {
         cycle: "monthly",
       }),
     ).toMatchObject({
-      amountCents: 4800,
-      currency: "USD",
+      amountCents: 144000,
+      currency: "twd",
       planName: "Pro",
       productName: "CodeGuard",
     });
@@ -25,8 +25,8 @@ describe("calculateCheckoutPricing", () => {
         cycle: "yearly",
       }),
     ).toMatchObject({
-      amountCents: 24000,
-      currency: "USD",
+      amountCents: 720000,
+      currency: "twd",
     });
   });
 

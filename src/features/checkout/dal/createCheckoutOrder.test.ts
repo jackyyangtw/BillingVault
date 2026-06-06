@@ -95,8 +95,8 @@ describe("建立結帳訂單", () => {
       },
     });
     expect(processTapPaySandboxTokenPayment).toHaveBeenCalledWith({
-      orderNumber: expect.stringMatching(/^SC20260603[A-Z0-9]{10}$/),
-      amountCents: 4800,
+      orderNumber: expect.stringMatching(/^SC\d{8}[A-Z0-9]{10}$/),
+      amountCents: 144000,
       cardKey: "CARD_KEY",
       cardToken: "CARD_TOKEN",
       details: "CodeGuard Pro subscription",

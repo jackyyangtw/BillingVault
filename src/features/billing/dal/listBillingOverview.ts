@@ -2,6 +2,7 @@ import "server-only";
 
 import type { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
+import { formatTwdAmount } from "@/lib/currency";
 import { products } from "@/mocks/fixtures/products";
 import { plans } from "@/mocks/fixtures/plans";
 import type { BillingInvoice, BillingOrder, BillingOverview } from "./types";
@@ -84,7 +85,7 @@ function getBillingSummary(orders: BillingOrder[]) {
     return [
       {
         label: "本期費用",
-        value: "$0",
+        value: formatTwdAmount(0),
         description: "目前尚未建立 sandbox 訂單。",
       },
       {
@@ -134,11 +135,7 @@ function getProductName(productId: string) {
 }
 
 function formatSummaryAmount(amount: number) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
-  }).format(amount);
+  return formatTwdAmount(amount);
 }
 
 function formatSummaryDate(date: string) {

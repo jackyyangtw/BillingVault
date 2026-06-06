@@ -7,6 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { formatTwdAmount } from "@/lib/currency";
 import type { Product } from "@/mocks/fixtures/products";
 
 type ProductSummaryCardProps = {
@@ -26,7 +27,7 @@ export default function ProductSummaryCard({
         <div>
           <p className="text-muted-foreground text-sm">起始價格</p>
           <p className="mt-1 text-4xl font-bold">
-            ${product.price}
+            {formatTwdAmount(product.price)}
             <span className="text-muted-foreground text-sm font-normal">
               /月
             </span>

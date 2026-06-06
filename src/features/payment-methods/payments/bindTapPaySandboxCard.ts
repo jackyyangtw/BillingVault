@@ -1,5 +1,7 @@
 import "server-only";
 
+import { tappayCurrency } from "@/lib/currency";
+
 type BindTapPaySandboxCardInput = {
   prime: string;
   cardholder: {
@@ -55,7 +57,7 @@ export async function bindTapPaySandboxCard({
       prime,
       partner_key: partnerKey,
       merchant_id: merchantId,
-      currency: "TWD",
+      currency: tappayCurrency,
       cardholder: {
         phone_number: cardholder.phoneNumber ?? "",
         name: cardholder.name,

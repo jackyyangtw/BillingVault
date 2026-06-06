@@ -3,6 +3,7 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import { prisma } from "@/lib/prisma";
 import { calculateCheckoutPricing } from "@/features/checkout/dal/pricing";
+import { appCurrency } from "@/lib/currency";
 import { getPlanById, type BillingCycle } from "@/mocks/fixtures/plans";
 
 type ChangeSubscriptionPlanInput = {
@@ -116,13 +117,13 @@ export async function changeSubscriptionPlan(
         taxId: currentSubscription.order.taxId ?? undefined,
         billingAddress: currentSubscription.order.billingAddress,
         amountCents: proratedAmountCents,
-        currency: "USD",
+        currency: appCurrency,
         status: "paid",
         payments: {
           create: {
             orderNumber,
             amountCents: proratedAmountCents,
-            currency: "USD",
+            currency: appCurrency,
             status: "succeeded",
             providerTradeId: createProviderTradeId(orderNumber),
             providerStatusCode: "0",
@@ -152,7 +153,7 @@ export async function changeSubscriptionPlan(
         paymentRecordId: payment.id,
         invoiceNumber,
         amountCents: proratedAmountCents,
-        currency: "USD",
+        currency: appCurrency,
         status: "paid",
       },
     });

@@ -4,7 +4,7 @@ import {
   processTapPaySandboxTokenPayment,
 } from "@/features/checkout/payments/processTapPaySandboxPayment";
 
-describe("processTapPaySandboxPayment", () => {
+describe("處理 TapPay sandbox 付款", () => {
   afterEach(() => {
     vi.unstubAllEnvs();
     vi.restoreAllMocks();
@@ -62,8 +62,8 @@ describe("processTapPaySandboxPayment", () => {
           prime: "test_prime",
           partner_key: "partner_test",
           merchant_id: "merchant_test",
-          amount: 4800,
-          currency: "USD",
+          amount: 48,
+          currency: "TWD",
           details: "CodeGuard Pro subscription",
           order_number: "SC20260529TEST",
           cardholder: {
@@ -124,8 +124,8 @@ describe("processTapPaySandboxPayment", () => {
           card_token: "CARD_TOKEN",
           partner_key: "partner_test",
           merchant_id: "merchant_test",
-          amount: 4800,
-          currency: "USD",
+          amount: 48,
+          currency: "TWD",
           details: "CodeGuard Pro subscription",
           order_number: "SC20260529TEST",
           cardholder: {

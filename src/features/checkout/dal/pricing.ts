@@ -1,3 +1,4 @@
+import { appCurrency, twdAmountToCents } from "@/lib/currency";
 import { products } from "@/mocks/fixtures/products";
 import { type BillingCycle, plans } from "@/mocks/fixtures/plans";
 
@@ -11,7 +12,7 @@ export type CheckoutPricing = {
   planName: string;
   productName: string;
   amountCents: number;
-  currency: "TWD";
+  currency: typeof appCurrency;
 };
 
 export function calculateCheckoutPricing({
@@ -37,7 +38,7 @@ export function calculateCheckoutPricing({
   return {
     planName: plan.name,
     productName: product.name,
-    amountCents: (planPrice + productPrice) * 100,
-    currency: "TWD",
+    amountCents: twdAmountToCents(planPrice + productPrice),
+    currency: appCurrency,
   };
 }

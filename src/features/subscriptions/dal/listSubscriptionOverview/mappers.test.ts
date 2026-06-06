@@ -20,7 +20,7 @@ function createSubscription(
     createdAt: now,
     updatedAt: now,
     order: {
-      amountCents: 99000,
+      amountCents: 3420000,
       status: "paid",
     },
     scheduledChanges: [],
@@ -46,7 +46,7 @@ describe("subscription mappers", () => {
       cycle: "yearly",
       seats: 25,
       renewalDate: "2026-06-10T00:00:00.000Z",
-      nextInvoiceAmount: 1140,
+      nextInvoiceAmount: 34200,
       trialDaysLeft: 0,
       isExpiringSoon: true,
       scheduledChange: null,
@@ -85,7 +85,7 @@ describe("subscription mappers", () => {
     expect(toSubscriptionRecord(record, 0, [record])).toMatchObject({
       id: "SUB-11111111",
       date: "2026-06-03T00:00:00.000Z",
-      amount: 990,
+      amount: 34200,
       status: "paid",
       planName: "Business",
       event: "created",

@@ -18,6 +18,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { TypographyH2, TypographyLead } from "@/components/ui/typography";
+import { formatTwdAmount } from "@/lib/currency";
 import { cn } from "@/lib/tailwind-css/utils";
 import { products, type Product } from "@/mocks/fixtures/products";
 
@@ -92,7 +93,7 @@ export default function ProductsSection() {
                   <CardTitle className="flex items-center justify-between">
                     {product.name}
                     <span className="text-muted-foreground text-base font-semibold">
-                      ${product.price}
+                      {formatTwdAmount(product.price)}
                       <span className="text-xs font-normal">/月</span>
                     </span>
                   </CardTitle>

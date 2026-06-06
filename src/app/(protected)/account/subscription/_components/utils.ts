@@ -2,12 +2,7 @@ import type {
   SubscriptionRecordData,
   SubscriptionStatus,
 } from "@/features/subscriptions/dal/types";
-
-const currencyFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  maximumFractionDigits: 0,
-});
+import { formatTwdAmount } from "@/lib/currency";
 
 const dateFormatter = new Intl.DateTimeFormat("zh-TW", {
   year: "numeric",
@@ -16,7 +11,7 @@ const dateFormatter = new Intl.DateTimeFormat("zh-TW", {
 });
 
 export function formatCurrency(amount: number) {
-  return currencyFormatter.format(amount);
+  return formatTwdAmount(amount);
 }
 
 export function formatDate(date: string) {

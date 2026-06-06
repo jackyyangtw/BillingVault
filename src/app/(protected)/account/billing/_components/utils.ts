@@ -1,10 +1,5 @@
+import { formatTwdAmount } from "@/lib/currency";
 import type { InvoiceData, OrderData } from "./types";
-
-const currencyFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  maximumFractionDigits: 0,
-});
 
 const dateFormatter = new Intl.DateTimeFormat("zh-TW", {
   year: "numeric",
@@ -13,7 +8,7 @@ const dateFormatter = new Intl.DateTimeFormat("zh-TW", {
 });
 
 export function formatCurrency(amount: number) {
-  return currencyFormatter.format(amount);
+  return formatTwdAmount(amount);
 }
 
 export function formatDate(date: string) {

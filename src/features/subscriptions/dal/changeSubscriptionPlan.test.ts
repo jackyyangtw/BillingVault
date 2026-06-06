@@ -99,11 +99,13 @@ describe("變更訂閱方案", () => {
         planId: "pro",
         productId: "codeguard",
         cycle: "monthly",
-        amountCents: 1000,
+        amountCents: 30000,
+        currency: "twd",
         status: "paid",
         payments: {
           create: expect.objectContaining({
-            amountCents: 1000,
+            amountCents: 30000,
+            currency: "twd",
             status: "succeeded",
             cardIdentifier: "card_identifier",
             cardLast4: "4242",
@@ -122,7 +124,8 @@ describe("變更訂閱方案", () => {
         userId,
         orderId: "33333333-3333-4333-8333-333333333333",
         paymentRecordId: "44444444-4444-4444-8444-444444444444",
-        amountCents: 1000,
+        amountCents: 30000,
+        currency: "twd",
         status: "paid",
       }),
     });

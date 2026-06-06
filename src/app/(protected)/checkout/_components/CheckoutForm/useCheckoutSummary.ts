@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { type Control, useWatch } from "react-hook-form";
+import { formatTwdAmount } from "@/lib/currency";
 import { products } from "@/mocks/fixtures/products";
 import { formatPlanPrice, getPlanById, plans } from "@/mocks/fixtures/plans";
 import type { CheckoutFormValues } from "./schema";
@@ -19,11 +20,11 @@ export function useCheckoutSummary(control: Control<CheckoutFormValues>) {
   const total =
     selectedPlan.monthlyPrice === null
       ? "洽詢報價"
-      : `$${
+      : formatTwdAmount(
           (cycle === "monthly"
             ? selectedPlan.monthlyPrice
-            : (selectedPlan.yearlyPrice ?? 0)) + productPrice
-        }`;
+            : (selectedPlan.yearlyPrice ?? 0)) + productPrice,
+        );
 
   return useMemo(
     () => ({

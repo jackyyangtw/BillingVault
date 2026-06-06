@@ -8,6 +8,7 @@ import {
   processTapPaySandboxTokenPayment,
 } from "@/features/checkout/payments/processTapPaySandboxPayment";
 import { getTapPayCardBrand } from "@/features/payment-methods/cardBrand";
+import { appCurrency } from "@/lib/currency";
 import type { BillingCycle } from "@/mocks/fixtures/plans";
 
 type CreateCheckoutOrderInput = {
@@ -38,7 +39,7 @@ export type CheckoutOrderResult = {
   orderId: string;
   orderNumber: string;
   amountCents: number;
-  currency: "TWD";
+  currency: typeof appCurrency;
   providerTradeId: string;
   failureMessage?: string;
 };
