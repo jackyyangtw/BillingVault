@@ -49,12 +49,14 @@ describe("綁定 TapPay sandbox 卡片", () => {
           prime: "test_prime",
           partner_key: "partner_test",
           merchant_id: "merchant_test",
+          currency: "TWD",
           cardholder: {
             phone_number: "",
             name: "SecureCart",
             email: "billing@example.com",
           },
         }),
+        signal: expect.any(AbortSignal),
       }),
     );
   });
