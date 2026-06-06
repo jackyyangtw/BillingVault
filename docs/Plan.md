@@ -295,9 +295,7 @@ docs/
 | ✅   | Email 登入   | `/login` 使用 Supabase Auth `signInWithPassword`                      |
 | ✅   | Session 管理 | 使用 Supabase SSR cookie flow，server-side 讀取目前使用者             |
 | ✅   | 登出         | 呼叫 Supabase Auth `signOut` 後導回首頁或登入頁                       |
-| 🟡   | 測試帳號     | 僅建立一組測試帳號，供 demo / 面試展示使用                            |
-| ⬜   | 註冊         | MVP 不開放註冊，避免 demo 使用者自行建立帳號                          |
-| ⬜   | OAuth        | MVP 不接 Google / Facebook / LINE，保留為後續擴充                     |
+| ✅   | 測試帳號     | 僅建立一組測試帳號，供 demo / 面試展示使用                            |
 | ✅   | 資料查詢     | Supabase Auth 不查業務資料；訂閱、帳單、付款方式等資料一律透過 Prisma |
 
 ### 測試帳號策略
@@ -498,17 +496,17 @@ type SubscriptionStatus =
 | ---- | ------------- | --------------------------------------------------------------- |
 | ✅   | 安全回調 URL  | 擋掉 `https://evil.com`、`javascript:`、`//evil.com`            |
 | ✅   | CSP header    | nonce 與第三方 script/frame 白名單                              |
-| ⬜   | Supabase Auth | email/password 登入、登出、session 過期                         |
+| ✅   | Supabase Auth | email/password 登入、登出、callbackUrl 與 session 失效導回登入  |
 | 🟡   | Prisma DAL    | Server-only 查詢、DTO 回傳、禁止 Client 直接查敏感資料          |
 | ✅   | 價格計算      | 月繳 / 年繳折扣計算                                             |
 | ⬜   | 方案比較      | 不同方案功能顯示                                                |
-| ⬜   | 訂閱狀態      | 不同狀態顯示正確 UI                                             |
+| 🟡   | 訂閱狀態      | 已測目前訂閱選取、即將到期與 mapper；待補 UI 狀態測試           |
 | ⬜   | 方案確認驗證  | 必填欄位、格式錯誤                                              |
 | ✅   | sandbox 付款  | TapPay sandbox 成功 / 失敗、response mapping、endpoint 防呆     |
-| ⬜   | 訂單紀錄      | 建立 pending / paid / failed order 與重複送出防護               |
-| ⬜   | 付款紀錄      | 保存 sandbox trade id、錯誤碼、狀態與金額                       |
+| 🟡   | 訂單紀錄      | 已測建立成功與冪等鍵防重；待補 pending / paid / failed 顯示     |
+| 🟡   | 付款紀錄      | 已測成功更新與 TapPay 失敗 mapping；待補失敗寫入 DAL 測試       |
 | 🟡   | 信用卡管理    | TapPay hosted fields、prime 取得、sandbox 綁卡、成功 / 失敗流程 |
-| 🟡   | 帳單格式化    | 金額、日期、狀態格式化                                          |
+| 🟡   | 帳單格式化    | 已測台幣金額；待補日期時間與狀態 label                          |
 
 ---
 

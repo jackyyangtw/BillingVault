@@ -82,4 +82,30 @@ test.describe("Supabase Email 登入", () => {
     await page.goto("/account/billing");
     await expect(page).toHaveURL(/\/login\?callbackUrl=%2Faccount%2Fbilling/);
   });
+
+  test("session cookie 失效後進入受保護頁面時會導向登入頁", async ({
+    page,
+  }) => {
+    const password = demoPassword;
+
+    if (!password) {
+      test.skip(
+        true,
+        "請設定 PLAYWRIGHT_TEST_PASSWORD 來執行 Supabase 真實登入測試。",
+      );
+      return;
+    }
+
+    await signIn(page, password);
+    await expect(
+      page.getByRole("button", { name: "開啟使用者選單" }),
+    ).toBeVisible();
+
+    await page.context().clearCookies();
+    await page.goto("/account/subscription");
+
+    await expect(page).toHaveURL(
+      /\/login\?callbackUrl=%2Faccount%2Fsubscription/,
+    );
+  });
 });
