@@ -47,6 +47,7 @@ export default function OrderHistory({ orders }: OrderHistoryProps) {
                           ? "destructive"
                           : "outline"
                     }
+                    className={getOrderStatusBadgeClassName(order.status)}
                   >
                     {getOrderStatusLabel(order.status)}
                   </Badge>
@@ -80,4 +81,15 @@ export default function OrderHistory({ orders }: OrderHistoryProps) {
       </CardContent>
     </Card>
   );
+}
+
+function getOrderStatusBadgeClassName(status: OrderData["status"]) {
+  const classNames: Record<OrderData["status"], string> = {
+    paid: "border-emerald-500/30 bg-emerald-500/12 text-emerald-200",
+    pending: "border-amber-500/30 bg-amber-500/12 text-amber-200",
+    failed: "border-red-500/30 bg-red-500/12 text-red-200",
+    canceled: "border-zinc-500/30 bg-zinc-500/12 text-zinc-200",
+  };
+
+  return classNames[status];
 }

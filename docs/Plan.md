@@ -500,7 +500,7 @@ type SubscriptionStatus =
 | ✅   | Prisma DAL    | 已測 server-only Prisma 查詢、DTO 回傳、ownership 與交易流程    |
 | ✅   | 價格計算      | 月繳 / 年繳折扣計算                                             |
 | ⬜   | 方案比較      | 不同方案功能顯示                                                |
-| 🟡   | 訂閱狀態      | 已測目前訂閱選取、即將到期與 mapper；待補 UI 狀態測試           |
+| ✅   | 訂閱狀態      | 已測目前訂閱選取、即將到期、mapper 與 UI 狀態顯示               |
 | ⬜   | 方案確認驗證  | 必填欄位、格式錯誤                                              |
 | ✅   | sandbox 付款  | TapPay sandbox 成功 / 失敗、response mapping、endpoint 防呆     |
 | ✅   | 訂單紀錄      | 已測建立成功、冪等鍵防重、pending / paid / failed 結果查詢      |

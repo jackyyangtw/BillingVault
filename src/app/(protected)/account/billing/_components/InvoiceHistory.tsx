@@ -45,6 +45,7 @@ export default function InvoiceHistory({ invoices }: InvoiceHistoryProps) {
                         ? "destructive"
                         : "outline"
                   }
+                  className={getInvoiceStatusBadgeClassName(invoice.status)}
                 >
                   {getInvoiceStatusLabel(invoice.status)}
                 </Badge>
@@ -60,4 +61,14 @@ export default function InvoiceHistory({ invoices }: InvoiceHistoryProps) {
       </CardContent>
     </Card>
   );
+}
+
+function getInvoiceStatusBadgeClassName(status: InvoiceData["status"]) {
+  const classNames: Record<InvoiceData["status"], string> = {
+    paid: "border-emerald-500/30 bg-emerald-500/12 text-emerald-200",
+    open: "border-amber-500/30 bg-amber-500/12 text-amber-200",
+    failed: "border-red-500/30 bg-red-500/12 text-red-200",
+  };
+
+  return classNames[status];
 }

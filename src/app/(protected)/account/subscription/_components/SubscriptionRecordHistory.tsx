@@ -37,14 +37,17 @@ export default function SubscriptionRecordHistory({
             </p>
           </div>
         ) : (
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-3">
             {records.map((record, index) => (
               <div key={record.id}>
-                <div className="flex items-center justify-between gap-4 py-3 first:pt-0 last:pb-0">
+                <div className="flex items-center justify-between gap-4 py-4 first:pt-0 last:pb-0">
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
                       <p className="truncate font-medium">{record.id}</p>
-                      <Badge variant="outline">
+                      <Badge
+                        variant="outline"
+                        className={getRecordEventBadgeClassName(record.event)}
+                      >
                         {getRecordEventLabel(record.event)}
                       </Badge>
                     </div>
@@ -73,4 +76,17 @@ export default function SubscriptionRecordHistory({
       </CardContent>
     </Card>
   );
+}
+
+function getRecordEventBadgeClassName(event: SubscriptionRecordData["event"]) {
+  const classNames: Record<SubscriptionRecordData["event"], string> = {
+    created:
+      "border-violet-500/30 bg-violet-500/12 px-2.5 py-1 text-sm font-semibold text-violet-200",
+    renewal:
+      "border-emerald-500/30 bg-emerald-500/12 px-2.5 py-1 text-sm font-semibold text-emerald-200",
+    plan_change:
+      "border-sky-500/35 bg-sky-500/15 px-2.5 py-1 text-sm font-semibold text-sky-200",
+  };
+
+  return classNames[event];
 }
