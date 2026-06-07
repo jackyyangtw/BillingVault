@@ -41,6 +41,7 @@ export function toSubscriptionRecord(
     date: subscription.createdAt.toISOString(),
     amount: centsToAmount(subscription.order.amountCents),
     status: getRecordStatus(subscription.order.status),
+    productName: getProductName(subscription.productId),
     planName: getPlanName(subscription.planId),
     event: getRecordEvent(subscription, nextSubscription),
   };

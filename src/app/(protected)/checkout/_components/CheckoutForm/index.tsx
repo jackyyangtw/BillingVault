@@ -23,6 +23,8 @@ export default function CheckoutForm({
   initialCycle,
   initialCompanyName,
   initialBillingEmail,
+  currentPlanId,
+  currentCycle,
 }: CheckoutFormProps) {
   const router = useRouter();
   const [idempotencyKey] = useState(() => crypto.randomUUID());
@@ -106,7 +108,10 @@ export default function CheckoutForm({
       >
         <div className="flex flex-col gap-6">
           <CheckoutSteps />
-          <PlanSelector />
+          <PlanSelector
+            currentPlanId={currentPlanId}
+            currentCycle={currentCycle}
+          />
           <BillingInfoCard />
           <PaymentMethodCard {...paymentCardProps} />
         </div>

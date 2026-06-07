@@ -52,7 +52,8 @@ export default function SubscriptionRecordHistory({
                       </Badge>
                     </div>
                     <p className="text-muted-foreground text-sm">
-                      {record.planName} · {formatDate(record.date)}
+                      {record.productName} · {record.planName} ·{" "}
+                      {formatDate(record.date)}
                     </p>
                   </div>
                   <div className="flex shrink-0 flex-col items-end gap-2">

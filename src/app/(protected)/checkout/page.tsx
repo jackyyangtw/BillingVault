@@ -1,8 +1,14 @@
 import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
+import { getCurrentSubscriptionCheckoutState } from "@/features/subscriptions/dal/getCurrentSubscriptionCheckoutState";
 import { getCurrentUser } from "@/lib/auth/dal";
 import { products } from "@/mocks/fixtures/products";
-import { type BillingCycle, plans } from "@/mocks/fixtures/plans";
+import {
+  type BillingCycle,
+  getSelectableBillingCycle,
+  getSelectablePlanId,
+  plans,
+} from "@/mocks/fixtures/plans";
 import CheckoutForm from "./_components/CheckoutForm";
 
 type CheckoutPageProps = {
@@ -24,11 +30,20 @@ export default async function CheckoutPage({
 }: CheckoutPageProps) {
   const params = await searchParams;
   const user = await getCurrentUser();
+  const currentSubscription = user
+    ? await getCurrentSubscriptionCheckoutState(user.id)
+    : null;
+  const currentPlanId = currentSubscription?.planId ?? null;
+  const currentCycle = currentSubscription?.cycle ?? null;
   const planExists = plans.some((plan) => plan.id === params.plan);
   const productExists = products.some(
     (product) => product.id === params.product,
   );
-  const cycle: BillingCycle = params.cycle === "yearly" ? "yearly" : "monthly";
+  const targetCycle: BillingCycle =
+    params.cycle === "yearly" ? "yearly" : "monthly";
+  const targetPlanId = planExists ? params.plan! : "pro";
+  const initialPlanId = getSelectablePlanId(targetPlanId, currentPlanId);
+  const initialCycle = getSelectableBillingCycle(targetCycle, currentCycle);
 
   return (
     <main>
@@ -49,11 +64,13 @@ export default async function CheckoutPage({
       <section className="py-12">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <CheckoutForm
-            initialPlanId={planExists ? params.plan! : "pro"}
+            initialPlanId={initialPlanId}
             initialProductId={productExists ? params.product! : products[0].id}
-            initialCycle={cycle}
+            initialCycle={initialCycle}
             initialCompanyName={user?.name ?? ""}
             initialBillingEmail={user?.email ?? ""}
+            currentPlanId={currentPlanId}
+            currentCycle={currentCycle}
           />
         </div>
       </section>

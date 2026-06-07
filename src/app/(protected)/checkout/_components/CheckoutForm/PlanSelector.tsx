@@ -21,10 +21,23 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { products } from "@/mocks/fixtures/products";
-import { plans } from "@/mocks/fixtures/plans";
+import {
+  type BillingCycle,
+  isBillingCycleDowngrade,
+  isPlanDowngrade,
+  plans,
+} from "@/mocks/fixtures/plans";
 import type { CheckoutFormValues } from "./schema";
 
-export default function PlanSelector() {
+type PlanSelectorProps = {
+  currentPlanId: string | null;
+  currentCycle: BillingCycle | null;
+};
+
+export default function PlanSelector({
+  currentPlanId,
+  currentCycle,
+}: PlanSelectorProps) {
   const form = useFormContext<CheckoutFormValues>();
 
   return (
@@ -52,7 +65,11 @@ export default function PlanSelector() {
                   <SelectContent>
                     <SelectGroup>
                       {plans.map((plan) => (
-                        <SelectItem key={plan.id} value={plan.id}>
+                        <SelectItem
+                          key={plan.id}
+                          value={plan.id}
+                          disabled={isPlanDowngrade(currentPlanId, plan.id)}
+                        >
                           {plan.name}
                         </SelectItem>
                       ))}
@@ -113,7 +130,15 @@ export default function PlanSelector() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectItem value="monthly">月繳</SelectItem>
+                      <SelectItem
+                        value="monthly"
+                        disabled={isBillingCycleDowngrade(
+                          currentCycle,
+                          "monthly",
+                        )}
+                      >
+                        月繳
+                      </SelectItem>
                       <SelectItem value="yearly">年繳</SelectItem>
                     </SelectGroup>
                   </SelectContent>

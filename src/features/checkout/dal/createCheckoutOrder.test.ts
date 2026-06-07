@@ -13,6 +13,7 @@ const prismaMock = vi.hoisted(() => ({
     create: vi.fn(),
   },
   subscription: {
+    findMany: vi.fn(),
     create: vi.fn(),
   },
   paymentMethod: {
@@ -53,6 +54,7 @@ describe("建立結帳訂單", () => {
       orderNumber: testCreatedOrderNumber,
       payments: [{ id: testPaymentRecordId }],
     });
+    prismaMock.subscription.findMany.mockResolvedValue([]);
     prismaMock.$transaction.mockImplementation(async (callback) => {
       if (Array.isArray(callback)) {
         return Promise.all(callback);
@@ -60,6 +62,60 @@ describe("建立結帳訂單", () => {
 
       return callback(prismaMock);
     });
+  });
+
+  it("目前為 Business 方案時拒絕透過結帳選擇 Pro", async () => {
+    prismaMock.subscription.findMany.mockResolvedValue([
+      {
+        planId: "business",
+        cycle: "monthly",
+        status: "active",
+      },
+    ]);
+
+    await expect(
+      createCheckoutOrder(testUserId, {
+        planId: "pro",
+        productId: "codeguard",
+        cycle: "monthly",
+        companyName: "SecureCart",
+        billingEmail: "billing@example.com",
+        billingAddress: "台北市信義區",
+        idempotencyKey: testIdempotencyKey,
+        paymentMethodId: testPaymentMethodId,
+      }),
+    ).rejects.toThrow("目前方案不可透過結帳降級，請到訂閱管理變更方案。");
+
+    expect(prismaMock.paymentMethod.findFirst).not.toHaveBeenCalled();
+    expect(prismaMock.order.create).not.toHaveBeenCalled();
+  });
+
+  it("目前為年繳方案時拒絕透過結帳選擇月繳", async () => {
+    prismaMock.subscription.findMany.mockResolvedValue([
+      {
+        planId: "pro",
+        cycle: "yearly",
+        status: "active",
+      },
+    ]);
+
+    await expect(
+      createCheckoutOrder(testUserId, {
+        planId: "pro",
+        productId: "codeguard",
+        cycle: "monthly",
+        companyName: "SecureCart",
+        billingEmail: "billing@example.com",
+        billingAddress: "台北市信義區",
+        idempotencyKey: testIdempotencyKey,
+        paymentMethodId: testPaymentMethodId,
+      }),
+    ).rejects.toThrow(
+      "目前年繳方案不可透過結帳改為月繳，請到訂閱管理變更方案。",
+    );
+
+    expect(prismaMock.paymentMethod.findFirst).not.toHaveBeenCalled();
+    expect(prismaMock.order.create).not.toHaveBeenCalled();
   });
 
   it("已儲存卡片有 TapPay token 時可完成扣款", async () => {

@@ -37,6 +37,7 @@ function createRecord(
     date: "2026-06-06T10:30:00.000Z",
     amount: 35400,
     status: "paid",
+    productName: "CodeGuard",
     planName: "Business",
     event: "created",
     ...overrides,
@@ -124,7 +125,7 @@ describe("訂閱狀態 UI", () => {
     expect(screen.getByText("尚無訂閱紀錄")).toBeInTheDocument();
   });
 
-  it("訂閱紀錄顯示事件、付款狀態與金額", () => {
+  it("訂閱紀錄顯示產品、方案、事件、付款狀態與金額", () => {
     render(
       <SubscriptionRecordHistory
         records={[
@@ -133,6 +134,7 @@ describe("訂閱狀態 UI", () => {
             id: "SUB-22222222",
             amount: 14400,
             status: "open",
+            productName: "DeployWatch",
             planName: "Pro",
             event: "plan_change",
           }),
@@ -147,6 +149,8 @@ describe("訂閱狀態 UI", () => {
       />,
     );
 
+    expect(screen.getByText(/CodeGuard · Business ·/)).toBeInTheDocument();
+    expect(screen.getByText(/DeployWatch · Pro ·/)).toBeInTheDocument();
     expect(screen.getByText("建立訂閱")).toBeInTheDocument();
     expect(screen.getByText("方案變更")).toBeInTheDocument();
     expect(screen.getByText("續訂")).toBeInTheDocument();

@@ -18,8 +18,13 @@ import type {
   CheckoutOrderResult,
   CreateCheckoutOrderInput,
 } from "@/features/checkout/dal/createCheckoutOrderTypes";
+import { getCurrentSubscriptionCheckoutState } from "@/features/subscriptions/dal/getCurrentSubscriptionCheckoutState";
 import { calculateCheckoutPricing } from "@/features/checkout/dal/pricing";
 import { processCheckoutPayment } from "@/features/checkout/dal/processCheckoutPayment";
+import {
+  isBillingCycleDowngrade,
+  isPlanDowngrade,
+} from "@/mocks/fixtures/plans";
 
 export type { CheckoutOrderResult, CreateCheckoutOrderInput };
 
@@ -38,6 +43,16 @@ export async function createCheckoutOrder(
 
   if (existingOrder) {
     return existingOrder;
+  }
+
+  const currentSubscription = await getCurrentSubscriptionCheckoutState(userId);
+
+  if (isPlanDowngrade(currentSubscription?.planId, input.planId)) {
+    throw new Error("目前方案不可透過結帳降級，請到訂閱管理變更方案。");
+  }
+
+  if (isBillingCycleDowngrade(currentSubscription?.cycle, input.cycle)) {
+    throw new Error("目前年繳方案不可透過結帳改為月繳，請到訂閱管理變更方案。");
   }
 
   await assertNoRecentPendingOrder(userId);

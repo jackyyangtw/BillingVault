@@ -34,7 +34,7 @@ function createSubscription(
   };
 }
 
-describe("subscription mappers", () => {
+describe("訂閱資料轉換", () => {
   afterEach(() => {
     vi.useRealTimers();
   });
@@ -93,6 +93,7 @@ describe("subscription mappers", () => {
       date: "2026-06-03T00:00:00.000Z",
       amount: 34200,
       status: "paid",
+      productName: "DeployWatch",
       planName: "Business",
       event: "created",
     });

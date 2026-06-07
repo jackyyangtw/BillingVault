@@ -8,6 +8,8 @@ export type CheckoutFormProps = {
   initialCycle: BillingCycle;
   initialCompanyName: string;
   initialBillingEmail: string;
+  currentPlanId: string | null;
+  currentCycle: BillingCycle | null;
 };
 
 export type CheckoutSummary = {

@@ -81,3 +81,46 @@ export function formatPlanPrice(plan: Plan, cycle: BillingCycle) {
 export function getPlanById(id: string) {
   return plans.find((plan) => plan.id === id);
 }
+
+export function isPlanDowngrade(
+  currentPlanId: string | null | undefined,
+  targetPlanId: string,
+) {
+  if (!currentPlanId) {
+    return false;
+  }
+
+  const currentPlanIndex = plans.findIndex((plan) => plan.id === currentPlanId);
+  const targetPlanIndex = plans.findIndex((plan) => plan.id === targetPlanId);
+
+  return currentPlanIndex >= 0 && targetPlanIndex >= 0
+    ? targetPlanIndex < currentPlanIndex
+    : false;
+}
+
+export function getSelectablePlanId(
+  targetPlanId: string,
+  currentPlanId: string | null | undefined,
+) {
+  if (currentPlanId && isPlanDowngrade(currentPlanId, targetPlanId)) {
+    return currentPlanId;
+  }
+
+  return targetPlanId;
+}
+
+export function isBillingCycleDowngrade(
+  currentCycle: BillingCycle | null | undefined,
+  targetCycle: BillingCycle,
+) {
+  return currentCycle === "yearly" && targetCycle === "monthly";
+}
+
+export function getSelectableBillingCycle(
+  targetCycle: BillingCycle,
+  currentCycle: BillingCycle | null | undefined,
+) {
+  return isBillingCycleDowngrade(currentCycle, targetCycle)
+    ? "yearly"
+    : targetCycle;
+}

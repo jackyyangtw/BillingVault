@@ -35,6 +35,7 @@ export type SubscriptionRecordData = {
   date: string;
   amount: number;
   status: "paid" | "open" | "failed";
+  productName: string;
   planName: string;
   event: "renewal" | "created" | "plan_change";
 };
