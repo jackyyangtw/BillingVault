@@ -43,7 +43,8 @@ export type SubscriptionRecordData = {
 export type PlanOptionData = {
   id: string;
   name: string;
-  price: string;
+  priceMonthly: string;
+  priceYearly: string;
   fit: string;
   action: "downgrade" | "current" | "upgrade" | "contact";
 };

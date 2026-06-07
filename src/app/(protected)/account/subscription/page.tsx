@@ -46,6 +46,7 @@ export default async function SubscriptionPage() {
             <PlanChangePanel
               currentSubscriptionId={currentSubscription?.id ?? null}
               currentPlanId={currentSubscription?.planId ?? null}
+              currentCycle={currentSubscription?.cycle ?? null}
               plans={planOptions}
             />
           </div>

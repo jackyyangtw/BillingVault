@@ -1,4 +1,8 @@
-import { type BillingCycle, plans } from "@/mocks/fixtures/plans";
+import {
+  type BillingCycle,
+  formatPlanPrice,
+  plans,
+} from "@/mocks/fixtures/plans";
 import type { PlanOptionData } from "../types";
 
 const planSeats: Record<string, number> = {
@@ -16,7 +20,8 @@ export function getPlanOptions(currentPlanId: string | null): PlanOptionData[] {
   return plans.map((plan, index) => ({
     id: plan.id,
     name: plan.name,
-    price: getPlanPriceLabel(plan, "monthly"),
+    priceMonthly: getPlanPriceLabel(plan, "monthly"),
+    priceYearly: getPlanPriceLabel(plan, "yearly"),
     fit: plan.description,
     action: getPlanAction(plan.id, index, currentPlanId, currentPlanIndex),
   }));
@@ -52,11 +57,5 @@ function getPlanAction(
 }
 
 function getPlanPriceLabel(plan: (typeof plans)[number], cycle: BillingCycle) {
-  const price = cycle === "monthly" ? plan.monthlyPrice : plan.yearlyPrice;
-
-  if (price === null) {
-    return "洽詢報價";
-  }
-
-  return `$${price}/月`;
+  return formatPlanPrice(plan, cycle);
 }
