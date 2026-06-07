@@ -1,16 +1,23 @@
 "use client";
 
-import { LogOut, MoreHorizontal } from "lucide-react";
+import { useState } from "react";
+import { LogOut, MoreHorizontal, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { logoutAction } from "@/lib/auth/logout";
 import type { UserProfile } from "@/lib/auth/types";
+import ClearDataDialog from "./ClearDataDialog";
+
+async function handleLogout() {
+  await logoutAction();
+}
 
 type ProtectedSidebarUserMenuProps = {
   user: UserProfile | null;
@@ -21,10 +28,7 @@ export default function ProtectedSidebarUserMenu({
 }: ProtectedSidebarUserMenuProps) {
   const userName = user?.name || "SecureCart User";
   const avatarInitial = userName.trim().charAt(0).toUpperCase() || "S";
-
-  const handleLogout = async () => {
-    await logoutAction();
-  };
+  const [isClearDialogOpen, setIsClearDialogOpen] = useState(false);
 
   return (
     <div className="flex min-w-0 items-center gap-3">
@@ -45,6 +49,14 @@ export default function ProtectedSidebarUserMenu({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" side="top" className="w-44">
           <DropdownMenuGroup>
+            <DropdownMenuItem
+              variant="destructive"
+              onSelect={() => setIsClearDialogOpen(true)}
+            >
+              <Trash2 />
+              清除帳號資料
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
             <DropdownMenuItem variant="destructive" onClick={handleLogout}>
               <LogOut />
               登出
@@ -52,6 +64,10 @@ export default function ProtectedSidebarUserMenu({
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
+      <ClearDataDialog
+        open={isClearDialogOpen}
+        onOpenChange={setIsClearDialogOpen}
+      />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Link from "next/link";
 import { toast } from "sonner";
 import {
   Card,
@@ -74,44 +75,59 @@ export default function PlanChangePanel({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="mb-4 flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setDisplayCycle("monthly")}
-            disabled={currentCycle === "yearly"}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
-              displayCycle === "monthly"
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:text-foreground"
-            } disabled:cursor-not-allowed disabled:opacity-40`}
-          >
-            月繳
-          </button>
-          <button
-            type="button"
-            onClick={() => setDisplayCycle("yearly")}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
-              displayCycle === "yearly"
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            年繳
-          </button>
-        </div>
-        <div className="grid gap-4 md:grid-cols-2">
-          {plans.map((plan) => (
-            <PlanOption
-              key={plan.id}
-              plan={plan}
-              displayCycle={displayCycle}
-              isCurrent={plan.id === currentPlanId}
-              isPending={pendingPlanId === plan.id}
-              isDisabled={!currentSubscriptionId || isPending}
-              onChangePlan={handleChangePlan}
-            />
-          ))}
-        </div>
+        {!currentSubscriptionId ? (
+          <p className="text-muted-foreground text-sm">
+            尚無訂閱方案，請先前往{" "}
+            <Link
+              href="/checkout"
+              className="text-primary underline-offset-4 hover:underline"
+            >
+              結帳頁面
+            </Link>{" "}
+            訂閱。
+          </p>
+        ) : (
+          <>
+            <div className="mb-4 flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setDisplayCycle("monthly")}
+                disabled={currentCycle === "yearly"}
+                className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+                  displayCycle === "monthly"
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                } disabled:cursor-not-allowed disabled:opacity-40`}
+              >
+                月繳
+              </button>
+              <button
+                type="button"
+                onClick={() => setDisplayCycle("yearly")}
+                className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+                  displayCycle === "yearly"
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                年繳
+              </button>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              {plans.map((plan) => (
+                <PlanOption
+                  key={plan.id}
+                  plan={plan}
+                  displayCycle={displayCycle}
+                  isCurrent={plan.id === currentPlanId}
+                  isPending={pendingPlanId === plan.id}
+                  isDisabled={isPending}
+                  onChangePlan={handleChangePlan}
+                />
+              ))}
+            </div>
+          </>
+        )}
       </CardContent>
     </Card>
   );
