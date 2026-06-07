@@ -22,7 +22,7 @@ export const plans: Plan[] = [
     yearlyPrice: 2700,
     description: "適合個人開發者",
     features: ["1 個專案", "基本分析報表", "Email 支援", "5 GB 儲存空間"],
-    cta: "免費開始試用",
+    cta: "選擇 Starter",
   },
   {
     id: "pro",

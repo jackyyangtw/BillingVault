@@ -86,7 +86,7 @@ export default function MobileNavSheet({
                 </SheetClose>
                 <SheetClose asChild>
                   <Button asChild>
-                    <Link href="/pricing">免費開始試用</Link>
+                    <Link href="/pricing">查看方案</Link>
                   </Button>
                 </SheetClose>
               </>

@@ -19,7 +19,7 @@ export default function PricingSection() {
             簡單透明的定價
           </TypographyH2>
           <TypographyLead className="mt-4 text-base">
-            免費起步，隨需擴展。無隱藏費用，無意外超額收費。
+            隨需擴展，無隱藏費用，無意外超額收費。
           </TypographyLead>
         </div>
 

@@ -22,25 +22,12 @@ export default function ProtectedSidebar({ user }: ProtectedSidebarProps) {
   return (
     <aside className="border-border/70 bg-background/95 fixed inset-y-0 left-0 z-40 hidden w-64 border-r lg:flex lg:flex-col">
       <nav className="flex flex-1 flex-col gap-5 overflow-y-auto px-3 py-4">
-        <SidebarSearch />
         <SidebarGroup links={protectedPrimaryLinks} pathname={pathname} />
       </nav>
-
-      <div className="border-border/70 border-t p-3">
+      <div className="border-border/70 border-b p-3">
         <ProtectedSidebarUserMenu user={user} />
       </div>
     </aside>
-  );
-}
-
-function SidebarSearch() {
-  return (
-    <div className="border-border bg-muted/30 text-muted-foreground flex h-9 items-center justify-between rounded-xl border px-3 text-sm">
-      <span>Find...</span>
-      <kbd className="border-border bg-background rounded-md border px-1.5 py-0.5 text-xs">
-        F
-      </kbd>
-    </div>
   );
 }
 

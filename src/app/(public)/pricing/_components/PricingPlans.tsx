@@ -61,7 +61,7 @@ export default function PricingPlans() {
                 <span
                   className={cn(
                     "font-bold",
-                    plan.monthlyPrice === null ? "text-3xl" : "text-5xl",
+                    plan.monthlyPrice === null ? "text-2xl" : "text-4xl",
                   )}
                 >
                   {formatPlanPrice(plan, cycle)}

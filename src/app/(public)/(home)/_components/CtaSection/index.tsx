@@ -16,12 +16,12 @@ export default function CtaSection() {
               準備好打造安全的結帳體驗了嗎？
             </TypographyH2>
             <TypographyLead className="text-primary-foreground/80 mx-auto mt-4 max-w-md text-base">
-              立即開始 14 天免費試用，無需信用卡，隨時可取消。
+              綁定信用卡即可開始使用，隨時可取消無負擔。
             </TypographyLead>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Button size="lg" variant="secondary" asChild>
                 <Link href="/pricing">
-                  免費開始試用
+                  查看方案
                   <ArrowRight data-icon="inline-end" />
                 </Link>
               </Button>

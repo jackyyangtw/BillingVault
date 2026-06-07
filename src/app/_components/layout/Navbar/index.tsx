@@ -11,9 +11,8 @@ import MobileNavSheet from "./MobileNavSheet";
 
 const navLinks = [
   { label: "產品", href: "/#products" },
-  { label: "定價", href: "/pricing" },
+  { label: "方案", href: "/pricing" },
   { label: "資安", href: "/#security" },
-  { label: "文件", href: "#" },
 ];
 
 export default function Navbar() {
