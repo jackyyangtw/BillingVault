@@ -17,7 +17,7 @@ export function toCurrentSubscription(
     id: subscription.id,
     planId: subscription.planId,
     planName: getPlanName(subscription.planId),
-    productName: getProductName(subscription.productId),
+    productName: getSubscriptionProductName(subscription),
     status: subscription.status,
     cycle: toBillingCycle(subscription.cycle),
     seats: getPlanSeats(subscription.planId),
@@ -41,7 +41,7 @@ export function toSubscriptionRecord(
     date: subscription.createdAt.toISOString(),
     amount: centsToAmount(subscription.order.amountCents),
     status: getRecordStatus(subscription.order.status),
-    productName: getProductName(subscription.productId),
+    productName: getSubscriptionProductName(subscription),
     planName: getPlanName(subscription.planId),
     event: getRecordEvent(subscription, nextSubscription),
   };
@@ -80,10 +80,20 @@ function getNextInvoiceAmount(subscription: SubscriptionRecord) {
   return centsToAmount(
     calculateCheckoutPricing({
       planId: subscription.planId,
-      productId: subscription.productId,
+      productIds: getSubscriptionProductIds(subscription),
       cycle: toBillingCycle(subscription.cycle),
     }).amountCents,
   );
+}
+
+function getSubscriptionProductIds(subscription: SubscriptionRecord) {
+  const productIds = subscription.items.map((item) => item.productId);
+
+  return productIds.length > 0 ? productIds : [subscription.productId];
+}
+
+function getSubscriptionProductName(subscription: SubscriptionRecord) {
+  return getSubscriptionProductIds(subscription).map(getProductName).join("、");
 }
 
 function toScheduledChange(subscription: SubscriptionRecord) {

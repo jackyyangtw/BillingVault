@@ -4,7 +4,7 @@ import type { BillingCycle, Plan } from "@/mocks/fixtures/plans";
 
 export type CheckoutFormProps = {
   initialPlanId: string;
-  initialProductId: string;
+  initialProductIds: string[];
   initialCycle: BillingCycle;
   initialCompanyName: string;
   initialBillingEmail: string;
@@ -14,10 +14,14 @@ export type CheckoutFormProps = {
 
 export type CheckoutSummary = {
   selectedPlan: Plan;
-  selectedProduct: Product;
+  selectedProducts: Product[];
   cycle: BillingCycle;
   planPrice: string;
-  productPrice: number;
+  productRows: {
+    id: string;
+    name: string;
+    price: string;
+  }[];
   total: string;
 };
 

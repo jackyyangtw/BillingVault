@@ -9,9 +9,13 @@ export const checkoutFormSchema = z.object({
   planId: z.string().refine((value) => planIds.includes(value), {
     message: "請選擇有效的訂閱方案",
   }),
-  productId: z.string().refine((value) => productIds.includes(value), {
-    message: "請選擇有效的 SaaS 產品",
-  }),
+  productIds: z
+    .array(
+      z.string().refine((value) => productIds.includes(value), {
+        message: "請選擇有效的 SaaS 產品",
+      }),
+    )
+    .min(1, "請至少選擇一個 SaaS 產品"),
   cycle: z.enum(["monthly", "yearly"], {
     message: "請選擇付款週期",
   }),

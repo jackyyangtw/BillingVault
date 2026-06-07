@@ -12,6 +12,7 @@ const billingOrderInclude = {
     orderBy: { createdAt: "desc" },
     take: 1,
   },
+  items: true,
 } satisfies Prisma.OrderInclude;
 
 type BillingOrderRecord = Prisma.OrderGetPayload<{
@@ -56,7 +57,7 @@ function toBillingOrder(order: BillingOrderRecord): BillingOrder {
     orderNumber: order.orderNumber,
     date: order.createdAt.toISOString(),
     planName: getPlanName(order.planId),
-    productName: getProductName(order.productId),
+    productName: getOrderProductName(order),
     amount: centsToAmount(order.amountCents),
     status: order.status,
     paymentStatus: payment?.status ?? "pending",
@@ -132,6 +133,14 @@ function getProductName(productId: string) {
   return (
     products.find((product) => product.id === productId)?.name ?? productId
   );
+}
+
+function getOrderProductName(order: BillingOrderRecord) {
+  const productIds = order.items.map((item) => item.productId);
+  const resolvedProductIds =
+    productIds.length > 0 ? productIds : [order.productId];
+
+  return resolvedProductIds.map(getProductName).join("、");
 }
 
 function formatSummaryAmount(amount: number) {

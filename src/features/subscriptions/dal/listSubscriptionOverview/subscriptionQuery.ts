@@ -10,6 +10,7 @@ const subscriptionInclude = {
     orderBy: { createdAt: "desc" },
     take: 1,
   },
+  items: true,
 } satisfies Prisma.SubscriptionInclude;
 
 export type SubscriptionRecord = Prisma.SubscriptionGetPayload<{

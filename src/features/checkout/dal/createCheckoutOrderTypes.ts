@@ -3,7 +3,8 @@ import type { BillingCycle } from "@/mocks/fixtures/plans";
 
 export type CreateCheckoutOrderInput = {
   planId: string;
-  productId: string;
+  productId?: string;
+  productIds: string[];
   cycle: BillingCycle;
   companyName: string;
   billingEmail: string;

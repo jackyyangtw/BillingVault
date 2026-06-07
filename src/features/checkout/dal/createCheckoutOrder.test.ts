@@ -76,7 +76,7 @@ describe("建立結帳訂單", () => {
     await expect(
       createCheckoutOrder(testUserId, {
         planId: "pro",
-        productId: "codeguard",
+        productIds: ["codeguard"],
         cycle: "monthly",
         companyName: "SecureCart",
         billingEmail: "billing@example.com",
@@ -102,7 +102,7 @@ describe("建立結帳訂單", () => {
     await expect(
       createCheckoutOrder(testUserId, {
         planId: "pro",
-        productId: "codeguard",
+        productIds: ["codeguard"],
         cycle: "monthly",
         companyName: "SecureCart",
         billingEmail: "billing@example.com",
@@ -139,7 +139,7 @@ describe("建立結帳訂單", () => {
     await expect(
       createCheckoutOrder(testUserId, {
         planId: "pro",
-        productId: "codeguard",
+        productIds: ["codeguard"],
         cycle: "monthly",
         companyName: "SecureCart",
         billingEmail: "billing@example.com",
@@ -182,6 +182,78 @@ describe("建立結帳訂單", () => {
     });
   });
 
+  it("多個 SaaS 產品會建立訂單明細並以產品總額扣款", async () => {
+    prismaMock.paymentMethod.findFirst.mockResolvedValue({
+      id: testPaymentMethodId,
+      tappayPrimeState: "ready",
+      expMonth: 12,
+      expYear: 2099,
+      providerCardKey: "CARD_KEY",
+      providerCardToken: "CARD_TOKEN",
+      cardIdentifier: "card_identifier",
+      last4: "4242",
+    });
+    vi.mocked(processTapPaySandboxTokenPayment).mockResolvedValue({
+      status: "succeeded",
+      providerTradeId: "SANDBOX_TOKEN_TRADE_ID",
+      providerStatusCode: "0",
+      providerMessage: "Success",
+    });
+
+    await expect(
+      createCheckoutOrder(testUserId, {
+        planId: "pro",
+        productIds: ["codeguard", "deploywatch"],
+        cycle: "monthly",
+        companyName: "SecureCart",
+        billingEmail: "billing@example.com",
+        billingAddress: "台北市信義區",
+        idempotencyKey: testIdempotencyKey,
+        paymentMethodId: testPaymentMethodId,
+      }),
+    ).resolves.toMatchObject({
+      status: "succeeded",
+      providerTradeId: "SANDBOX_TOKEN_TRADE_ID",
+    });
+
+    expect(prismaMock.order.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          productId: "codeguard",
+          amountCents: 189000,
+          items: {
+            create: [
+              {
+                productId: "codeguard",
+                amountCents: 57000,
+                currency: "twd",
+              },
+              {
+                productId: "deploywatch",
+                amountCents: 45000,
+                currency: "twd",
+              },
+            ],
+          },
+        }),
+      }),
+    );
+    expect(prismaMock.subscription.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        productId: "codeguard",
+        items: {
+          create: [{ productId: "codeguard" }, { productId: "deploywatch" }],
+        },
+      }),
+    });
+    expect(processTapPaySandboxTokenPayment).toHaveBeenCalledWith(
+      expect.objectContaining({
+        amountCents: 189000,
+        details: "CodeGuard、DeployWatch Pro subscription",
+      }),
+    );
+  });
+
   it("已儲存卡片缺少 TapPay token 時要求重新綁定", async () => {
     prismaMock.paymentMethod.findFirst.mockResolvedValue({
       id: testPaymentMethodId,
@@ -195,7 +267,7 @@ describe("建立結帳訂單", () => {
     await expect(
       createCheckoutOrder(testUserId, {
         planId: "pro",
-        productId: "codeguard",
+        productIds: ["codeguard"],
         cycle: "monthly",
         companyName: "SecureCart",
         billingEmail: "billing@example.com",
@@ -226,7 +298,7 @@ describe("建立結帳訂單", () => {
     await expect(
       createCheckoutOrder(testUserId, {
         planId: "pro",
-        productId: "codeguard",
+        productIds: ["codeguard"],
         cycle: "monthly",
         companyName: "SecureCart",
         billingEmail: "billing@example.com",
@@ -257,7 +329,7 @@ describe("建立結帳訂單", () => {
     await expect(
       createCheckoutOrder(testUserId, {
         planId: "pro",
-        productId: "codeguard",
+        productIds: ["codeguard"],
         cycle: "monthly",
         companyName: "SecureCart",
         billingEmail: "billing@example.com",

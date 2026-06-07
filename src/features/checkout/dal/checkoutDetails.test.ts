@@ -32,6 +32,14 @@ describe("結帳結果頁 Prisma DAL", () => {
       orderNumber: testPaidOrderNumber,
       planId: "business",
       productId: "codeguard",
+      items: [
+        {
+          productId: "codeguard",
+        },
+        {
+          productId: "deploywatch",
+        },
+      ],
       amountCents: 3540000,
       createdAt: new Date("2026-06-06T10:30:00.000Z"),
     });
@@ -41,7 +49,7 @@ describe("結帳結果頁 Prisma DAL", () => {
     ).resolves.toEqual({
       orderNumber: testPaidOrderNumber,
       amount: "NT$35,400",
-      productName: "CodeGuard",
+      productName: "CodeGuard、DeployWatch",
       planName: "Business",
       purchasedAt: "2026年6月6日 18:30",
     });
@@ -52,6 +60,7 @@ describe("結帳結果頁 Prisma DAL", () => {
         orderNumber: true,
         planId: true,
         productId: true,
+        items: true,
         amountCents: true,
         createdAt: true,
       },

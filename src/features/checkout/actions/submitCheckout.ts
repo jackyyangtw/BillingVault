@@ -14,9 +14,13 @@ const submitCheckoutSchema = z
     planId: z.string().refine((value) => planIds.includes(value), {
       message: "請選擇有效的訂閱方案",
     }),
-    productId: z.string().refine((value) => productIds.includes(value), {
-      message: "請選擇有效的 SaaS 產品",
-    }),
+    productIds: z
+      .array(
+        z.string().refine((value) => productIds.includes(value), {
+          message: "請選擇有效的 SaaS 產品",
+        }),
+      )
+      .min(1, "請至少選擇一個 SaaS 產品"),
     cycle: z.enum(["monthly", "yearly"]),
     companyName: z.string().min(1),
     billingEmail: z.string().email(),

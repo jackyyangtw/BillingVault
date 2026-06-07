@@ -36,10 +36,13 @@ export default function OrderSummary({
       <CardContent className="flex flex-col gap-5">
         <SummaryRow label="方案" value={summary.selectedPlan.name} />
         <SummaryRow label="方案費用" value={summary.planPrice} />
-        <SummaryRow
-          label="產品"
-          value={`${summary.selectedProduct.name} $${summary.productPrice}`}
-        />
+        {summary.productRows.map((product) => (
+          <SummaryRow
+            key={product.id}
+            label="產品"
+            value={`${product.name} ${product.price}`}
+          />
+        ))}
         <SummaryRow
           label="付款週期"
           value={summary.cycle === "monthly" ? "月繳" : "年繳"}

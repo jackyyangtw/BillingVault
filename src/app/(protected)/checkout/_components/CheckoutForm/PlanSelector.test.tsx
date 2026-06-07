@@ -17,7 +17,7 @@ function TestPlanSelector({
   const form = useForm<CheckoutFormValues>({
     defaultValues: {
       planId: "business",
-      productId: "codeguard",
+      productIds: ["codeguard"],
       cycle: "monthly",
       companyName: "SecureCart",
       billingEmail: "billing@example.com",
@@ -41,6 +41,21 @@ beforeAll(() => {
 });
 
 describe("結帳方案選擇", () => {
+  it("可以同時選擇多個 SaaS 產品", () => {
+    render(<TestPlanSelector currentPlanId={null} currentCycle={null} />);
+
+    const codeGuard = screen.getByRole("checkbox", { name: /CodeGuard/ });
+    const deployWatch = screen.getByRole("checkbox", { name: /DeployWatch/ });
+
+    expect(codeGuard).toBeChecked();
+    expect(deployWatch).not.toBeChecked();
+
+    fireEvent.click(deployWatch);
+
+    expect(codeGuard).toBeChecked();
+    expect(deployWatch).toBeChecked();
+  });
+
   it("目前為 Business 方案時不可選擇 Pro", async () => {
     render(<TestPlanSelector currentPlanId="business" currentCycle={null} />);
 

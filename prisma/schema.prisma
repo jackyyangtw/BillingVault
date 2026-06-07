@@ -101,11 +101,27 @@ model Order {
   payments       PaymentRecord[]
   invoices       Invoice[]
   subscription   Subscription?
+  items          OrderItem[]
 
   @@unique([userId, idempotencyKey], map: "orders_user_id_idempotency_key_key")
   @@index([userId, createdAt])
   @@index([userId, status])
   @@map("orders")
+}
+
+model OrderItem {
+  id          String   @id @default(uuid()) @db.Uuid
+  orderId     String   @map("order_id") @db.Uuid
+  productId   String   @map("product_id")
+  amountCents Int      @map("amount_cents")
+  currency    String   @default("twd") @db.VarChar(3)
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@unique([orderId, productId])
+  @@index([orderId])
+  @@map("order_items")
 }
 
 model PaymentRecord {
@@ -169,10 +185,24 @@ model Subscription {
   updatedAt          DateTime                 @updatedAt @map("updated_at") @db.Timestamptz(6)
   order              Order                    @relation(fields: [orderId], references: [id], onDelete: Cascade)
   scheduledChanges   SubscriptionPlanChange[]
+  items              SubscriptionItem[]
 
   @@index([userId, status])
   @@index([userId, currentPeriodEnd])
   @@map("subscriptions")
+}
+
+model SubscriptionItem {
+  id             String       @id @default(uuid()) @db.Uuid
+  subscriptionId String       @map("subscription_id") @db.Uuid
+  productId      String       @map("product_id")
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime     @updatedAt @map("updated_at") @db.Timestamptz(6)
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  @@unique([subscriptionId, productId])
+  @@index([subscriptionId])
+  @@map("subscription_items")
 }
 
 model SubscriptionPlanChange {

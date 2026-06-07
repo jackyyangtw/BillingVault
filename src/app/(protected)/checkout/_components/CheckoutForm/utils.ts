@@ -6,7 +6,7 @@ import type { CheckoutPaymentSelection } from "./types";
 
 type CheckoutDefaultValuesInput = {
   initialPlanId: string;
-  initialProductId: string;
+  initialProductIds: string[];
   initialCycle: BillingCycle;
   initialCompanyName: string;
   initialBillingEmail: string;
@@ -14,14 +14,14 @@ type CheckoutDefaultValuesInput = {
 
 export function getCheckoutDefaultValues({
   initialPlanId,
-  initialProductId,
+  initialProductIds,
   initialCycle,
   initialCompanyName,
   initialBillingEmail,
 }: CheckoutDefaultValuesInput): CheckoutFormValues {
   return {
     planId: initialPlanId,
-    productId: initialProductId,
+    productIds: initialProductIds,
     cycle: initialCycle,
     companyName: initialCompanyName,
     billingEmail: initialBillingEmail,

@@ -30,6 +30,7 @@ function createSubscription(
       status: "paid",
     },
     scheduledChanges: [],
+    items: [],
     ...overrides,
   };
 }
@@ -97,6 +98,39 @@ describe("訂閱資料轉換", () => {
       planName: "Business",
       event: "created",
     });
+  });
+
+  it("將多產品訂閱轉換成產品名稱清單與下期金額", () => {
+    const subscription = createSubscription({
+      planId: "pro",
+      productId: "codeguard",
+      items: [
+        {
+          id: "item_1",
+          subscriptionId: testSubscriptionId,
+          productId: "codeguard",
+          createdAt: new Date("2026-06-03T00:00:00.000Z"),
+          updatedAt: new Date("2026-06-03T00:00:00.000Z"),
+        },
+        {
+          id: "item_2",
+          subscriptionId: testSubscriptionId,
+          productId: "deploywatch",
+          createdAt: new Date("2026-06-03T00:00:00.000Z"),
+          updatedAt: new Date("2026-06-03T00:00:00.000Z"),
+        },
+      ],
+    });
+
+    expect(toCurrentSubscription(subscription)).toMatchObject({
+      productName: "CodeGuard、DeployWatch",
+      nextInvoiceAmount: 18900,
+    });
+    expect(toSubscriptionRecord(subscription, 0, [subscription])).toMatchObject(
+      {
+        productName: "CodeGuard、DeployWatch",
+      },
+    );
   });
 
   it("方案不同時標記為方案變更事件", () => {

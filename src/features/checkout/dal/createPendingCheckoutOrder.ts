@@ -41,7 +41,7 @@ export async function createPendingCheckoutOrder({
         orderNumber,
         idempotencyKey: input.idempotencyKey,
         planId: input.planId,
-        productId: input.productId,
+        productId: input.productIds[0],
         cycle: input.cycle,
         companyName: input.companyName,
         billingEmail: input.billingEmail,
@@ -57,6 +57,13 @@ export async function createPendingCheckoutOrder({
             cardIdentifier: paymentSource.cardIdentifier,
             cardLast4: paymentSource.last4,
           },
+        },
+        items: {
+          create: pricing.productLineItems.map((item) => ({
+            productId: item.productId,
+            amountCents: item.amountCents,
+            currency: pricing.currency,
+          })),
         },
       },
       include: {

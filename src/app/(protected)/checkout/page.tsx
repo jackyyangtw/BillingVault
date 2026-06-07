@@ -44,6 +44,7 @@ export default async function CheckoutPage({
   const targetPlanId = planExists ? params.plan! : "pro";
   const initialPlanId = getSelectablePlanId(targetPlanId, currentPlanId);
   const initialCycle = getSelectableBillingCycle(targetCycle, currentCycle);
+  const initialProductIds = [productExists ? params.product! : products[0].id];
 
   return (
     <main>
@@ -65,7 +66,7 @@ export default async function CheckoutPage({
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <CheckoutForm
             initialPlanId={initialPlanId}
-            initialProductId={productExists ? params.product! : products[0].id}
+            initialProductIds={initialProductIds}
             initialCycle={initialCycle}
             initialCompanyName={user?.name ?? ""}
             initialBillingEmail={user?.email ?? ""}

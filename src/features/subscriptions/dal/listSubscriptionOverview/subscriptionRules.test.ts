@@ -30,6 +30,7 @@ function createSubscription(
       status: "paid",
     },
     scheduledChanges: [],
+    items: [],
     ...overrides,
   };
 }

@@ -89,11 +89,16 @@ export async function completeCheckoutOrder({
         userId,
         orderId: pendingOrderId,
         planId: input.planId,
-        productId: input.productId,
+        productId: input.productIds[0],
         cycle: input.cycle,
         status: "active",
         currentPeriodStart: now,
         currentPeriodEnd: getPeriodEnd(now, input.cycle),
+        items: {
+          create: pricing.productLineItems.map((item) => ({
+            productId: item.productId,
+          })),
+        },
       },
     });
 

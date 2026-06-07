@@ -36,6 +36,7 @@ export async function getCheckoutSuccessDetails(
       orderNumber: true,
       planId: true,
       productId: true,
+      items: true,
       amountCents: true,
       createdAt: true,
     },
@@ -48,7 +49,7 @@ export async function getCheckoutSuccessDetails(
   return {
     orderNumber: order.orderNumber,
     amount: formatTwdAmount(centsToTwdAmount(order.amountCents)),
-    productName: getProductName(order.productId),
+    productName: getOrderProductName(order),
     planName: getPlanName(order.planId),
     purchasedAt: purchaseDateFormatter.format(order.createdAt),
   };
@@ -58,6 +59,17 @@ function getProductName(productId: string) {
   return (
     products.find((product) => product.id === productId)?.name ?? productId
   );
+}
+
+function getOrderProductName(order: {
+  productId: string;
+  items: { productId: string }[];
+}) {
+  const productIds = order.items.map((item) => item.productId);
+  const resolvedProductIds =
+    productIds.length > 0 ? productIds : [order.productId];
+
+  return resolvedProductIds.map(getProductName).join("、");
 }
 
 function getPlanName(planId: string) {

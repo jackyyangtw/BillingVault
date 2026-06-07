@@ -6,7 +6,7 @@ describe("計算結帳價格", () => {
     expect(
       calculateCheckoutPricing({
         planId: "pro",
-        productId: "codeguard",
+        productIds: ["codeguard"],
         cycle: "monthly",
       }),
     ).toMatchObject({
@@ -21,7 +21,7 @@ describe("計算結帳價格", () => {
     expect(
       calculateCheckoutPricing({
         planId: "starter",
-        productId: "deploywatch",
+        productIds: ["deploywatch"],
         cycle: "yearly",
       }),
     ).toMatchObject({
@@ -34,9 +34,35 @@ describe("計算結帳價格", () => {
     expect(() =>
       calculateCheckoutPricing({
         planId: "enterprise",
-        productId: "codeguard",
+        productIds: ["codeguard"],
         cycle: "monthly",
       }),
     ).toThrow("企業方案需聯繫業務");
+  });
+
+  it("計算多個 SaaS 產品總額", () => {
+    expect(
+      calculateCheckoutPricing({
+        planId: "pro",
+        productIds: ["codeguard", "deploywatch"],
+        cycle: "monthly",
+      }),
+    ).toMatchObject({
+      amountCents: 189000,
+      productName: "CodeGuard、DeployWatch",
+      productNames: ["CodeGuard", "DeployWatch"],
+      productLineItems: [
+        {
+          productId: "codeguard",
+          productName: "CodeGuard",
+          amountCents: 57000,
+        },
+        {
+          productId: "deploywatch",
+          productName: "DeployWatch",
+          amountCents: 45000,
+        },
+      ],
+    });
   });
 });

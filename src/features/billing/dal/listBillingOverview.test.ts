@@ -61,6 +61,7 @@ describe("帳單總覽 Prisma DAL", () => {
           orderBy: { createdAt: "desc" },
           take: 1,
         },
+        items: true,
       },
     });
     expect(prismaMock.invoice.findMany).toHaveBeenCalledWith({
@@ -81,6 +82,14 @@ describe("帳單總覽 Prisma DAL", () => {
         createdAt: new Date("2026-06-06T10:30:00.000Z"),
         planId: "business",
         productId: "codeguard",
+        items: [
+          {
+            productId: "codeguard",
+          },
+          {
+            productId: "deploywatch",
+          },
+        ],
         amountCents: 3540000,
         status: "paid",
         payments: [
@@ -108,7 +117,7 @@ describe("帳單總覽 Prisma DAL", () => {
         {
           label: "本期費用",
           value: "NT$35,400",
-          description: "Business / CodeGuard",
+          description: "Business / CodeGuard、DeployWatch",
         },
         {
           label: "付款狀態",
@@ -135,7 +144,7 @@ describe("帳單總覽 Prisma DAL", () => {
           orderNumber: testPaidOrderNumber,
           date: "2026-06-06T10:30:00.000Z",
           planName: "Business",
-          productName: "CodeGuard",
+          productName: "CodeGuard、DeployWatch",
           amount: 35400,
           status: "paid",
           paymentStatus: "succeeded",
@@ -153,6 +162,7 @@ describe("帳單總覽 Prisma DAL", () => {
         createdAt: new Date("2026-06-04T08:00:00.000Z"),
         planId: "pro",
         productId: "codeguard",
+        items: [],
         amountCents: 4800,
         status: "failed",
         payments: [

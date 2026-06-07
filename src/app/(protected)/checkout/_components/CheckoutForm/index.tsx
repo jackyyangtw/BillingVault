@@ -19,7 +19,7 @@ import { getCheckoutDefaultValues } from "./utils";
 
 export default function CheckoutForm({
   initialPlanId,
-  initialProductId,
+  initialProductIds,
   initialCycle,
   initialCompanyName,
   initialBillingEmail,
@@ -35,7 +35,7 @@ export default function CheckoutForm({
     () =>
       getCheckoutDefaultValues({
         initialPlanId,
-        initialProductId,
+        initialProductIds,
         initialCycle,
         initialCompanyName,
         initialBillingEmail,
@@ -45,7 +45,7 @@ export default function CheckoutForm({
       initialCompanyName,
       initialCycle,
       initialPlanId,
-      initialProductId,
+      initialProductIds,
     ],
   );
   const form = useForm<CheckoutFormValues>({
