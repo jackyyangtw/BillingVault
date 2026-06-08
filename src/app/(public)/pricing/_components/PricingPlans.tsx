@@ -13,6 +13,7 @@ import {
   formatPlanPrice,
   plans,
 } from "@/mocks/fixtures/plans";
+import EnterpriseInquiryDialog from "./EnterpriseInquiryDialog";
 
 export default function PricingPlans() {
   const [cycle, setCycle] = useState<BillingCycle>("monthly");
@@ -85,16 +86,24 @@ export default function PricingPlans() {
               ))}
             </ul>
 
-            <Button
-              className="mt-8 w-full"
-              variant={plan.highlight ? "default" : "outline"}
-              asChild
-            >
-              <Link href={`/checkout?plan=${plan.id}&cycle=${cycle}`}>
-                <CreditCard data-icon="inline-start" />
-                {plan.cta}
-              </Link>
-            </Button>
+            {plan.id === "enterprise" ? (
+              <EnterpriseInquiryDialog
+                triggerLabel={plan.cta}
+                triggerClassName="mt-8 w-full"
+                showTriggerIcon
+              />
+            ) : (
+              <Button
+                className="mt-8 w-full"
+                variant={plan.highlight ? "default" : "outline"}
+                asChild
+              >
+                <Link href={`/checkout?plan=${plan.id}&cycle=${cycle}`}>
+                  <CreditCard data-icon="inline-start" />
+                  {plan.cta}
+                </Link>
+              </Button>
+            )}
           </div>
         ))}
       </div>

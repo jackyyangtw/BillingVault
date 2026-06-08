@@ -1,10 +1,5 @@
-import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import {
-  TypographyH2,
-  TypographyLead,
-  TypographyMuted,
-} from "@/components/ui/typography";
+import { TypographyH2, TypographyLead } from "@/components/ui/typography";
 import PricingPlans from "./PricingPlans";
 
 export default function PricingSection() {
@@ -24,16 +19,6 @@ export default function PricingSection() {
         </div>
 
         <PricingPlans />
-
-        <TypographyMuted className="mt-10 text-center">
-          需要客製化方案？{" "}
-          <Link
-            href="/checkout?plan=enterprise"
-            className="text-primary underline-offset-4 hover:underline"
-          >
-            洽詢 Enterprise 企業版 →
-          </Link>
-        </TypographyMuted>
       </div>
     </section>
   );
