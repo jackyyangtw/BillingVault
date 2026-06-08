@@ -80,6 +80,52 @@ A secure SaaS subscription and sandbox payment flow demo built with Next.js App 
 - **可維護的 feature 分層**：以 `features/<domain>/dal`、`actions`、`queries` 拆分資料、mutation 與 client-side server state。
 - **測試覆蓋核心規則**：針對付款方式、checkout、訂閱異動、格式化工具、proxy helper 等核心邏輯建立測試。
 
+## 架構圖
+
+```mermaid
+flowchart TD
+  Browser["Client UI<br/>React 19 / App Router"]
+  Query["TanStack Query Hook<br/>client-side server state"]
+  Action["Server Action<br/>session + input validation"]
+  DAL["Feature DAL<br/>transaction / mapper / domain rule"]
+  Prisma["Prisma 7 Client<br/>server-only data access"]
+  DB["Supabase Postgres<br/>orders / payments / subscriptions"]
+  Auth["Supabase Auth<br/>Email / Password session"]
+  TapPay["TapPay Sandbox<br/>hosted fields / Pay by Prime / Bind Card"]
+  Proxy["Next.js Proxy<br/>route guard / CSP nonce / safe callback"]
+
+  Browser --> Query
+  Query --> Action
+  Action --> Auth
+  Action --> DAL
+  DAL --> Prisma
+  Prisma --> DB
+  Browser --> TapPay
+  Action --> TapPay
+  Proxy --> Browser
+```
+
+```mermaid
+sequenceDiagram
+  participant User as User
+  participant UI as Checkout UI
+  participant TapPay as TapPay Hosted Fields
+  participant Action as Server Action
+  participant DAL as Checkout DAL
+  participant DB as Supabase Postgres
+
+  User->>UI: 選擇產品、方案與帳務資料
+  UI->>TapPay: 取得 sandbox prime
+  UI->>Action: 送出 checkout payload + idempotency key
+  Action->>Action: 驗證 session、Zod input、方案規則
+  Action->>DAL: 建立或查詢既有訂單
+  DAL->>DB: 寫入 pending order / order items
+  DAL->>TapPay: Pay by Prime 或 Pay by Card Token
+  DAL->>DB: 寫入 payment record、invoice、subscription
+  DAL-->>Action: 回傳 success / failure DTO
+  Action-->>UI: 導向結果頁
+```
+
 ## 核心資料流
 
 ```txt
