@@ -56,8 +56,8 @@ describe("結帳方案選擇", () => {
     expect(deployWatch).toBeChecked();
   });
 
-  it("目前為 Business 方案時不可選擇 Pro", async () => {
-    render(<TestPlanSelector currentPlanId="business" currentCycle={null} />);
+  it("結帳方案不顯示 Enterprise", async () => {
+    render(<TestPlanSelector currentPlanId={null} currentCycle={null} />);
 
     fireEvent.pointerDown(screen.getByRole("combobox", { name: "訂閱方案" }), {
       button: 0,
@@ -65,13 +65,20 @@ describe("結帳方案選擇", () => {
       pointerType: "mouse",
     });
 
-    expect(await screen.findByRole("option", { name: "Pro" })).toHaveAttribute(
-      "aria-disabled",
-      "true",
-    );
     expect(
-      screen.getByRole("option", { name: "Business" }),
-    ).not.toHaveAttribute("aria-disabled", "true");
+      await screen.findByRole("option", { name: "Starter" }),
+    ).toBeVisible();
+    expect(screen.queryByRole("option", { name: "Enterprise" })).toBeNull();
+  });
+
+  it("目前已有 Business 方案時顯示訂閱管理提示", () => {
+    render(<TestPlanSelector currentPlanId="business" currentCycle={null} />);
+
+    expect(screen.getByText("Business")).toBeVisible();
+    expect(screen.getByRole("link", { name: "訂閱管理" })).toHaveAttribute(
+      "href",
+      "/account/subscription",
+    );
   });
 
   it("目前為年繳方案時不可選擇月繳", async () => {

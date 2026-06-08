@@ -1,12 +1,11 @@
 import { z } from "zod/v4";
 import { products } from "@/mocks/fixtures/products";
-import { plans } from "@/mocks/fixtures/plans";
+import { checkoutPlanIds } from "./checkoutPlans";
 
-const planIds = plans.map((plan) => plan.id);
 const productIds = products.map((product) => product.id);
 
 export const checkoutFormSchema = z.object({
-  planId: z.string().refine((value) => planIds.includes(value), {
+  planId: z.string().refine((value) => checkoutPlanIds.includes(value), {
     message: "請選擇有效的訂閱方案",
   }),
   productIds: z

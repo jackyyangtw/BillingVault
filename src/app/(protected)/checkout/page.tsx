@@ -7,9 +7,9 @@ import {
   type BillingCycle,
   getSelectableBillingCycle,
   getSelectablePlanId,
-  plans,
 } from "@/mocks/fixtures/plans";
 import CheckoutForm from "./_components/CheckoutForm";
+import { checkoutPlans } from "./_components/CheckoutForm/checkoutPlans";
 
 type CheckoutPageProps = {
   searchParams: Promise<{
@@ -35,7 +35,7 @@ export default async function CheckoutPage({
     : null;
   const currentPlanId = currentSubscription?.planId ?? null;
   const currentCycle = currentSubscription?.cycle ?? null;
-  const planExists = plans.some((plan) => plan.id === params.plan);
+  const planExists = checkoutPlans.some((plan) => plan.id === params.plan);
   const productExists = products.some(
     (product) => product.id === params.product,
   );

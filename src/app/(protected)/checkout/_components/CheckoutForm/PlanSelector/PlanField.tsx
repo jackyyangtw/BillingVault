@@ -9,8 +9,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getPlanById, plans } from "@/mocks/fixtures/plans";
+import { getPlanById } from "@/mocks/fixtures/plans";
 import type { CheckoutFormValues } from "@/app/(protected)/checkout/_components/CheckoutForm/schema";
+import { checkoutPlans } from "../checkoutPlans";
 
 type PlanFieldProps = {
   currentPlanId: string | null;
@@ -57,7 +58,7 @@ export default function PlanField({ currentPlanId }: PlanFieldProps) {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                {plans.map((plan) => (
+                {checkoutPlans.map((plan) => (
                   <SelectItem key={plan.id} value={plan.id}>
                     {plan.name}
                   </SelectItem>

@@ -1,7 +1,12 @@
+import Link from "next/link";
 import { ShieldCheck } from "lucide-react";
+
 export default function ProtectedLogo() {
   return (
-    <>
+    <Link
+      href="/account/billing"
+      className="hover:text-primary flex min-w-0 items-center gap-3 transition-colors"
+    >
       <div className="bg-primary/10 text-primary hidden size-8 items-center justify-center rounded-lg sm:flex">
         <ShieldCheck />
       </div>
@@ -11,6 +16,6 @@ export default function ProtectedLogo() {
           Billing, payments, subscriptions
         </p>
       </div>
-    </>
+    </Link>
   );
 }
