@@ -1,5 +1,12 @@
+import Link from "next/link";
+import { Info } from "lucide-react";
 import { Controller, useFormContext } from "react-hook-form";
-import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+} from "@/components/ui/field";
 import {
   Select,
   SelectContent,
@@ -28,6 +35,22 @@ export default function CycleField({ currentCycle }: CycleFieldProps) {
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid}>
           <FieldLabel htmlFor="cycle">付款週期</FieldLabel>
+          <FieldDescription className="flex items-start gap-2">
+            <Info
+              aria-hidden="true"
+              className="mt-0.5 size-4 shrink-0 text-cyan-500"
+            />
+            <span>
+              選擇年繳後不可轉回月繳。如要體驗月繳，請回{" "}
+              <Link
+                href="/account/billing"
+                className="text-primary underline-offset-4 hover:underline"
+              >
+                帳務管理
+              </Link>{" "}
+              左下角選單清除帳號資料，即可重置帳號。
+            </span>
+          </FieldDescription>
           <Select value={field.value} onValueChange={field.onChange}>
             <SelectTrigger
               id="cycle"
