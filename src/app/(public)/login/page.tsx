@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { ArrowLeft, LockKeyhole, ShieldCheck, Sparkles } from "lucide-react";
+import { LockKeyhole, ShieldCheck, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import LoginForm from "./_components/LoginForm";
 
 export const metadata: Metadata = {
@@ -42,13 +40,6 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
     <main className="bg-muted/30 min-h-screen pt-24">
       <section className="mx-auto grid min-h-[calc(100vh-6rem)] max-w-7xl items-center gap-10 px-6 py-12 lg:grid-cols-[1fr_440px] lg:px-8">
         <div className="flex flex-col gap-8">
-          <Button variant="ghost" size="sm" className="w-fit" asChild>
-            <Link href="/">
-              <ArrowLeft data-icon="inline-start" />
-              回首頁
-            </Link>
-          </Button>
-
           <div className="max-w-2xl">
             <Badge variant="secondary" className="mb-5 gap-1.5">
               <ShieldCheck className="size-3" />

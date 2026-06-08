@@ -17,11 +17,9 @@ import {
 } from "@/components/ui/card";
 import {
   Field,
-  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
-  FieldSeparator,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { loginAction } from "../actions";
@@ -30,6 +28,7 @@ import {
   loginFormSchema,
   type LoginFormValues,
 } from "../schema";
+import DemoAccessPanel, { DEMO_EMAIL, DEMO_PASSWORD } from "./DemoAccessPanel";
 
 type LoginFormProps = {
   callbackUrl: string;
@@ -73,7 +72,7 @@ export default function LoginForm({ callbackUrl }: LoginFormProps) {
       <CardHeader>
         <CardTitle className="text-2xl">登入 SecureCart</CardTitle>
         <CardDescription>
-          使用專案提供的測試帳號登入，繼續完成安全結帳流程。
+          使用 README 提供的 demo 帳號登入，體驗完整 sandbox 訂閱流程。
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -103,7 +102,7 @@ export default function LoginForm({ callbackUrl }: LoginFormProps) {
                       id={field.name}
                       type="email"
                       autoComplete="email"
-                      placeholder="demo@securecart.dev"
+                      placeholder={DEMO_EMAIL}
                       aria-invalid={invalid}
                       required
                     />
@@ -135,7 +134,7 @@ export default function LoginForm({ callbackUrl }: LoginFormProps) {
                       id={field.name}
                       type="password"
                       autoComplete="current-password"
-                      placeholder="請輸入測試帳號密碼"
+                      placeholder={DEMO_PASSWORD}
                       aria-invalid={invalid}
                       required
                     />
@@ -169,13 +168,7 @@ export default function LoginForm({ callbackUrl }: LoginFormProps) {
               登入
             </Button>
 
-            <FieldSeparator>測試帳號</FieldSeparator>
-
-            <Field>
-              <FieldDescription className="text-center">
-                Email: demo@securecart.dev。密碼由 Supabase Dashboard 管理。
-              </FieldDescription>
-            </Field>
+            <DemoAccessPanel />
           </FieldGroup>
         </form>
       </CardContent>
@@ -187,7 +180,7 @@ export default function LoginForm({ callbackUrl }: LoginFormProps) {
           </Link>
         </Button>
         <p className="text-muted-foreground text-center text-sm">
-          目前不開放註冊與 OAuth，請使用唯一測試帳號體驗完整流程。
+          目前不開放註冊與 OAuth，demo 帳號只連接 sandbox 付款環境。
         </p>
       </CardFooter>
     </Card>

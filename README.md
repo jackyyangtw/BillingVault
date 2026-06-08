@@ -11,6 +11,16 @@ Next.js App Router side project。
 A secure SaaS subscription and sandbox payment flow demo built with Next.js App Router.
 ```
 
+## Demo Access
+
+```txt
+Email: demo@securecart.dev
+Password: test12345
+```
+
+這組帳號僅用於公開 demo，付款流程只連接 TapPay sandbox，不會真實扣款。
+請勿在 demo 環境輸入真實信用卡資料。
+
 ## 專案功能
 
 ### 公開頁面
