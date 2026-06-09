@@ -1,10 +1,8 @@
 "use client";
 
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
-import { useRouter } from "next/navigation";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { useSubmitCheckout } from "@/features/checkout/queries/useSubmitCheckout";
 import BillingInfoCard from "./BillingInfoCard";
 import CheckoutPendingDialog from "./CheckoutPendingDialog";
 import CheckoutSteps from "./CheckoutSteps";
@@ -15,6 +13,7 @@ import { type CheckoutFormValues, checkoutFormSchema } from "./schema";
 import type { CheckoutFormProps } from "./types";
 import { useCheckoutPaymentMethod } from "./useCheckoutPaymentMethod";
 import { useCheckoutSummary } from "./useCheckoutSummary";
+import { useCheckoutSubmission } from "./useCheckoutSubmission";
 import { getCheckoutDefaultValues } from "./utils";
 
 export default function CheckoutForm({
@@ -26,11 +25,6 @@ export default function CheckoutForm({
   currentPlanId,
   currentCycle,
 }: CheckoutFormProps) {
-  const router = useRouter();
-  const [idempotencyKey] = useState(() => crypto.randomUUID());
-  const [paymentError, setPaymentError] = useState("");
-  const { mutateAsync: submitCheckoutOrder, isPending: isCheckoutPending } =
-    useSubmitCheckout();
   const defaultValues = useMemo<CheckoutFormValues>(
     () =>
       getCheckoutDefaultValues({
@@ -55,50 +49,43 @@ export default function CheckoutForm({
   });
 
   const summary = useCheckoutSummary(form.control);
-  const clearPaymentError = useCallback(() => setPaymentError(""), []);
+  const {
+    clearPaymentError,
+    handleSubmissionError,
+    isCheckoutPending,
+    paymentError,
+    submitCheckout,
+  } = useCheckoutSubmission();
   const { paymentCardProps, canSubmitPayment, getSubmitPaymentInput } =
     useCheckoutPaymentMethod({
       onPaymentReady: clearPaymentError,
     });
   const isSubmitting = form.formState.isSubmitting || isCheckoutPending;
 
-  const submitCheckout = useCallback(
-    async (values: CheckoutFormValues, simulatePaymentFailure: boolean) => {
-      try {
-        const paymentInput = await getSubmitPaymentInput();
-        const result = await submitCheckoutOrder({
-          ...values,
-          ...paymentInput,
-          idempotencyKey,
-          simulatePaymentFailure,
-        });
-        const query = `order=${encodeURIComponent(result.orderNumber)}`;
-
-        if (result.status === "failed") {
-          router.replace(`/checkout/failure?${query}`);
-          return;
-        }
-
-        router.replace(`/checkout/success?${query}`);
-      } catch (error) {
-        setPaymentError(
-          error instanceof Error ? error.message : "結帳流程建立失敗。",
-        );
-      }
-    },
-    [getSubmitPaymentInput, idempotencyKey, router, submitCheckoutOrder],
-  );
-
   const handleValidSubmit = useCallback(
     async (values: CheckoutFormValues) => {
-      await submitCheckout(values, false);
+      try {
+        const paymentInput = await getSubmitPaymentInput();
+
+        await submitCheckout(values, paymentInput, false);
+      } catch (error) {
+        handleSubmissionError(error);
+      }
     },
-    [submitCheckout],
+    [getSubmitPaymentInput, handleSubmissionError, submitCheckout],
   );
 
   const handleFailure = useCallback(() => {
-    form.handleSubmit((values) => submitCheckout(values, true))();
-  }, [form, submitCheckout]);
+    form.handleSubmit(async (values) => {
+      try {
+        const paymentInput = await getSubmitPaymentInput();
+
+        await submitCheckout(values, paymentInput, true);
+      } catch (error) {
+        handleSubmissionError(error);
+      }
+    })();
+  }, [form, getSubmitPaymentInput, handleSubmissionError, submitCheckout]);
 
   return (
     <FormProvider {...form}>
