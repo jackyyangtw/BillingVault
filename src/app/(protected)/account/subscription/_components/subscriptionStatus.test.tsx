@@ -1,13 +1,22 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type {
   CurrentSubscriptionData,
+  PlanOptionData,
   SubscriptionRecordData,
 } from "@/features/subscriptions/dal/types";
 import { testScheduledChangeId, testSubscriptionId } from "@/test/testIds";
 import CurrentSubscription from "./CurrentSubscription";
 import NoCurrentSubscription from "./NoCurrentSubscription";
+import PlanChangePanel from "./PlanChangePanel";
 import SubscriptionRecordHistory from "./SubscriptionRecordHistory";
+
+vi.mock("@/features/subscriptions/queries/useChangeSubscriptionPlan", () => ({
+  useChangeSubscriptionPlan: () => ({
+    isPending: false,
+    mutate: vi.fn(),
+  }),
+}));
 
 function createSubscription(
   overrides: Partial<CurrentSubscriptionData> = {},
@@ -42,6 +51,27 @@ function createRecord(
     event: "created",
     ...overrides,
   };
+}
+
+function createPlanOptions(): PlanOptionData[] {
+  return [
+    {
+      id: "starter",
+      name: "Starter",
+      priceMonthly: "NT$900",
+      priceYearly: "NT$2,700",
+      fit: "適合個人開發者",
+      action: "downgrade",
+    },
+    {
+      id: "business",
+      name: "Business",
+      priceMonthly: "NT$9,900",
+      priceYearly: "NT$29,700",
+      fit: "適合規模化企業團隊",
+      action: "current",
+    },
+  ];
 }
 
 describe("訂閱狀態 UI", () => {
@@ -83,6 +113,26 @@ describe("訂閱狀態 UI", () => {
         /CodeGuard 已取消續訂，仍可使用 Business 方案至 2026年7月1日/,
       ),
     ).toBeInTheDocument();
+  });
+
+  it("已取消訂閱時升級降級區塊提示到期後重新訂閱", () => {
+    render(
+      <PlanChangePanel
+        currentSubscriptionId={testSubscriptionId}
+        currentPlanId="business"
+        currentSubscriptionStatus="canceled"
+        currentCycle="yearly"
+        plans={createPlanOptions()}
+      />,
+    );
+
+    expect(screen.getByText("請於訂閱到期後再重新訂閱。")).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /降級/ }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /目前方案/ }),
+    ).not.toBeInTheDocument();
   });
 
   it("有待生效降級時顯示排程提示與目標方案", () => {

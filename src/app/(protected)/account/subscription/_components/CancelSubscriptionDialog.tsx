@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { CalendarX, LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { cancelSubscriptionAction } from "@/features/subscriptions/actions/cancelSubscription";
+import { useCancelSubscription } from "@/features/subscriptions/queries/useCancelSubscription";
 
 type CancelSubscriptionDialogProps = {
   subscriptionId: string;
@@ -25,20 +25,26 @@ export default function CancelSubscriptionDialog({
   renewalDateLabel,
 }: CancelSubscriptionDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  const cancelSubscriptionMutation = useCancelSubscription(subscriptionId);
+  const isPending = cancelSubscriptionMutation.isPending;
 
   function handleConfirmCancel() {
-    startTransition(async () => {
-      try {
-        await cancelSubscriptionAction({ id: subscriptionId });
-        toast.success("訂閱已取消");
-        setIsOpen(false);
-      } catch (error) {
-        toast.error(
-          error instanceof Error ? error.message : "取消訂閱失敗，請稍後再試。",
-        );
-      }
-    });
+    cancelSubscriptionMutation.mutate(
+      { id: subscriptionId },
+      {
+        onSuccess: () => {
+          toast.success("訂閱已取消");
+          setIsOpen(false);
+        },
+        onError: (error) => {
+          toast.error(
+            error instanceof Error
+              ? error.message
+              : "取消訂閱失敗，請稍後再試。",
+          );
+        },
+      },
+    );
   }
 
   function handleOpenChange(nextOpen: boolean) {

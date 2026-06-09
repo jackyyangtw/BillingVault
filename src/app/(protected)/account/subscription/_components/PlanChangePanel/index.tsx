@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
@@ -10,14 +10,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { changeSubscriptionPlanAction } from "@/features/subscriptions/actions/changeSubscriptionPlan";
+import { useChangeSubscriptionPlan } from "@/features/subscriptions/queries/useChangeSubscriptionPlan";
 import type { BillingCycle } from "@/mocks/fixtures/plans";
-import type { PlanOptionData } from "@/features/subscriptions/dal/types";
+import type {
+  PlanOptionData,
+  SubscriptionStatus,
+} from "@/features/subscriptions/dal/types";
 import PlanOption from "./PlanOption";
 
 type PlanChangePanelProps = {
   currentSubscriptionId: string | null;
   currentPlanId: string | null;
+  currentSubscriptionStatus: SubscriptionStatus | null;
   currentCycle: BillingCycle | null;
   plans: PlanOptionData[];
 };
@@ -25,17 +29,19 @@ type PlanChangePanelProps = {
 export default function PlanChangePanel({
   currentSubscriptionId,
   currentPlanId,
+  currentSubscriptionStatus,
   currentCycle,
   plans,
 }: PlanChangePanelProps) {
   const [pendingPlanId, setPendingPlanId] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
   const [displayCycle, setDisplayCycle] = useState<BillingCycle>(
     currentCycle ?? "monthly",
   );
+  const changePlanMutation = useChangeSubscriptionPlan(currentSubscriptionId);
+  const isCanceled = currentSubscriptionStatus === "canceled";
 
   function handleChangePlan(plan: PlanOptionData) {
-    if (!currentSubscriptionId || plan.action === "current") {
+    if (!currentSubscriptionId || isCanceled || plan.action === "current") {
       return;
     }
 
@@ -45,25 +51,29 @@ export default function PlanChangePanel({
     }
 
     setPendingPlanId(plan.id);
-    startTransition(async () => {
-      try {
-        const result = await changeSubscriptionPlanAction({
-          subscriptionId: currentSubscriptionId,
-          planId: plan.id,
-        });
-        toast.success(
-          result.changeType === "upgrade"
-            ? `已升級至 ${plan.name}`
-            : `已排程於本期結束後降級至 ${plan.name}`,
-        );
-      } catch (error) {
-        toast.error(
-          error instanceof Error ? error.message : "變更訂閱方案失敗。",
-        );
-      } finally {
-        setPendingPlanId(null);
-      }
-    });
+    changePlanMutation.mutate(
+      {
+        subscriptionId: currentSubscriptionId,
+        planId: plan.id,
+      },
+      {
+        onSuccess: (result) => {
+          toast.success(
+            result.changeType === "upgrade"
+              ? `已升級至 ${plan.name}`
+              : `已排程於本期結束後降級至 ${plan.name}`,
+          );
+        },
+        onError: (error) => {
+          toast.error(
+            error instanceof Error ? error.message : "變更訂閱方案失敗。",
+          );
+        },
+        onSettled: () => {
+          setPendingPlanId(null);
+        },
+      },
+    );
   }
 
   return (
@@ -85,6 +95,10 @@ export default function PlanChangePanel({
               結帳頁面
             </Link>{" "}
             訂閱。
+          </p>
+        ) : isCanceled ? (
+          <p className="text-muted-foreground text-sm">
+            請於訂閱到期後再重新訂閱。
           </p>
         ) : (
           <>
@@ -121,7 +135,7 @@ export default function PlanChangePanel({
                   displayCycle={displayCycle}
                   isCurrent={plan.id === currentPlanId}
                   isPending={pendingPlanId === plan.id}
-                  isDisabled={isPending}
+                  isDisabled={changePlanMutation.isPending}
                   onChangePlan={handleChangePlan}
                 />
               ))}

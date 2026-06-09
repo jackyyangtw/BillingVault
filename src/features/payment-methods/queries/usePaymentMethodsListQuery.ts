@@ -6,5 +6,6 @@ export const usePaymentMethodsListQuery = () => {
   return useQuery({
     queryKey: paymentMethodsQueryKeys.list(),
     queryFn: () => listPaymentMethodsAction(),
+    staleTime: 2 * 60 * 1000,
   });
 };
