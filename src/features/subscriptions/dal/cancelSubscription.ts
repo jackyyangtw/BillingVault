@@ -21,19 +21,31 @@ export async function cancelSubscription(
     throw new Error("找不到可取消的訂閱，或訂閱已經取消。");
   }
 
-  const result = await prisma.subscription.updateMany({
-    where: {
-      userId,
-      status: {
-        not: "canceled",
+  await prisma.$transaction(async (tx) => {
+    const result = await tx.subscription.updateMany({
+      where: {
+        userId,
+        status: {
+          not: "canceled",
+        },
       },
-    },
-    data: {
-      status: "canceled",
-    },
-  });
+      data: {
+        status: "canceled",
+      },
+    });
 
-  if (result.count === 0) {
-    throw new Error("找不到可取消的訂閱，或訂閱已經取消。");
-  }
+    if (result.count === 0) {
+      throw new Error("找不到可取消的訂閱，或訂閱已經取消。");
+    }
+
+    await tx.subscriptionPlanChange.updateMany({
+      where: {
+        userId,
+        status: "pending",
+      },
+      data: {
+        status: "canceled",
+      },
+    });
+  });
 }

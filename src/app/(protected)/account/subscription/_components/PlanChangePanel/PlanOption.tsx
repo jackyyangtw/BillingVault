@@ -49,6 +49,7 @@ export default function PlanOption({
 }: PlanOptionProps) {
   const Icon = actionIcon[action];
   const isButtonDisabled = isCurrent || isDisabled;
+  const statusBadgeClassName = getStatusBadgeClassName(statusLabel);
 
   return (
     <div className="flex min-h-44 flex-col justify-between rounded-3xl border p-4">
@@ -75,7 +76,11 @@ export default function PlanOption({
               )}
             </div>
           </div>
-          {statusLabel && <Badge variant="secondary">{statusLabel}</Badge>}
+          {statusLabel && (
+            <Badge variant="outline" className={statusBadgeClassName}>
+              {statusLabel}
+            </Badge>
+          )}
         </div>
         <p className="text-muted-foreground text-sm leading-6">{plan.fit}</p>
       </div>
@@ -94,4 +99,16 @@ export default function PlanOption({
       </Button>
     </div>
   );
+}
+
+function getStatusBadgeClassName(statusLabel: string | null) {
+  if (statusLabel === "使用中") {
+    return "border-emerald-500/25 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300";
+  }
+
+  if (statusLabel === "目標方案") {
+    return "border-amber-500/25 bg-amber-500/10 text-amber-700 dark:text-amber-300";
+  }
+
+  return undefined;
 }

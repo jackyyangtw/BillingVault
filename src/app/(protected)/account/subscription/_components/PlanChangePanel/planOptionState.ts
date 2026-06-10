@@ -1,4 +1,7 @@
-import type { PlanOptionData } from "@/features/subscriptions/dal/types";
+import type {
+  PlanOptionData,
+  ScheduledSubscriptionChangeData,
+} from "@/features/subscriptions/dal/types";
 import type { BillingCycle } from "@/mocks/fixtures/plans";
 import type { PlanOptionAction } from "./PlanOption";
 
@@ -6,6 +9,7 @@ type PlanOptionStateInput = {
   plan: PlanOptionData;
   currentPlanId: string | null;
   currentCycle: BillingCycle | null;
+  scheduledChange: ScheduledSubscriptionChangeData | null;
   selectedDisplayCycle: BillingCycle;
 };
 
@@ -33,17 +37,20 @@ export function getPlanOptionStatusLabel({
   plan,
   currentPlanId,
   currentCycle,
+  scheduledChange,
   selectedDisplayCycle,
 }: PlanOptionStateInput) {
-  if (plan.id !== currentPlanId || currentCycle === null) {
-    return null;
-  }
-
-  if (selectedDisplayCycle === currentCycle) {
+  if (plan.id === currentPlanId && selectedDisplayCycle === currentCycle) {
     return "使用中";
   }
 
-  return currentCycle === "yearly" && selectedDisplayCycle === "monthly"
-    ? "目標方案"
-    : null;
+  if (
+    scheduledChange &&
+    scheduledChange.toPlanId === plan.id &&
+    scheduledChange.toCycle === selectedDisplayCycle
+  ) {
+    return "目標方案";
+  }
+
+  return null;
 }

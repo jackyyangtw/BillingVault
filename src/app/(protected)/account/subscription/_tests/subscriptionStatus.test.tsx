@@ -80,6 +80,35 @@ function createPlanOptions(): PlanOptionData[] {
   ];
 }
 
+function createTieredPlanOptions(): PlanOptionData[] {
+  return [
+    {
+      id: "starter",
+      name: "Starter",
+      priceMonthly: "NT$900",
+      priceYearly: "NT$2,700",
+      fit: "適合個人開發者",
+      action: "downgrade",
+    },
+    {
+      id: "pro",
+      name: "Pro",
+      priceMonthly: "NT$2,900",
+      priceYearly: "NT$8,700",
+      fit: "適合快速成長的小團隊",
+      action: "current",
+    },
+    {
+      id: "business",
+      name: "Business",
+      priceMonthly: "NT$9,900",
+      priceYearly: "NT$29,700",
+      fit: "適合規模化企業團隊",
+      action: "upgrade",
+    },
+  ];
+}
+
 describe("訂閱狀態 UI", () => {
   it("訂閱中時顯示目前方案、續訂日與下期金額", () => {
     render(<CurrentSubscription subscription={createSubscription()} />);
@@ -121,6 +150,29 @@ describe("訂閱狀態 UI", () => {
     ).toBeInTheDocument();
   });
 
+  it("已取消續訂時不顯示待生效方案變更", () => {
+    render(
+      <CurrentSubscription
+        subscription={createSubscription({
+          status: "canceled",
+          scheduledChange: {
+            id: testScheduledChangeId,
+            fromPlanName: "Business",
+            fromCycle: "yearly",
+            toPlanId: "pro",
+            toPlanName: "Pro",
+            toCycle: "yearly",
+            effectiveAt: "2027-06-11T00:18:00.000Z",
+          },
+        })}
+      />,
+    );
+
+    expect(screen.getByText("到期後將停止續訂")).toBeInTheDocument();
+    expect(screen.queryByText("已排程降級")).not.toBeInTheDocument();
+    expect(screen.queryByText(/改為 Pro 年繳方案/)).not.toBeInTheDocument();
+  });
+
   it("已取消訂閱時升級降級區塊提示到期後重新訂閱", () => {
     render(
       <PlanChangePanel
@@ -128,6 +180,7 @@ describe("訂閱狀態 UI", () => {
         currentPlanId="business"
         currentSubscriptionStatus="canceled"
         currentCycle="yearly"
+        scheduledChange={null}
         plans={createPlanOptions()}
       />,
     );
@@ -261,6 +314,7 @@ describe("訂閱狀態 UI", () => {
         currentPlanId="business"
         currentSubscriptionStatus="active"
         currentCycle="monthly"
+        scheduledChange={null}
         plans={createPlanOptions()}
       />,
     );
@@ -273,6 +327,7 @@ describe("訂閱狀態 UI", () => {
         currentPlanId="business"
         currentSubscriptionStatus="active"
         currentCycle="yearly"
+        scheduledChange={null}
         plans={createPlanOptions()}
       />,
     );
@@ -288,6 +343,7 @@ describe("訂閱狀態 UI", () => {
         currentPlanId="starter"
         currentSubscriptionStatus="active"
         currentCycle="monthly"
+        scheduledChange={null}
         plans={[
           {
             id: "starter",
@@ -324,20 +380,50 @@ describe("訂閱狀態 UI", () => {
     );
   });
 
-  it("年繳方案可排程改回月繳週期並標示目標方案", () => {
+  it("年繳方案切到月繳頁籤但尚未排程時不標示目標方案", () => {
     render(
       <PlanChangePanel
         currentSubscriptionId={testSubscriptionId}
         currentPlanId="business"
         currentSubscriptionStatus="active"
         currentCycle="yearly"
+        scheduledChange={null}
         plans={createPlanOptions()}
       />,
     );
 
     fireEvent.click(screen.getByRole("button", { name: "月繳" }));
 
-    expect(screen.getByText("目標方案")).toBeInTheDocument();
+    expect(screen.queryByText("目標方案")).not.toBeInTheDocument();
+  });
+
+  it("年繳方案已排程改回月繳週期時標示目標方案", () => {
+    render(
+      <PlanChangePanel
+        currentSubscriptionId={testSubscriptionId}
+        currentPlanId="business"
+        currentSubscriptionStatus="active"
+        currentCycle="yearly"
+        scheduledChange={{
+          id: testScheduledChangeId,
+          fromPlanName: "Business",
+          fromCycle: "yearly",
+          toPlanId: "business",
+          toPlanName: "Business",
+          toCycle: "monthly",
+          effectiveAt: "2026-07-01T00:00:00.000Z",
+        }}
+        plans={createPlanOptions()}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "月繳" }));
+
+    expect(screen.getByText("目標方案")).toHaveClass(
+      "border-amber-500/25",
+      "bg-amber-500/10",
+      "text-amber-700",
+    );
     fireEvent.click(screen.getAllByRole("button", { name: /降級/ })[1]);
 
     expect(changePlanMutateMock).toHaveBeenCalledWith(
@@ -347,6 +433,87 @@ describe("訂閱狀態 UI", () => {
         cycle: "monthly",
       },
       expect.any(Object),
+    );
+  });
+
+  it("年繳方案已排程降級到其他月繳方案時標示目標方案", () => {
+    render(
+      <PlanChangePanel
+        currentSubscriptionId={testSubscriptionId}
+        currentPlanId="pro"
+        currentSubscriptionStatus="active"
+        currentCycle="yearly"
+        scheduledChange={{
+          id: testScheduledChangeId,
+          fromPlanName: "Pro",
+          fromCycle: "yearly",
+          toPlanId: "starter",
+          toPlanName: "Starter",
+          toCycle: "monthly",
+          effectiveAt: "2026-07-01T00:00:00.000Z",
+        }}
+        plans={createTieredPlanOptions()}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "月繳" }));
+
+    expect(screen.getByText("目標方案")).toHaveClass(
+      "border-amber-500/25",
+      "bg-amber-500/10",
+      "text-amber-700",
+    );
+    expect(
+      screen.getAllByRole("button", { name: /降級/ }).length,
+    ).toBeGreaterThan(0);
+  });
+
+  it("年繳方案已排程升級到其他月繳方案時標示目標方案", () => {
+    render(
+      <PlanChangePanel
+        currentSubscriptionId={testSubscriptionId}
+        currentPlanId="pro"
+        currentSubscriptionStatus="active"
+        currentCycle="yearly"
+        scheduledChange={{
+          id: testScheduledChangeId,
+          fromPlanName: "Pro",
+          fromCycle: "yearly",
+          toPlanId: "business",
+          toPlanName: "Business",
+          toCycle: "monthly",
+          effectiveAt: "2026-07-01T00:00:00.000Z",
+        }}
+        plans={createTieredPlanOptions()}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "月繳" }));
+
+    expect(screen.getByText("目標方案")).toHaveClass(
+      "border-amber-500/25",
+      "bg-amber-500/10",
+      "text-amber-700",
+    );
+    expect(screen.getByRole("button", { name: /升級/ })).toBeInTheDocument();
+  });
+
+  it("使用中方案標籤使用目前狀態色", () => {
+    render(
+      <PlanChangePanel
+        currentSubscriptionId={testSubscriptionId}
+        currentPlanId="business"
+        currentSubscriptionStatus="active"
+        currentCycle="yearly"
+        scheduledChange={null}
+        plans={createPlanOptions()}
+      />,
+    );
+
+    expect(screen.getByText("使用中")).toHaveClass(
+      "border-emerald-500/25",
+      "bg-emerald-500/10",
+      "text-emerald-700",
     );
   });
 });

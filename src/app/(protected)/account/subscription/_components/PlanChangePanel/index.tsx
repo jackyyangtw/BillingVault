@@ -14,6 +14,7 @@ import { useChangeSubscriptionPlan } from "@/features/subscriptions/queries/useC
 import type { BillingCycle } from "@/mocks/fixtures/plans";
 import type {
   PlanOptionData,
+  ScheduledSubscriptionChangeData,
   SubscriptionStatus,
 } from "@/features/subscriptions/dal/types";
 import PlanOption from "./PlanOption";
@@ -27,6 +28,7 @@ type PlanChangePanelProps = {
   currentPlanId: string | null;
   currentSubscriptionStatus: SubscriptionStatus | null;
   currentCycle: BillingCycle | null;
+  scheduledChange: ScheduledSubscriptionChangeData | null;
   plans: PlanOptionData[];
 };
 
@@ -35,6 +37,7 @@ export default function PlanChangePanel({
   currentPlanId,
   currentSubscriptionStatus,
   currentCycle,
+  scheduledChange,
   plans,
 }: PlanChangePanelProps) {
   const [pendingPlanId, setPendingPlanId] = useState<string | null>(null);
@@ -145,6 +148,7 @@ export default function PlanChangePanel({
                     plan,
                     currentPlanId,
                     currentCycle,
+                    scheduledChange,
                     selectedDisplayCycle,
                   })}
                   isCurrent={
@@ -155,6 +159,7 @@ export default function PlanChangePanel({
                     plan,
                     currentPlanId,
                     currentCycle,
+                    scheduledChange,
                     selectedDisplayCycle,
                   })}
                   isPending={pendingPlanId === plan.id}

@@ -48,6 +48,7 @@ export default async function SubscriptionPage() {
               currentPlanId={currentSubscription?.planId ?? null}
               currentSubscriptionStatus={currentSubscription?.status ?? null}
               currentCycle={currentSubscription?.cycle ?? null}
+              scheduledChange={currentSubscription?.scheduledChange ?? null}
               plans={planOptions}
             />
           </div>

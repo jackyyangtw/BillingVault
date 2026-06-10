@@ -28,7 +28,7 @@ export default function CurrentSubscription({
     ? "到期後將停止續訂"
     : `預計收取 ${formatCurrency(subscription.nextInvoiceAmount)}`;
   const statusBadge = getStatusBadge(subscription);
-  const scheduledChange = subscription.scheduledChange;
+  const scheduledChange = isCanceled ? null : subscription.scheduledChange;
   const scheduledChangeLabel = getScheduledChangeLabel(scheduledChange);
 
   return (
