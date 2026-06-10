@@ -5,7 +5,7 @@ import { type Control, useWatch } from "react-hook-form";
 import { formatTwdAmount } from "@/lib/currency";
 import { products } from "@/mocks/fixtures/products";
 import { formatPlanPrice, getPlanById, plans } from "@/mocks/fixtures/plans";
-import type { CheckoutFormValues } from "./schema";
+import type { CheckoutFormValues } from "../schema";
 
 export function useCheckoutSummary(control: Control<CheckoutFormValues>) {
   const planId = useWatch({ control, name: "planId" });

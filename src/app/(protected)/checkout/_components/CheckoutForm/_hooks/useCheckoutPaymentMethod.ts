@@ -10,12 +10,10 @@ import {
 import type {
   CheckoutPaymentCardProps,
   CheckoutPaymentSelection,
-} from "./types";
-import {
-  getAvailableCheckoutPaymentMethods,
-  getDefaultCheckoutPaymentSelection,
-  toNewCardCheckoutInput,
-} from "./utils";
+} from "../types";
+import { getAvailableCheckoutPaymentMethods } from "../_utils/getAvailableCheckoutPaymentMethods";
+import { getDefaultCheckoutPaymentSelection } from "../_utils/getDefaultCheckoutPaymentSelection";
+import { toNewCardCheckoutInput } from "../_utils/toNewCardCheckoutInput";
 
 type UseCheckoutPaymentMethodInput = {
   onPaymentReady?: () => void;

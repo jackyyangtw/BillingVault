@@ -12,7 +12,7 @@ import {
   formatDate,
   getOrderStatusLabel,
   getPaymentStatusLabel,
-} from "./utils";
+} from "../_utils/utils";
 
 type OrderHistoryProps = {
   orders: OrderData[];

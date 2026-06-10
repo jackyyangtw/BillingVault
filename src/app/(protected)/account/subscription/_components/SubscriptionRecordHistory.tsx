@@ -13,7 +13,7 @@ import {
   formatDate,
   getRecordEventLabel,
   getRecordStatusLabel,
-} from "./utils";
+} from "../_utils/utils";
 
 type SubscriptionRecordHistoryProps = {
   records: SubscriptionRecordData[];

@@ -11,10 +11,10 @@ import PaymentMethodCard from "./PaymentMethodCard";
 import PlanSelector from "./PlanSelector";
 import { type CheckoutFormValues, checkoutFormSchema } from "./schema";
 import type { CheckoutFormProps } from "./types";
-import { useCheckoutPaymentMethod } from "./useCheckoutPaymentMethod";
-import { useCheckoutSummary } from "./useCheckoutSummary";
-import { useCheckoutSubmission } from "./useCheckoutSubmission";
-import { getCheckoutDefaultValues } from "./utils";
+import { useCheckoutPaymentMethod } from "./_hooks/useCheckoutPaymentMethod";
+import { useCheckoutSummary } from "./_hooks/useCheckoutSummary";
+import { useCheckoutSubmission } from "./_hooks/useCheckoutSubmission";
+import { getCheckoutDefaultValues } from "./_utils/getCheckoutDefaultValues";
 
 export default function CheckoutForm({
   initialPlanId,

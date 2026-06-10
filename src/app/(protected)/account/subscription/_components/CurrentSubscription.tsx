@@ -13,7 +13,7 @@ import {
   formatCurrency,
   formatDate,
   getSubscriptionStatusLabel,
-} from "./utils";
+} from "../_utils/utils";
 
 type CurrentSubscriptionProps = {
   subscription: CurrentSubscriptionData;

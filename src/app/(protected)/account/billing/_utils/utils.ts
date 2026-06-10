@@ -1,5 +1,5 @@
 import { formatTwdAmount } from "@/lib/currency";
-import type { InvoiceData, OrderData } from "./types";
+import type { InvoiceData, OrderData } from "../_components/types";
 
 const dateFormatter = new Intl.DateTimeFormat("zh-TW", {
   year: "numeric",

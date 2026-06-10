@@ -6,10 +6,10 @@ import type {
   SubscriptionRecordData,
 } from "@/features/subscriptions/dal/types";
 import { testScheduledChangeId, testSubscriptionId } from "@/test/testIds";
-import CurrentSubscription from "./CurrentSubscription";
-import NoCurrentSubscription from "./NoCurrentSubscription";
-import PlanChangePanel from "./PlanChangePanel";
-import SubscriptionRecordHistory from "./SubscriptionRecordHistory";
+import CurrentSubscription from "../_components/CurrentSubscription";
+import NoCurrentSubscription from "../_components/NoCurrentSubscription";
+import PlanChangePanel from "../_components/PlanChangePanel";
+import SubscriptionRecordHistory from "../_components/SubscriptionRecordHistory";
 
 const changePlanMutateMock = vi.hoisted(() => vi.fn());
 

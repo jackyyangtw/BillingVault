@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { type SubmitCheckoutInput } from "@/features/checkout/actions/submitCheckout";
 import { useSubmitCheckout } from "@/features/checkout/queries/useSubmitCheckout";
-import type { CheckoutFormValues } from "./schema";
+import type { CheckoutFormValues } from "../schema";
 
 type CheckoutSubmitPaymentInput =
   | Pick<SubmitCheckoutInput, "paymentMethodId">

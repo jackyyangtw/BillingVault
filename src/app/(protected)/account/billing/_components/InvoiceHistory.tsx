@@ -7,7 +7,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import type { InvoiceData } from "./types";
-import { formatCurrency, formatDate, getInvoiceStatusLabel } from "./utils";
+import {
+  formatCurrency,
+  formatDate,
+  getInvoiceStatusLabel,
+} from "../_utils/utils";
 
 type InvoiceHistoryProps = {
   invoices: InvoiceData[];
