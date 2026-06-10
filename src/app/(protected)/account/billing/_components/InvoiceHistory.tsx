@@ -6,12 +6,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { formatCurrency } from "@/utils/formatCurrency";
+import { formatDate } from "@/utils/formatDate";
 import type { InvoiceData } from "./types";
-import {
-  formatCurrency,
-  formatDate,
-  getInvoiceStatusLabel,
-} from "../_utils/utils";
+import { getInvoiceStatusLabel } from "../_utils/getInvoiceStatusLabel";
 
 type InvoiceHistoryProps = {
   invoices: InvoiceData[];

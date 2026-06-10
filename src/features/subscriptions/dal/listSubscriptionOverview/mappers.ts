@@ -1,14 +1,12 @@
 import type { CurrentSubscriptionData, SubscriptionRecordData } from "../types";
 import { calculateCheckoutPricing } from "@/features/checkout/dal/pricing";
+import { centsToAmount } from "./centsToAmount";
+import { getProductName } from "./getProductName";
+import { getShortSubscriptionId } from "./getShortSubscriptionId";
 import { getPlanName, getPlanSeats } from "./planOptions";
 import { getIsExpiringSoon, getTrialDaysLeft } from "./subscriptionRules";
 import type { SubscriptionRecord } from "./subscriptionQuery";
-import {
-  centsToAmount,
-  getProductName,
-  getShortSubscriptionId,
-  toBillingCycle,
-} from "./utils";
+import { toBillingCycle } from "./toBillingCycle";
 
 export function toCurrentSubscription(
   subscription: SubscriptionRecord,

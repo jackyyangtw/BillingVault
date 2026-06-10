@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import type { CurrentSubscriptionData } from "@/features/subscriptions/dal/types";
-import { formatDate } from "../_utils/utils";
+import { formatDate } from "@/utils/formatDate";
 import CancelSubscriptionDialog from "./CancelSubscriptionDialog";
 
 type SubscriptionDangerZoneProps = {

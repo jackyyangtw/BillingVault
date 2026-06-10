@@ -1,10 +1,8 @@
 import { describe, expect, it } from "vitest";
-import {
-  formatDate,
-  getInvoiceStatusLabel,
-  getOrderStatusLabel,
-  getPaymentStatusLabel,
-} from "./utils";
+import { formatDate } from "@/utils/formatDate";
+import { getInvoiceStatusLabel } from "./getInvoiceStatusLabel";
+import { getOrderStatusLabel } from "./getOrderStatusLabel";
+import { getPaymentStatusLabel } from "./getPaymentStatusLabel";
 
 describe("帳務格式化工具", () => {
   it("將日期格式化為繁體中文日期與時間", () => {

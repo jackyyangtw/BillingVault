@@ -8,12 +8,10 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import type { SubscriptionRecordData } from "@/features/subscriptions/dal/types";
-import {
-  formatCurrency,
-  formatDate,
-  getRecordEventLabel,
-  getRecordStatusLabel,
-} from "../_utils/utils";
+import { formatCurrency } from "@/utils/formatCurrency";
+import { formatDate } from "@/utils/formatDate";
+import { getRecordEventLabel } from "../_utils/getRecordEventLabel";
+import { getRecordStatusLabel } from "../_utils/getRecordStatusLabel";
 
 type SubscriptionRecordHistoryProps = {
   records: SubscriptionRecordData[];

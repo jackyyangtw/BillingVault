@@ -9,11 +9,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import type { CurrentSubscriptionData } from "@/features/subscriptions/dal/types";
-import {
-  formatCurrency,
-  formatDate,
-  getSubscriptionStatusLabel,
-} from "../_utils/utils";
+import { formatCurrency } from "@/utils/formatCurrency";
+import { formatDate } from "@/utils/formatDate";
+import { getSubscriptionStatusLabel } from "../_utils/getSubscriptionStatusLabel";
 
 type CurrentSubscriptionProps = {
   subscription: CurrentSubscriptionData;

@@ -1,9 +1,7 @@
 import { describe, expect, it } from "vitest";
-import {
-  formatDate,
-  getRecordStatusLabel,
-  getSubscriptionStatusLabel,
-} from "./utils";
+import { formatDate } from "@/utils/formatDate";
+import { getRecordStatusLabel } from "./getRecordStatusLabel";
+import { getSubscriptionStatusLabel } from "./getSubscriptionStatusLabel";
 
 describe("訂閱格式化工具", () => {
   it("將日期格式化為繁體中文日期與時間", () => {

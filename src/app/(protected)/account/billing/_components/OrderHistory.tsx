@@ -6,13 +6,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { formatCurrency } from "@/utils/formatCurrency";
+import { formatDate } from "@/utils/formatDate";
 import type { OrderData } from "./types";
-import {
-  formatCurrency,
-  formatDate,
-  getOrderStatusLabel,
-  getPaymentStatusLabel,
-} from "../_utils/utils";
+import { getOrderStatusLabel } from "../_utils/getOrderStatusLabel";
+import { getPaymentStatusLabel } from "../_utils/getPaymentStatusLabel";
 
 type OrderHistoryProps = {
   orders: OrderData[];
