@@ -38,6 +38,17 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 [Barrel 檔案]：禁止新增 barrel 檔案（例如 `index.ts` 只用來 re-export 其他模組）。Import 必須指向實際功能檔案，例如 `@/lib/payment-methods/dal/listPaymentMethods`，避免透過資料夾入口隱藏依賴來源。既有 barrel 若因重構碰到，應優先移除並改成明確 import。
 
+## Util Function 拆分與共用規則
+
+處理 `utils.ts`、`_utils/` 或任何 helper function 時，必須先檢查使用面，再決定放置位置：
+
+1. **只被單一 component 或 hook 使用**：不要獨立成 `_utils` 檔案。將 function 放回該 component / hook 檔案底部，維持 module scope 的具名 function，避免在 render 或 hook body 內重新建立。
+2. **被同一 component 資料夾內多個子元件共用**：放在該 component 資料夾最近共同父層的 `utils.ts`，例如 `CheckoutForm/utils.ts`。Import 必須指向實際檔案，不得新增 `index.ts` barrel。
+3. **被兩個以上不同 route、feature 或跨資料夾模組共用**：提升到明確的共用位置，例如 `src/utils/formatDate.ts` 或既有 domain lib。必須一個概念一個檔案，避免把不相關 helper 合併成大型 `utils.ts`。
+4. **元件超過 200 行時**：依「200 行拆分規則」改成資料夾結構；僅被該元件使用的 util 放在該元件資料夾內的 `utils.ts`，外部 import 路徑維持不變。
+5. **不可為了測試而保留獨立 util**：若 helper 沒有共用需求，優先透過使用它的 component / hook 行為測試覆蓋。
+6. **React Compiler 注意事項**：helper 必須保持純函式；不得在 helper 或 render 過程中修改 props/state/global，也不得讀寫 `ref.current`。
+
 ## 測試命名規範
 
 - 所有 unit test / integration test / e2e test 的 `describe()`、`it()`、`test()` 描述文字必須使用繁體中文。
