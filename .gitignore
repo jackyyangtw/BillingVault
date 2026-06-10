@@ -48,6 +48,7 @@ next-env.d.ts
 .codegraph
 .cursor
 .mcp.json
+.codex
 skills-lock.json
 
 # storybook
