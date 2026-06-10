@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/select";
 import { getPlanById } from "@/mocks/fixtures/plans";
 import type { CheckoutFormValues } from "@/app/(protected)/checkout/_components/CheckoutForm/schema";
-import { checkoutPlans } from "../checkoutPlans";
+import { checkoutPlans } from "../../../_utils/checkoutPlans";
 
 type PlanFieldProps = {
   currentPlanId: string | null;

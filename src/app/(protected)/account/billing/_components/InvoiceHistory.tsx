@@ -8,12 +8,21 @@ import {
 } from "@/components/ui/card";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { formatDate } from "@/utils/formatDate";
-import type { InvoiceData } from "./types";
-import { getInvoiceStatusLabel } from "../_utils/getInvoiceStatusLabel";
+import type { InvoiceData } from "../types";
 
 type InvoiceHistoryProps = {
   invoices: InvoiceData[];
 };
+
+function getInvoiceStatusLabel(status: InvoiceData["status"]) {
+  const labels: Record<InvoiceData["status"], string> = {
+    paid: "已付款",
+    open: "待付款",
+    failed: "付款失敗",
+  };
+
+  return labels[status];
+}
 
 export default function InvoiceHistory({ invoices }: InvoiceHistoryProps) {
   return (

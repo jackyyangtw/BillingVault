@@ -1,8 +1,12 @@
 "use client";
 
 import { useCallback, useMemo, useState, useSyncExternalStore } from "react";
+import type { PaymentMethod } from "@/features/payment-methods/dal/types";
 import { usePaymentMethodsListQuery } from "@/features/payment-methods/queries/usePaymentMethodsListQuery";
-import { getTapPayPrime } from "@/providers/tappay/tappay";
+import {
+  getTapPayPrime,
+  type TapPayPrimeResult,
+} from "@/providers/tappay/tappay";
 import {
   getTapPayCardStatusSnapshot,
   subscribeTapPayCardStatus,
@@ -11,9 +15,6 @@ import type {
   CheckoutPaymentCardProps,
   CheckoutPaymentSelection,
 } from "../types";
-import { getAvailableCheckoutPaymentMethods } from "../_utils/getAvailableCheckoutPaymentMethods";
-import { getDefaultCheckoutPaymentSelection } from "../_utils/getDefaultCheckoutPaymentSelection";
-import { toNewCardCheckoutInput } from "../_utils/toNewCardCheckoutInput";
 
 type UseCheckoutPaymentMethodInput = {
   onPaymentReady?: () => void;
@@ -93,5 +94,40 @@ export function useCheckoutPaymentMethod({
     paymentCardProps,
     canSubmitPayment,
     getSubmitPaymentInput,
+  };
+}
+
+function getAvailableCheckoutPaymentMethods(paymentMethods: PaymentMethod[]) {
+  return paymentMethods.filter(
+    (method) =>
+      method.status !== "expired" && method.tappayPrimeState === "ready",
+  );
+}
+
+function getDefaultCheckoutPaymentSelection(
+  availablePaymentMethods: PaymentMethod[],
+): CheckoutPaymentSelection {
+  const defaultPaymentMethod = availablePaymentMethods[0];
+
+  if (defaultPaymentMethod) {
+    return { type: "saved", paymentMethodId: defaultPaymentMethod.id };
+  }
+
+  return { type: "new" };
+}
+
+function toNewCardCheckoutInput(primeResult: TapPayPrimeResult) {
+  return {
+    prime: primeResult.card?.prime ?? "",
+    card: {
+      binCode: primeResult.card?.bincode,
+      last4: primeResult.card?.lastfour,
+      type: primeResult.card?.type,
+      issuer: primeResult.card?.issuer,
+      issuerZhTw: primeResult.card?.issuer_zh_tw,
+      cardIdentifier: primeResult.card_identifier,
+      expMonth: primeResult.card?.expiry_month,
+      expYear: primeResult.card?.expiry_year,
+    },
   };
 }

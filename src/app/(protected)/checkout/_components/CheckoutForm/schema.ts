@@ -1,6 +1,6 @@
 import { z } from "zod/v4";
 import { products } from "@/mocks/fixtures/products";
-import { checkoutPlanIds } from "./checkoutPlans";
+import { checkoutPlanIds } from "../../_utils/checkoutPlans";
 
 const productIds = products.map((product) => product.id);
 

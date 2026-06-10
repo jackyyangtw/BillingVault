@@ -8,10 +8,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { CurrentSubscriptionData } from "@/features/subscriptions/dal/types";
+import type {
+  CurrentSubscriptionData,
+  SubscriptionStatus,
+} from "@/features/subscriptions/dal/types";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { formatDate } from "@/utils/formatDate";
-import { getSubscriptionStatusLabel } from "../_utils/getSubscriptionStatusLabel";
 
 type CurrentSubscriptionProps = {
   subscription: CurrentSubscriptionData;
@@ -137,6 +139,18 @@ function getStatusBadge(subscription: CurrentSubscriptionData) {
     variant: "secondary" as const,
     className: undefined,
   };
+}
+
+function getSubscriptionStatusLabel(status: SubscriptionStatus) {
+  const labels: Record<SubscriptionStatus, string> = {
+    trialing: "試用中",
+    active: "訂閱中",
+    past_due: "付款逾期",
+    canceled: "已取消續訂",
+    incomplete: "尚未完成",
+  };
+
+  return labels[status];
 }
 
 type SubscriptionMetricProps = {

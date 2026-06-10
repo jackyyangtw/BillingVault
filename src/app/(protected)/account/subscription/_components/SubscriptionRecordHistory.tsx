@@ -10,8 +10,6 @@ import { Separator } from "@/components/ui/separator";
 import type { SubscriptionRecordData } from "@/features/subscriptions/dal/types";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { formatDate } from "@/utils/formatDate";
-import { getRecordEventLabel } from "../_utils/getRecordEventLabel";
-import { getRecordStatusLabel } from "../_utils/getRecordStatusLabel";
 
 type SubscriptionRecordHistoryProps = {
   records: SubscriptionRecordData[];
@@ -88,4 +86,24 @@ function getRecordEventBadgeClassName(event: SubscriptionRecordData["event"]) {
   };
 
   return classNames[event];
+}
+
+function getRecordEventLabel(event: SubscriptionRecordData["event"]) {
+  const labels: Record<SubscriptionRecordData["event"], string> = {
+    renewal: "續訂",
+    created: "建立訂閱",
+    plan_change: "方案變更",
+  };
+
+  return labels[event];
+}
+
+function getRecordStatusLabel(status: SubscriptionRecordData["status"]) {
+  const labels: Record<SubscriptionRecordData["status"], string> = {
+    paid: "已付款",
+    open: "待付款",
+    failed: "付款失敗",
+  };
+
+  return labels[status];
 }

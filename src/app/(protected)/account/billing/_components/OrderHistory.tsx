@@ -8,13 +8,32 @@ import {
 } from "@/components/ui/card";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { formatDate } from "@/utils/formatDate";
-import type { OrderData } from "./types";
-import { getOrderStatusLabel } from "../_utils/getOrderStatusLabel";
-import { getPaymentStatusLabel } from "../_utils/getPaymentStatusLabel";
+import type { OrderData } from "../types";
 
 type OrderHistoryProps = {
   orders: OrderData[];
 };
+
+function getPaymentStatusLabel(status: OrderData["paymentStatus"]) {
+  const labels: Record<OrderData["paymentStatus"], string> = {
+    pending: "等待授權",
+    succeeded: "授權成功",
+    failed: "授權失敗",
+  };
+
+  return labels[status];
+}
+
+function getOrderStatusLabel(status: OrderData["status"]) {
+  const labels: Record<OrderData["status"], string> = {
+    pending: "處理中",
+    paid: "已付款",
+    failed: "付款失敗",
+    canceled: "已取消",
+  };
+
+  return labels[status];
+}
 
 export default function OrderHistory({ orders }: OrderHistoryProps) {
   return (

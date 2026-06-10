@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { BillingSummaryItem } from "./types";
+import type { BillingSummaryItem } from "../types";
 
 type BillingSummaryProps = {
   summary: BillingSummaryItem[];

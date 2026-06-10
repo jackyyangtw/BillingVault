@@ -14,7 +14,6 @@ import type { CheckoutFormProps } from "./types";
 import { useCheckoutPaymentMethod } from "./_hooks/useCheckoutPaymentMethod";
 import { useCheckoutSummary } from "./_hooks/useCheckoutSummary";
 import { useCheckoutSubmission } from "./_hooks/useCheckoutSubmission";
-import { getCheckoutDefaultValues } from "./_utils/getCheckoutDefaultValues";
 
 export default function CheckoutForm({
   initialPlanId,
@@ -114,4 +113,31 @@ export default function CheckoutForm({
       <CheckoutPendingDialog isOpen={isSubmitting} />
     </FormProvider>
   );
+}
+
+type CheckoutDefaultValuesInput = Pick<
+  CheckoutFormProps,
+  | "initialPlanId"
+  | "initialProductIds"
+  | "initialCycle"
+  | "initialCompanyName"
+  | "initialBillingEmail"
+>;
+
+function getCheckoutDefaultValues({
+  initialPlanId,
+  initialProductIds,
+  initialCycle,
+  initialCompanyName,
+  initialBillingEmail,
+}: CheckoutDefaultValuesInput): CheckoutFormValues {
+  return {
+    planId: initialPlanId,
+    productIds: initialProductIds,
+    cycle: initialCycle,
+    companyName: initialCompanyName,
+    billingEmail: initialBillingEmail,
+    taxId: "",
+    billingAddress: "",
+  };
 }

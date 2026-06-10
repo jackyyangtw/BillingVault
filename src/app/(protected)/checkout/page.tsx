@@ -9,7 +9,7 @@ import {
   getSelectablePlanId,
 } from "@/mocks/fixtures/plans";
 import CheckoutForm from "./_components/CheckoutForm";
-import { checkoutPlans } from "./_components/CheckoutForm/checkoutPlans";
+import { checkoutPlans } from "./_utils/checkoutPlans";
 
 type CheckoutPageProps = {
   searchParams: Promise<{
