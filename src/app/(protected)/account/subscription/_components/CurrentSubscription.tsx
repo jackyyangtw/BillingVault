@@ -29,6 +29,7 @@ export default function CurrentSubscription({
     : `預計收取 ${formatCurrency(subscription.nextInvoiceAmount)}`;
   const statusBadge = getStatusBadge(subscription);
   const scheduledChange = subscription.scheduledChange;
+  const scheduledChangeLabel = getScheduledChangeLabel(scheduledChange);
 
   return (
     <Card>
@@ -64,7 +65,7 @@ export default function CurrentSubscription({
             value={formatDate(subscription.renewalDate)}
             detail={
               scheduledChange
-                ? `將於 ${formatDate(scheduledChange.effectiveAt)} 改為 ${scheduledChange.toPlanName}`
+                ? `將於 ${formatDate(scheduledChange.effectiveAt)} 改為 ${scheduledChangeLabel}`
                 : periodDateDetail
             }
           />
@@ -87,13 +88,25 @@ export default function CurrentSubscription({
             <p className="text-muted-foreground mt-1 text-sm leading-6">
               目前仍可使用 {scheduledChange.fromPlanName}，將於{" "}
               {formatDate(scheduledChange.effectiveAt)} 起改為{" "}
-              {scheduledChange.toPlanName}。
+              {scheduledChangeLabel}。
             </p>
           </div>
         )}
       </CardContent>
     </Card>
   );
+}
+
+function getScheduledChangeLabel(
+  scheduledChange: CurrentSubscriptionData["scheduledChange"],
+) {
+  if (!scheduledChange) {
+    return "";
+  }
+
+  const cycleLabel = scheduledChange.toCycle === "monthly" ? "月繳" : "年繳";
+
+  return `${scheduledChange.toPlanName} ${cycleLabel}方案`;
 }
 
 function getStatusBadge(subscription: CurrentSubscriptionData) {

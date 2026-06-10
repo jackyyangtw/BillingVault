@@ -17,6 +17,10 @@ import type {
   SubscriptionStatus,
 } from "@/features/subscriptions/dal/types";
 import PlanOption from "./PlanOption";
+import {
+  getPlanOptionAction,
+  getPlanOptionStatusLabel,
+} from "./planOptionState";
 
 type PlanChangePanelProps = {
   currentSubscriptionId: string | null;
@@ -39,9 +43,13 @@ export default function PlanChangePanel({
   );
   const changePlanMutation = useChangeSubscriptionPlan(currentSubscriptionId);
   const isCanceled = currentSubscriptionStatus === "canceled";
+  const selectedDisplayCycle = displayCycle;
 
   function handleChangePlan(plan: PlanOptionData) {
-    if (!currentSubscriptionId || isCanceled || plan.action === "current") {
+    const isCurrentSelection =
+      plan.id === currentPlanId && selectedDisplayCycle === currentCycle;
+
+    if (!currentSubscriptionId || isCanceled || isCurrentSelection) {
       return;
     }
 
@@ -55,6 +63,7 @@ export default function PlanChangePanel({
       {
         subscriptionId: currentSubscriptionId,
         planId: plan.id,
+        cycle: selectedDisplayCycle,
       },
       {
         onSuccess: (result) => {
@@ -106,12 +115,11 @@ export default function PlanChangePanel({
               <button
                 type="button"
                 onClick={() => setDisplayCycle("monthly")}
-                disabled={currentCycle === "yearly"}
                 className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
-                  displayCycle === "monthly"
+                  selectedDisplayCycle === "monthly"
                     ? "bg-primary text-primary-foreground"
                     : "text-muted-foreground hover:text-foreground"
-                } disabled:cursor-not-allowed disabled:opacity-40`}
+                }`}
               >
                 月繳
               </button>
@@ -119,7 +127,7 @@ export default function PlanChangePanel({
                 type="button"
                 onClick={() => setDisplayCycle("yearly")}
                 className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
-                  displayCycle === "yearly"
+                  selectedDisplayCycle === "yearly"
                     ? "bg-primary text-primary-foreground"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
@@ -132,8 +140,23 @@ export default function PlanChangePanel({
                 <PlanOption
                   key={plan.id}
                   plan={plan}
-                  displayCycle={displayCycle}
-                  isCurrent={plan.id === currentPlanId}
+                  displayCycle={selectedDisplayCycle}
+                  action={getPlanOptionAction({
+                    plan,
+                    currentPlanId,
+                    currentCycle,
+                    selectedDisplayCycle,
+                  })}
+                  isCurrent={
+                    plan.id === currentPlanId &&
+                    selectedDisplayCycle === currentCycle
+                  }
+                  statusLabel={getPlanOptionStatusLabel({
+                    plan,
+                    currentPlanId,
+                    currentCycle,
+                    selectedDisplayCycle,
+                  })}
                   isPending={pendingPlanId === plan.id}
                   isDisabled={changePlanMutation.isPending}
                   onChangePlan={handleChangePlan}

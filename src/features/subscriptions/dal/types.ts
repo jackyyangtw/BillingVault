@@ -25,8 +25,10 @@ export type CurrentSubscriptionData = {
 export type ScheduledSubscriptionChangeData = {
   id: string;
   fromPlanName: string;
+  fromCycle: BillingCycle;
   toPlanId: string;
   toPlanName: string;
+  toCycle: BillingCycle;
   effectiveAt: string;
 };
 

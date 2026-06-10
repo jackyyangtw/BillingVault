@@ -1,6 +1,7 @@
 import "server-only";
 
 import { randomUUID } from "node:crypto";
+import { getPeriodEnd } from "@/features/checkout/dal/checkoutOrderNumbers";
 import { prisma } from "@/lib/prisma";
 import { calculateCheckoutPricing } from "@/features/checkout/dal/pricing";
 import { appCurrency } from "@/lib/currency";
@@ -9,6 +10,7 @@ import { getPlanById, type BillingCycle } from "@/mocks/fixtures/plans";
 type ChangeSubscriptionPlanInput = {
   subscriptionId: string;
   planId: string;
+  cycle: BillingCycle;
 };
 
 const changeableStatuses = ["active", "trialing", "past_due"] as const;
@@ -55,20 +57,24 @@ export async function changeSubscriptionPlan(
     throw new Error("找不到可變更的訂閱。");
   }
 
-  if (currentSubscription.planId === input.planId) {
+  const currentCycle = currentSubscription.cycle as BillingCycle;
+  const targetCycle = input.cycle;
+
+  if (
+    currentSubscription.planId === input.planId &&
+    currentCycle === targetCycle
+  ) {
     throw new Error("目標方案與目前方案相同。");
   }
-
-  const cycle = currentSubscription.cycle as BillingCycle;
   const currentPlanAmountCents = calculateCheckoutPricing({
     planId: currentSubscription.planId,
     productId: currentSubscription.productId,
-    cycle,
+    cycle: currentCycle,
   }).amountCents;
   const targetPlanAmountCents = calculateCheckoutPricing({
     planId: input.planId,
     productId: currentSubscription.productId,
-    cycle,
+    cycle: targetCycle,
   }).amountCents;
   const changeType =
     targetPlanAmountCents > currentPlanAmountCents ? "upgrade" : "downgrade";
@@ -79,6 +85,8 @@ export async function changeSubscriptionPlan(
       subscriptionId: currentSubscription.id,
       fromPlanId: currentSubscription.planId,
       toPlanId: input.planId,
+      fromCycle: currentCycle,
+      toCycle: targetCycle,
       effectiveAt: currentSubscription.currentPeriodEnd,
     });
 
@@ -94,6 +102,10 @@ export async function changeSubscriptionPlan(
   const orderNumber = createOrderNumber();
   const invoiceNumber = createInvoiceNumber(orderNumber);
   const now = new Date();
+  const targetPeriodEnd =
+    targetCycle === currentCycle
+      ? currentSubscription.currentPeriodEnd
+      : getPeriodEnd(now, targetCycle);
   const defaultPaymentMethod = await prisma.paymentMethod.findFirst({
     where: { userId, isDefault: true },
     select: { cardIdentifier: true, last4: true },
@@ -111,7 +123,7 @@ export async function changeSubscriptionPlan(
         orderNumber,
         planId: input.planId,
         productId: currentSubscription.productId,
-        cycle,
+        cycle: targetCycle,
         companyName: currentSubscription.order.companyName,
         billingEmail: currentSubscription.order.billingEmail,
         taxId: currentSubscription.order.taxId ?? undefined,
@@ -164,10 +176,10 @@ export async function changeSubscriptionPlan(
         orderId: order.id,
         planId: input.planId,
         productId: currentSubscription.productId,
-        cycle,
+        cycle: targetCycle,
         status: "active",
         currentPeriodStart: now,
-        currentPeriodEnd: currentSubscription.currentPeriodEnd,
+        currentPeriodEnd: targetPeriodEnd,
       },
     });
 
@@ -203,12 +215,16 @@ async function scheduleDowngrade({
   subscriptionId,
   fromPlanId,
   toPlanId,
+  fromCycle,
+  toCycle,
   effectiveAt,
 }: {
   userId: string;
   subscriptionId: string;
   fromPlanId: string;
   toPlanId: string;
+  fromCycle: BillingCycle;
+  toCycle: BillingCycle;
   effectiveAt: Date;
 }) {
   await prisma.$transaction(async (tx) => {
@@ -226,6 +242,8 @@ async function scheduleDowngrade({
         subscriptionId,
         fromPlanId,
         toPlanId,
+        fromCycle,
+        toCycle,
         effectiveAt,
         status: "pending",
       },

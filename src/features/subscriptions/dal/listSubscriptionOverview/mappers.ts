@@ -106,8 +106,10 @@ function toScheduledChange(subscription: SubscriptionRecord) {
   return {
     id: scheduledChange.id,
     fromPlanName: getPlanName(scheduledChange.fromPlanId),
+    fromCycle: toBillingCycle(scheduledChange.fromCycle),
     toPlanId: scheduledChange.toPlanId,
     toPlanName: getPlanName(scheduledChange.toPlanId),
+    toCycle: toBillingCycle(scheduledChange.toCycle),
     effectiveAt: scheduledChange.effectiveAt.toISOString(),
   };
 }

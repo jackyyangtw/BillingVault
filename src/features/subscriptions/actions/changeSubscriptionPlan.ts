@@ -13,6 +13,7 @@ const changeSubscriptionPlanSchema = z.object({
   planId: z.string().refine((value) => planIds.includes(value), {
     message: "請選擇有效的訂閱方案。",
   }),
+  cycle: z.enum(["monthly", "yearly"]),
 });
 
 export type ChangeSubscriptionPlanInput = z.infer<

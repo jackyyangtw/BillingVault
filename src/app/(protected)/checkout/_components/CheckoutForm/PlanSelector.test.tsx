@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+﻿import { fireEvent, render, screen } from "@testing-library/react";
 import { FormProvider, useForm } from "react-hook-form";
 import { beforeAll, describe, expect, it } from "vitest";
 import type { BillingCycle } from "@/mocks/fixtures/plans";
@@ -18,7 +18,7 @@ function TestPlanSelector({
     defaultValues: {
       planId: "business",
       productIds: ["codeguard"],
-      cycle: "monthly",
+      cycle: currentCycle ?? "monthly",
       companyName: "SecureCart",
       billingEmail: "billing@example.com",
       taxId: "",
@@ -75,14 +75,13 @@ describe("結帳方案選擇", () => {
     render(<TestPlanSelector currentPlanId="business" currentCycle={null} />);
 
     expect(screen.getByText("Business")).toBeVisible();
-    expect(screen.getByRole("link", { name: "訂閱管理" })).toHaveAttribute(
-      "href",
-      "/account/subscription",
-    );
+    expect(
+      screen.getAllByRole("link", { name: "訂閱管理" })[0],
+    ).toHaveAttribute("href", "/account/subscription");
   });
 
-  it("目前為年繳方案時不可選擇月繳", async () => {
-    render(<TestPlanSelector currentPlanId={null} currentCycle="yearly" />);
+  it("沒有訂閱時可以選擇付款週期", async () => {
+    render(<TestPlanSelector currentPlanId={null} currentCycle={null} />);
 
     fireEvent.pointerDown(screen.getByRole("combobox", { name: "付款週期" }), {
       button: 0,
@@ -90,13 +89,16 @@ describe("結帳方案選擇", () => {
       pointerType: "mouse",
     });
 
-    expect(await screen.findByRole("option", { name: "月繳" })).toHaveAttribute(
-      "aria-disabled",
-      "true",
-    );
-    expect(screen.getByRole("option", { name: "年繳" })).not.toHaveAttribute(
-      "aria-disabled",
-      "true",
-    );
+    expect(await screen.findByRole("option", { name: "月繳" })).toBeVisible();
+    expect(screen.getByRole("option", { name: "年繳" })).toBeVisible();
+  });
+
+  it("已有訂閱時付款週期只顯示目前值", () => {
+    render(<TestPlanSelector currentPlanId="business" currentCycle="yearly" />);
+
+    expect(
+      screen.queryByRole("combobox", { name: "付款週期" }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByText("年繳")).toBeVisible();
   });
 });

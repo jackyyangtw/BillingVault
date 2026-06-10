@@ -1,5 +1,5 @@
-import { render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type {
   CurrentSubscriptionData,
   PlanOptionData,
@@ -11,12 +11,18 @@ import NoCurrentSubscription from "./NoCurrentSubscription";
 import PlanChangePanel from "./PlanChangePanel";
 import SubscriptionRecordHistory from "./SubscriptionRecordHistory";
 
+const changePlanMutateMock = vi.hoisted(() => vi.fn());
+
 vi.mock("@/features/subscriptions/queries/useChangeSubscriptionPlan", () => ({
   useChangeSubscriptionPlan: () => ({
     isPending: false,
-    mutate: vi.fn(),
+    mutate: changePlanMutateMock,
   }),
 }));
+
+beforeEach(() => {
+  changePlanMutateMock.mockClear();
+});
 
 function createSubscription(
   overrides: Partial<CurrentSubscriptionData> = {},
@@ -142,8 +148,10 @@ describe("訂閱狀態 UI", () => {
           scheduledChange: {
             id: testScheduledChangeId,
             fromPlanName: "Business",
+            fromCycle: "monthly",
             toPlanId: "pro",
             toPlanName: "Pro",
+            toCycle: "monthly",
             effectiveAt: "2026-07-01T00:00:00.000Z",
           },
         })}
@@ -153,7 +161,7 @@ describe("訂閱狀態 UI", () => {
     expect(screen.getByText("已排程降級")).toBeInTheDocument();
     expect(screen.getAllByText(/將於 2026年7月1日.*改為 Pro/)).toHaveLength(2);
     expect(
-      screen.getByText(/目前仍可使用 Business，將於.*起改為 Pro。/),
+      screen.getByText(/目前仍可使用 Business，將於.*起改為 Pro 月繳方案。/),
     ).toBeInTheDocument();
   });
 
@@ -243,6 +251,102 @@ describe("訂閱狀態 UI", () => {
       "bg-emerald-500/12",
       "text-emerald-200",
       "font-semibold",
+    );
+  });
+
+  it("升級為年繳後即使保留舊狀態也顯示年繳價格", () => {
+    const { rerender } = render(
+      <PlanChangePanel
+        currentSubscriptionId={testSubscriptionId}
+        currentPlanId="business"
+        currentSubscriptionStatus="active"
+        currentCycle="monthly"
+        plans={createPlanOptions()}
+      />,
+    );
+
+    expect(screen.getByText("NT$900")).toBeInTheDocument();
+
+    rerender(
+      <PlanChangePanel
+        currentSubscriptionId={testSubscriptionId}
+        currentPlanId="business"
+        currentSubscriptionStatus="active"
+        currentCycle="yearly"
+        plans={createPlanOptions()}
+      />,
+    );
+
+    expect(screen.getByText("NT$900")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "月繳" })).not.toBeDisabled();
+  });
+
+  it("在年繳頁籤升級時送出年繳週期", () => {
+    render(
+      <PlanChangePanel
+        currentSubscriptionId={testSubscriptionId}
+        currentPlanId="starter"
+        currentSubscriptionStatus="active"
+        currentCycle="monthly"
+        plans={[
+          {
+            id: "starter",
+            name: "Starter",
+            priceMonthly: "NT$900",
+            priceYearly: "NT$2,700",
+            fit: "適合個人開發者",
+            action: "current",
+          },
+          {
+            id: "pro",
+            name: "Pro",
+            priceMonthly: "NT$2,900",
+            priceYearly: "NT$8,700",
+            fit: "適合快速成長的小團隊",
+            action: "upgrade",
+          },
+        ]}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "年繳" }));
+
+    expect(screen.queryByText("目標方案")).not.toBeInTheDocument();
+    fireEvent.click(screen.getAllByRole("button", { name: /升級/ })[1]);
+
+    expect(changePlanMutateMock).toHaveBeenCalledWith(
+      {
+        subscriptionId: testSubscriptionId,
+        planId: "pro",
+        cycle: "yearly",
+      },
+      expect.any(Object),
+    );
+  });
+
+  it("年繳方案可排程改回月繳週期並標示目標方案", () => {
+    render(
+      <PlanChangePanel
+        currentSubscriptionId={testSubscriptionId}
+        currentPlanId="business"
+        currentSubscriptionStatus="active"
+        currentCycle="yearly"
+        plans={createPlanOptions()}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "月繳" }));
+
+    expect(screen.getByText("目標方案")).toBeInTheDocument();
+    fireEvent.click(screen.getAllByRole("button", { name: /降級/ })[1]);
+
+    expect(changePlanMutateMock).toHaveBeenCalledWith(
+      {
+        subscriptionId: testSubscriptionId,
+        planId: "business",
+        cycle: "monthly",
+      },
+      expect.any(Object),
     );
   });
 });

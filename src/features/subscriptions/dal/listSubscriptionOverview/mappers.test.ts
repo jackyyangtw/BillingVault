@@ -69,6 +69,8 @@ describe("訂閱資料轉換", () => {
           subscriptionId: testSubscriptionId,
           fromPlanId: "business",
           toPlanId: "pro",
+          fromCycle: "yearly",
+          toCycle: "monthly",
           effectiveAt: new Date("2026-06-10T00:00:00.000Z"),
           status: "pending",
           createdAt: new Date("2026-06-03T00:00:00.000Z"),
@@ -80,8 +82,10 @@ describe("訂閱資料轉換", () => {
     expect(toCurrentSubscription(subscription).scheduledChange).toMatchObject({
       id: testScheduledChangeId,
       fromPlanName: "Business",
+      fromCycle: "yearly",
       toPlanId: "pro",
       toPlanName: "Pro",
+      toCycle: "monthly",
       effectiveAt: "2026-06-10T00:00:00.000Z",
     });
   });

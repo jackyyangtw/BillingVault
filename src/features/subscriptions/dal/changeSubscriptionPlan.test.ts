@@ -70,6 +70,7 @@ describe("變更訂閱方案", () => {
       changeSubscriptionPlan(testUserId, {
         subscriptionId: testSubscriptionId,
         planId: "pro",
+        cycle: "monthly",
       }),
     ).resolves.toEqual({ changeType: "upgrade" });
 
@@ -161,6 +162,7 @@ describe("變更訂閱方案", () => {
       changeSubscriptionPlan(testUserId, {
         subscriptionId: testSubscriptionId,
         planId: "pro",
+        cycle: "monthly",
       }),
     ).resolves.toEqual({ changeType: "downgrade" });
 
@@ -177,6 +179,38 @@ describe("變更訂閱方案", () => {
         subscriptionId: testSubscriptionId,
         fromPlanId: "business",
         toPlanId: "pro",
+        fromCycle: "monthly",
+        toCycle: "monthly",
+        effectiveAt: new Date("2026-07-01T00:00:00.000Z"),
+        status: "pending",
+      },
+    });
+    expect(txMock.subscription.update).not.toHaveBeenCalled();
+    expect(txMock.order.create).not.toHaveBeenCalled();
+    expect(txMock.invoice.create).not.toHaveBeenCalled();
+  });
+
+  it("年繳方案改為月繳時排程於本期結束後生效", async () => {
+    prismaMock.subscription.findFirst.mockResolvedValue(
+      createCurrentSubscription({ planId: "business", cycle: "yearly" }),
+    );
+
+    await expect(
+      changeSubscriptionPlan(testUserId, {
+        subscriptionId: testSubscriptionId,
+        planId: "business",
+        cycle: "monthly",
+      }),
+    ).resolves.toEqual({ changeType: "downgrade" });
+
+    expect(txMock.subscriptionPlanChange.create).toHaveBeenCalledWith({
+      data: {
+        userId: testUserId,
+        subscriptionId: testSubscriptionId,
+        fromPlanId: "business",
+        toPlanId: "business",
+        fromCycle: "yearly",
+        toCycle: "monthly",
         effectiveAt: new Date("2026-07-01T00:00:00.000Z"),
         status: "pending",
       },
@@ -195,6 +229,7 @@ describe("變更訂閱方案", () => {
       changeSubscriptionPlan(testUserId, {
         subscriptionId: testSubscriptionId,
         planId: "pro",
+        cycle: "monthly",
       }),
     ).rejects.toThrow("目標方案與目前方案相同。");
 
@@ -206,6 +241,7 @@ describe("變更訂閱方案", () => {
       changeSubscriptionPlan(testUserId, {
         subscriptionId: testSubscriptionId,
         planId: "enterprise",
+        cycle: "monthly",
       }),
     ).rejects.toThrow("企業方案需聯繫業務，無法直接變更。");
 
@@ -219,21 +255,62 @@ describe("變更訂閱方案", () => {
       changeSubscriptionPlan(testUserId, {
         subscriptionId: testSubscriptionId,
         planId: "business",
+        cycle: "monthly",
       }),
     ).rejects.toThrow("找不到可變更的訂閱。");
 
     expect(prismaMock.$transaction).not.toHaveBeenCalled();
   });
+
+  it("月繳方案升級為年繳方案時建立年繳訂閱", async () => {
+    prismaMock.subscription.findFirst.mockResolvedValue(
+      createCurrentSubscription({ planId: "starter" }),
+    );
+
+    await expect(
+      changeSubscriptionPlan(testUserId, {
+        subscriptionId: testSubscriptionId,
+        planId: "pro",
+        cycle: "yearly",
+      }),
+    ).resolves.toEqual({ changeType: "upgrade" });
+
+    expect(txMock.order.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        planId: "pro",
+        cycle: "yearly",
+      }),
+      include: {
+        payments: {
+          take: 1,
+          orderBy: { createdAt: "desc" },
+        },
+      },
+    });
+    expect(txMock.subscription.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        planId: "pro",
+        cycle: "yearly",
+        currentPeriodEnd: new Date("2027-06-16T00:00:00.000Z"),
+      }),
+    });
+  });
 });
 
-function createCurrentSubscription({ planId }: { planId: string }) {
+function createCurrentSubscription({
+  planId,
+  cycle = "monthly",
+}: {
+  planId: string;
+  cycle?: "monthly" | "yearly";
+}) {
   return {
     id: testSubscriptionId,
     userId: testUserId,
     orderId: testOrderId,
     planId,
     productId: "codeguard",
-    cycle: "monthly",
+    cycle,
     status: "active",
     currentPeriodStart: new Date("2026-06-01T00:00:00.000Z"),
     currentPeriodEnd: new Date("2026-07-01T00:00:00.000Z"),

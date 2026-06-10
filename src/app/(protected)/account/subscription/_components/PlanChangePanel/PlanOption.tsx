@@ -24,10 +24,14 @@ const actionLabel = {
   contact: "聯絡銷售",
 };
 
+export type PlanOptionAction = keyof typeof actionLabel;
+
 export type PlanOptionProps = {
   plan: PlanOptionData;
   displayCycle: BillingCycle;
+  action: PlanOptionAction;
   isCurrent: boolean;
+  statusLabel: string | null;
   isPending: boolean;
   isDisabled: boolean;
   onChangePlan: (plan: PlanOptionData) => void;
@@ -36,12 +40,14 @@ export type PlanOptionProps = {
 export default function PlanOption({
   plan,
   displayCycle,
+  action,
   isCurrent,
+  statusLabel,
   isPending,
   isDisabled,
   onChangePlan,
 }: PlanOptionProps) {
-  const Icon = actionIcon[plan.action];
+  const Icon = actionIcon[action];
   const isButtonDisabled = isCurrent || isDisabled;
 
   return (
@@ -53,7 +59,7 @@ export default function PlanOption({
             <div className="flex items-baseline gap-1">
               <span
                 className={
-                  plan.action === "contact"
+                  action === "contact"
                     ? "text-xl font-bold"
                     : "text-3xl font-bold"
                 }
@@ -62,14 +68,14 @@ export default function PlanOption({
                   ? plan.priceMonthly
                   : plan.priceYearly}
               </span>
-              {plan.action !== "contact" && (
+              {action !== "contact" && (
                 <span className="text-muted-foreground text-sm">
                   /{displayCycle === "monthly" ? "月" : "年"}
                 </span>
               )}
             </div>
           </div>
-          {isCurrent && <Badge variant="secondary">使用中</Badge>}
+          {statusLabel && <Badge variant="secondary">{statusLabel}</Badge>}
         </div>
         <p className="text-muted-foreground text-sm leading-6">{plan.fit}</p>
       </div>
@@ -84,7 +90,7 @@ export default function PlanOption({
         ) : (
           <Icon data-icon="inline-start" />
         )}
-        {actionLabel[plan.action]}
+        {actionLabel[action]}
       </Button>
     </div>
   );
