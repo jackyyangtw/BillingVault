@@ -7,7 +7,6 @@ import {
   FieldError,
   FieldLabel,
 } from "@/components/ui/field";
-import { cn } from "@/lib/tailwind-css/utils";
 import {
   Select,
   SelectContent,
@@ -18,6 +17,7 @@ import {
 } from "@/components/ui/select";
 import type { BillingCycle } from "@/mocks/fixtures/plans";
 import type { CheckoutFormValues } from "@/app/(protected)/checkout/_components/CheckoutForm/schema";
+import LockedFieldValue from "./LockedFieldValue";
 
 type CycleFieldProps = {
   currentCycle: BillingCycle | null;
@@ -51,15 +51,9 @@ export default function CycleField({ currentCycle }: CycleFieldProps) {
             </span>
           </FieldDescription>
           {isLocked ? (
-            <div
-              id="cycle"
-              className={cn(
-                "border-input bg-muted text-foreground flex h-9 w-full items-center rounded-3xl border px-3 text-sm",
-                fieldState.invalid && "border-destructive",
-              )}
-            >
+            <LockedFieldValue id="cycle" isInvalid={fieldState.invalid}>
               {field.value === "monthly" ? "月繳" : "年繳"}
-            </div>
+            </LockedFieldValue>
           ) : (
             <Select value={field.value} onValueChange={field.onChange}>
               <SelectTrigger

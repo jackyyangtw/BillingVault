@@ -12,6 +12,7 @@ import {
 import { getPlanById } from "@/mocks/fixtures/plans";
 import type { CheckoutFormValues } from "@/app/(protected)/checkout/_components/CheckoutForm/schema";
 import { checkoutPlans } from "../../../_utils/checkoutPlans";
+import LockedFieldValue from "./LockedFieldValue";
 
 type PlanFieldProps = {
   currentPlanId: string | null;
@@ -24,9 +25,9 @@ export default function PlanField({ currentPlanId }: PlanFieldProps) {
     return (
       <Field>
         <FieldLabel>訂閱方案</FieldLabel>
-        <div className="bg-input/40 flex h-9 w-full items-center rounded-md border px-3 text-sm">
+        <LockedFieldValue>
           {getPlanById(currentPlanId)?.name ?? currentPlanId}
-        </div>
+        </LockedFieldValue>
         <p className="text-muted-foreground text-xs">
           若要更換方案，請前往{" "}
           <Link
