@@ -1,6 +1,12 @@
 import Link from "next/link";
+import { Info } from "lucide-react";
 import { Controller, useFormContext } from "react-hook-form";
-import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+} from "@/components/ui/field";
 import {
   Select,
   SelectContent,
@@ -25,19 +31,25 @@ export default function PlanField({ currentPlanId }: PlanFieldProps) {
     return (
       <Field>
         <FieldLabel>訂閱方案</FieldLabel>
+        <FieldDescription className="flex items-start gap-2">
+          <Info
+            aria-hidden="true"
+            className="mt-0.5 size-4 shrink-0 text-cyan-500"
+          />
+          <span>
+            若要更換方案，請前往{" "}
+            <Link
+              href="/account/subscription"
+              className="text-primary underline-offset-4 hover:underline"
+            >
+              訂閱管理
+            </Link>
+            。
+          </span>
+        </FieldDescription>
         <LockedFieldValue>
           {getPlanById(currentPlanId)?.name ?? currentPlanId}
         </LockedFieldValue>
-        <p className="text-muted-foreground text-xs">
-          若要更換方案，請前往{" "}
-          <Link
-            href="/account/subscription"
-            className="text-primary underline-offset-4 hover:underline"
-          >
-            訂閱管理
-          </Link>
-          。
-        </p>
       </Field>
     );
   }

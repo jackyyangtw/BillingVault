@@ -75,6 +75,7 @@ describe("結帳方案選擇", () => {
     render(<TestPlanSelector currentPlanId="business" currentCycle={null} />);
 
     expect(screen.getByText("Business")).toBeVisible();
+    expect(screen.getByText(/若要更換方案/)).toBeInTheDocument();
     expect(
       screen.getAllByRole("link", { name: "訂閱管理" })[0],
     ).toHaveAttribute("href", "/account/subscription");
@@ -93,6 +94,15 @@ describe("結帳方案選擇", () => {
     expect(screen.getByRole("option", { name: "年繳" })).toBeVisible();
   });
 
+  it("沒有訂閱時不顯示訂閱限制提示", () => {
+    render(<TestPlanSelector currentPlanId={null} currentCycle={null} />);
+
+    expect(
+      screen.queryByText(/可購買已有商品是正常現象/),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText(/如要更改訂閱週期/)).not.toBeInTheDocument();
+  });
+
   it("已有訂閱時付款週期只顯示目前值", () => {
     render(<TestPlanSelector currentPlanId="business" currentCycle="yearly" />);
 
@@ -100,5 +110,12 @@ describe("結帳方案選擇", () => {
       screen.queryByRole("combobox", { name: "付款週期" }),
     ).not.toBeInTheDocument();
     expect(screen.getByText("年繳")).toBeVisible();
+  });
+
+  it("已有訂閱時顯示訂閱限制提示", () => {
+    render(<TestPlanSelector currentPlanId="business" currentCycle="yearly" />);
+
+    expect(screen.getByText(/可購買已有商品是正常現象/)).toBeInTheDocument();
+    expect(screen.getByText(/如要更改訂閱週期/)).toBeInTheDocument();
   });
 });

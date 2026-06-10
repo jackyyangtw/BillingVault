@@ -4,7 +4,13 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { products } from "@/mocks/fixtures/products";
 import type { CheckoutFormValues } from "@/app/(protected)/checkout/_components/CheckoutForm/schema";
 
-export default function ProductsField() {
+type ProductsFieldProps = {
+  hasCurrentSubscription: boolean;
+};
+
+export default function ProductsField({
+  hasCurrentSubscription,
+}: ProductsFieldProps) {
   const form = useFormContext<CheckoutFormValues>();
 
   return (
@@ -14,15 +20,17 @@ export default function ProductsField() {
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid} className="md:col-span-2">
           <FieldLabel>SaaS 產品</FieldLabel>
-          <p className="text-muted-foreground flex items-start gap-2 text-sm leading-6">
-            <Info
-              aria-hidden="true"
-              className="mt-1 size-4 shrink-0 text-cyan-500"
-            />
-            <span>
-              因為這是 demo，可購買已有商品是正常現象，主要用來體驗結帳流程。
-            </span>
-          </p>
+          {hasCurrentSubscription && (
+            <p className="text-muted-foreground flex items-start gap-2 text-xs leading-5">
+              <Info
+                aria-hidden="true"
+                className="mt-0.5 size-3.5 shrink-0 text-cyan-500"
+              />
+              <span>
+                因為這是 demo，可購買已有商品是正常現象，主要用來體驗結帳流程。
+              </span>
+            </p>
+          )}
           <div className="grid gap-3 md:grid-cols-3">
             {products.map((product) => {
               const inputId = `product-${product.id}`;

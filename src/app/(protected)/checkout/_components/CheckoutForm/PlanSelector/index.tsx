@@ -20,6 +20,8 @@ export default function PlanSelector({
   currentPlanId,
   currentCycle,
 }: PlanSelectorProps) {
+  const hasCurrentSubscription = currentPlanId !== null;
+
   return (
     <Card>
       <CardHeader>
@@ -29,7 +31,7 @@ export default function PlanSelector({
       <CardContent>
         <FieldGroup className="grid gap-4 md:grid-cols-2">
           <PlanField currentPlanId={currentPlanId} />
-          <ProductsField />
+          <ProductsField hasCurrentSubscription={hasCurrentSubscription} />
           <CycleField currentCycle={currentCycle} />
         </FieldGroup>
       </CardContent>

@@ -34,22 +34,24 @@ export default function CycleField({ currentCycle }: CycleFieldProps) {
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid}>
           <FieldLabel htmlFor="cycle">付款週期</FieldLabel>
-          <FieldDescription className="flex items-start gap-2">
-            <Info
-              aria-hidden="true"
-              className="mt-0.5 size-4 shrink-0 text-cyan-500"
-            />
-            <span>
-              如要更改訂閱週期，請回{" "}
-              <Link
-                href="/account/subscription"
-                className="text-primary underline-offset-4 hover:underline"
-              >
-                訂閱管理
-              </Link>{" "}
-              變更方案。
-            </span>
-          </FieldDescription>
+          {isLocked && (
+            <FieldDescription className="flex items-start gap-2 text-xs">
+              <Info
+                aria-hidden="true"
+                className="mt-0.5 size-3.5 shrink-0 text-cyan-500"
+              />
+              <span>
+                如要更改訂閱週期，請回{" "}
+                <Link
+                  href="/account/subscription"
+                  className="text-primary underline-offset-4 hover:underline"
+                >
+                  訂閱管理
+                </Link>{" "}
+                變更方案。
+              </span>
+            </FieldDescription>
+          )}
           {isLocked ? (
             <LockedFieldValue id="cycle" isInvalid={fieldState.invalid}>
               {field.value === "monthly" ? "月繳" : "年繳"}
