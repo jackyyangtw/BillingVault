@@ -11,7 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/tailwind-css/utils";
-import type { Product } from "@/mocks/fixtures/products";
+import type { Product } from "@/mocks/products";
 
 type ProductHeroProps = {
   product: Product;

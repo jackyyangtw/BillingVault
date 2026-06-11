@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getPlanById } from "@/mocks/fixtures/plans";
+import { getPlanById } from "@/mocks/plans";
 import type { CheckoutFormValues } from "@/app/(protected)/checkout/_components/CheckoutForm/schema";
 import { checkoutPlans } from "../../../_utils/checkoutPlans";
 import LockedFieldValue from "./LockedFieldValue";

@@ -3,8 +3,8 @@
 import { z } from "zod/v4";
 import { verifySession } from "@/lib/auth/dal";
 import { createCheckoutOrder } from "@/features/checkout/dal/createCheckoutOrder";
-import { products } from "@/mocks/fixtures/products";
-import { plans } from "@/mocks/fixtures/plans";
+import { products } from "@/mocks/products";
+import { plans } from "@/mocks/plans";
 
 const planIds = plans.map((plan) => plan.id);
 const productIds = products.map((product) => product.id);

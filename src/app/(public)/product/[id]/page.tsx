@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { getProductById, products } from "@/mocks/fixtures/products";
+import { getProductById, products } from "@/mocks/products";
 import ProductDetailCards from "./_components/ProductDetailCards";
 import ProductHero from "./_components/ProductHero";
 import ProductSummaryCard from "./_components/ProductSummaryCard";

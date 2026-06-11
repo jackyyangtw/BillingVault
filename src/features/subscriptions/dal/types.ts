@@ -1,4 +1,4 @@
-import type { BillingCycle } from "@/mocks/fixtures/plans";
+import type { BillingCycle } from "@/mocks/plans";
 
 export type SubscriptionStatus =
   | "trialing"

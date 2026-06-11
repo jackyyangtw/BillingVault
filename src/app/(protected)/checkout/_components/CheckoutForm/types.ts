@@ -1,6 +1,6 @@
 import type { PaymentMethod } from "@/features/payment-methods/dal/types";
-import type { Product } from "@/mocks/fixtures/products";
-import type { BillingCycle, Plan } from "@/mocks/fixtures/plans";
+import type { Product } from "@/mocks/products";
+import type { BillingCycle, Plan } from "@/mocks/plans";
 
 export type CheckoutFormProps = {
   initialPlanId: string;

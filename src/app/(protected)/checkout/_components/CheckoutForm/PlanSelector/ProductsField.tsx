@@ -1,7 +1,7 @@
 import { Info } from "lucide-react";
 import { Controller, useFormContext } from "react-hook-form";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
-import { products } from "@/mocks/fixtures/products";
+import { products } from "@/mocks/products";
 import type { CheckoutFormValues } from "@/app/(protected)/checkout/_components/CheckoutForm/schema";
 
 type ProductsFieldProps = {

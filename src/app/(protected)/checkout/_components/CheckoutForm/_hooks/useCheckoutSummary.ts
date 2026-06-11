@@ -3,8 +3,8 @@
 import { useMemo } from "react";
 import { type Control, useWatch } from "react-hook-form";
 import { formatTwdAmount } from "@/lib/currency";
-import { products } from "@/mocks/fixtures/products";
-import { formatPlanPrice, getPlanById, plans } from "@/mocks/fixtures/plans";
+import { products } from "@/mocks/products";
+import { formatPlanPrice, getPlanById, plans } from "@/mocks/plans";
 import type { CheckoutFormValues } from "../schema";
 
 export function useCheckoutSummary(control: Control<CheckoutFormValues>) {

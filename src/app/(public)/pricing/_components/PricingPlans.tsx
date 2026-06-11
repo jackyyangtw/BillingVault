@@ -8,11 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { TypographyH3, TypographyMuted } from "@/components/ui/typography";
 import { cn } from "@/lib/tailwind-css/utils";
-import {
-  type BillingCycle,
-  formatPlanPrice,
-  plans,
-} from "@/mocks/fixtures/plans";
+import { type BillingCycle, formatPlanPrice, plans } from "@/mocks/plans";
 import EnterpriseInquiryDialog from "./EnterpriseInquiryDialog";
 
 export default function PricingPlans() {

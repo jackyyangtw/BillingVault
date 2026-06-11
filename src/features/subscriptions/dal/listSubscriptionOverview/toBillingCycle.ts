@@ -1,4 +1,4 @@
-import type { BillingCycle } from "@/mocks/fixtures/plans";
+import type { BillingCycle } from "@/mocks/plans";
 
 export function toBillingCycle(cycle: string): BillingCycle {
   return cycle === "yearly" ? "yearly" : "monthly";

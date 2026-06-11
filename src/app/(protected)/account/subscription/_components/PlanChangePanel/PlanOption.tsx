@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import type { BillingCycle } from "@/mocks/fixtures/plans";
+import type { BillingCycle } from "@/mocks/plans";
 import type { PlanOptionData } from "@/features/subscriptions/dal/types";
 
 const actionIcon = {

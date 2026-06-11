@@ -1,5 +1,5 @@
 import type { appCurrency } from "@/lib/currency";
-import type { BillingCycle } from "@/mocks/fixtures/plans";
+import type { BillingCycle } from "@/mocks/plans";
 
 export type CreateCheckoutOrderInput = {
   planId: string;

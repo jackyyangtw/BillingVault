@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useChangeSubscriptionPlan } from "@/features/subscriptions/queries/useChangeSubscriptionPlan";
-import type { BillingCycle } from "@/mocks/fixtures/plans";
+import type { BillingCycle } from "@/mocks/plans";
 import type {
   PlanOptionData,
   ScheduledSubscriptionChangeData,

@@ -1,7 +1,7 @@
 ﻿import { fireEvent, render, screen } from "@testing-library/react";
 import { FormProvider, useForm } from "react-hook-form";
 import { beforeAll, describe, expect, it } from "vitest";
-import type { BillingCycle } from "@/mocks/fixtures/plans";
+import type { BillingCycle } from "@/mocks/plans";
 import PlanSelector from "./PlanSelector";
 import type { CheckoutFormValues } from "./schema";
 

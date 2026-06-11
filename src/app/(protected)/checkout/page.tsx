@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { getCurrentSubscriptionCheckoutState } from "@/features/subscriptions/dal/getCurrentSubscriptionCheckoutState";
 import { getCurrentUser } from "@/lib/auth/dal";
-import { products } from "@/mocks/fixtures/products";
+import { products } from "@/mocks/products";
 import {
   type BillingCycle,
   getSelectableBillingCycle,
   getSelectablePlanId,
-} from "@/mocks/fixtures/plans";
+} from "@/mocks/plans";
 import CheckoutForm from "./_components/CheckoutForm";
 import { checkoutPlans } from "./_utils/checkoutPlans";
 

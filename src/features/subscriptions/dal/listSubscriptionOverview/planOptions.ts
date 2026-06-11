@@ -1,8 +1,4 @@
-import {
-  type BillingCycle,
-  formatPlanPrice,
-  plans,
-} from "@/mocks/fixtures/plans";
+import { type BillingCycle, formatPlanPrice, plans } from "@/mocks/plans";
 import type { PlanOptionData } from "../types";
 
 const planSeats: Record<string, number> = {

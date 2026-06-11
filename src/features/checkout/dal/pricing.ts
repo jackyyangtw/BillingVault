@@ -1,6 +1,6 @@
 import { appCurrency, twdAmountToCents } from "@/lib/currency";
-import { products } from "@/mocks/fixtures/products";
-import { type BillingCycle, plans } from "@/mocks/fixtures/plans";
+import { products } from "@/mocks/products";
+import { type BillingCycle, plans } from "@/mocks/plans";
 
 type CheckoutPricingInput = {
   planId: string;

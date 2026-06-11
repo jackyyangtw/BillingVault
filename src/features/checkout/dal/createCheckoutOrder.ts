@@ -21,10 +21,7 @@ import type {
 import { getCurrentSubscriptionCheckoutState } from "@/features/subscriptions/dal/getCurrentSubscriptionCheckoutState";
 import { calculateCheckoutPricing } from "@/features/checkout/dal/pricing";
 import { processCheckoutPayment } from "@/features/checkout/dal/processCheckoutPayment";
-import {
-  isBillingCycleDowngrade,
-  isPlanDowngrade,
-} from "@/mocks/fixtures/plans";
+import { isBillingCycleDowngrade, isPlanDowngrade } from "@/mocks/plans";
 
 export type { CheckoutOrderResult, CreateCheckoutOrderInput };
 

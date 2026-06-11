@@ -20,7 +20,7 @@ import {
 import { TypographyH2, TypographyLead } from "@/components/ui/typography";
 import { formatTwdAmount } from "@/lib/currency";
 import { cn } from "@/lib/tailwind-css/utils";
-import { products, type Product } from "@/mocks/fixtures/products";
+import { products, type Product } from "@/mocks/products";
 
 const productIcons: Record<Product["id"], typeof ShieldCheck> = {
   codeguard: ShieldCheck,

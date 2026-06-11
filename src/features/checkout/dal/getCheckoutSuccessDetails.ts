@@ -2,8 +2,8 @@ import "server-only";
 
 import { centsToTwdAmount, formatTwdAmount } from "@/lib/currency";
 import { prisma } from "@/lib/prisma";
-import { products } from "@/mocks/fixtures/products";
-import { plans } from "@/mocks/fixtures/plans";
+import { products } from "@/mocks/products";
+import { plans } from "@/mocks/plans";
 import { LOCALE } from "@/settings/locale";
 
 export type CheckoutSuccessDetails = {

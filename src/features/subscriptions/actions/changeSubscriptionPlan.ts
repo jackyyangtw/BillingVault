@@ -4,7 +4,7 @@ import { refresh } from "next/cache";
 import { z } from "zod/v4";
 import { changeSubscriptionPlan } from "@/features/subscriptions/dal/changeSubscriptionPlan";
 import { verifySession } from "@/lib/auth/dal";
-import { plans } from "@/mocks/fixtures/plans";
+import { plans } from "@/mocks/plans";
 
 const planIds = plans.map((plan) => plan.id);
 

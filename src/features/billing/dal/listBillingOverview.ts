@@ -3,8 +3,8 @@ import "server-only";
 import type { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import { formatTwdAmount } from "@/lib/currency";
-import { products } from "@/mocks/fixtures/products";
-import { plans } from "@/mocks/fixtures/plans";
+import { products } from "@/mocks/products";
+import { plans } from "@/mocks/plans";
 import type { BillingInvoice, BillingOrder, BillingOverview } from "./types";
 
 const billingOrderInclude = {

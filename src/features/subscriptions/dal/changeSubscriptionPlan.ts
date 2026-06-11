@@ -5,7 +5,7 @@ import { getPeriodEnd } from "@/features/checkout/dal/checkoutOrderNumbers";
 import { prisma } from "@/lib/prisma";
 import { calculateCheckoutPricing } from "@/features/checkout/dal/pricing";
 import { appCurrency } from "@/lib/currency";
-import { getPlanById, type BillingCycle } from "@/mocks/fixtures/plans";
+import { getPlanById, type BillingCycle } from "@/mocks/plans";
 
 type ChangeSubscriptionPlanInput = {
   subscriptionId: string;

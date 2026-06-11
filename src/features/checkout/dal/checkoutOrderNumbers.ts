@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import type { BillingCycle } from "@/mocks/fixtures/plans";
+import type { BillingCycle } from "@/mocks/plans";
 
 export function createOrderNumber() {
   const date = new Date().toISOString().slice(0, 10).replaceAll("-", "");

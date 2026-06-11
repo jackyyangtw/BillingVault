@@ -2,7 +2,7 @@ import type {
   PlanOptionData,
   ScheduledSubscriptionChangeData,
 } from "@/features/subscriptions/dal/types";
-import type { BillingCycle } from "@/mocks/fixtures/plans";
+import type { BillingCycle } from "@/mocks/plans";
 import type { PlanOptionAction } from "./PlanOption";
 
 type PlanOptionStateInput = {

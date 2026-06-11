@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { formatTwdAmount } from "@/lib/currency";
-import type { Product } from "@/mocks/fixtures/products";
+import type { Product } from "@/mocks/products";
 
 type ProductSummaryCardProps = {
   product: Product;

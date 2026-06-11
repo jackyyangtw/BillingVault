@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { Product } from "@/mocks/fixtures/products";
+import type { Product } from "@/mocks/products";
 
 type ProductDetailCardsProps = {
   product: Product;
