@@ -1,0 +1,42 @@
+model Order {
+  id             String          @id @default(uuid()) @db.Uuid
+  userId         String          @map("user_id") @db.Uuid
+  orderNumber    String          @unique @map("order_number")
+  idempotencyKey String?         @map("idempotency_key") @db.VarChar(64)
+  planId         String          @map("plan_id")
+  productId      String          @map("product_id")
+  cycle          String          @db.VarChar(16)
+  companyName    String          @map("company_name")
+  billingEmail   String          @map("billing_email")
+  taxId          String?         @map("tax_id")
+  billingAddress String          @map("billing_address")
+  amountCents    Int             @map("amount_cents")
+  currency       String          @default("twd") @db.VarChar(3)
+  status         OrderStatus     @default(pending)
+  createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime        @updatedAt @map("updated_at") @db.Timestamptz(6)
+  payments       PaymentRecord[]
+  invoices       Invoice[]
+  subscription   Subscription?
+  items          OrderItem[]
+
+  @@unique([userId, idempotencyKey], map: "orders_user_id_idempotency_key_key")
+  @@index([userId, createdAt])
+  @@index([userId, status])
+  @@map("orders")
+}
+
+model OrderItem {
+  id          String   @id @default(uuid()) @db.Uuid
+  orderId     String   @map("order_id") @db.Uuid
+  productId   String   @map("product_id")
+  amountCents Int      @map("amount_cents")
+  currency    String   @default("twd") @db.VarChar(3)
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@unique([orderId, productId])
+  @@index([orderId])
+  @@map("order_items")
+}

@@ -1,8 +1,27 @@
 # Prisma 與 Supabase Schema 更新流程
 
 本專案使用 Prisma 7、Next.js 16、Supabase PostgreSQL。修改
-`prisma/schema.prisma` 後，請照以下流程處理，避免 Prisma Client、Next dev
+`prisma/` schema folder 後，請照以下流程處理，避免 Prisma Client、Next dev
 server、真實資料庫 schema 不同步。
+
+本專案使用 multi-file Prisma schema：
+
+```txt
+prisma/
+├── schema.prisma              # generator、datasource、共用 enum
+├── models/
+│   ├── billing.prisma
+│   ├── checkout.prisma
+│   ├── payment-methods.prisma
+│   └── subscriptions.prisma
+└── migrations/
+```
+
+`prisma.config.ts` 的 `schema` 必須指向整個 schema folder：
+
+```ts
+schema: "prisma/",
+```
 
 ## 重要原則
 
@@ -30,7 +49,9 @@ Supabase policy、extension、特殊 function 或資料修補。
 
 ## 修改 Prisma Schema 後要做什麼
 
-1. 修改 `prisma/schema.prisma`。
+1. 修改 Prisma schema。
+   - generator、datasource、共用 enum 放在 `prisma/schema.prisma`。
+   - models 依 domain 放在 `prisma/models/*.prisma`。
 
 2. 建立對應 migration SQL。
 
@@ -44,13 +65,20 @@ pnpm exec prisma migrate dev --name <migration-name> --create-only
 database 重播既有 migration 失敗，則使用 schema diff 產 SQL：
 
 ```bash
-git show HEAD:prisma/schema.prisma > /private/tmp/secure-cart-base-schema.prisma
+mkdir -p /private/tmp/secure-cart-prisma-base
+git show HEAD:prisma/schema.prisma > /private/tmp/secure-cart-prisma-base/schema.prisma
+git show HEAD:prisma/models/billing.prisma > /private/tmp/secure-cart-prisma-base/billing.prisma
+git show HEAD:prisma/models/checkout.prisma > /private/tmp/secure-cart-prisma-base/checkout.prisma
+git show HEAD:prisma/models/payment-methods.prisma > /private/tmp/secure-cart-prisma-base/payment-methods.prisma
+git show HEAD:prisma/models/subscriptions.prisma > /private/tmp/secure-cart-prisma-base/subscriptions.prisma
 
 pnpm exec prisma migrate diff \
-  --from-schema /private/tmp/secure-cart-base-schema.prisma \
-  --to-schema prisma/schema.prisma \
+  --from-schema /private/tmp/secure-cart-prisma-base \
+  --to-schema prisma/ \
   --script > prisma/migrations/<migration-name>/migration.sql
 ```
+
+Windows 環境可將暫存資料夾改成 `C:\tmp\secure-cart-prisma-base`。
 
 產完後再手動補上 Prisma 無法產生的 Supabase RLS policy 區塊。
 
@@ -155,7 +183,7 @@ pnpm prisma generate
 
 ## 快速 Checklist
 
-每次改 `prisma/schema.prisma` 後：
+每次改 `prisma/schema.prisma` 或 `prisma/models/*.prisma` 後：
 
 ```bash
 pnpm exec prisma validate

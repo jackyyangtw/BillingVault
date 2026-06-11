@@ -1,0 +1,46 @@
+model PaymentRecord {
+  id                 String              @id @default(uuid()) @db.Uuid
+  orderId            String              @map("order_id") @db.Uuid
+  provider           PaymentProvider     @default(tappay)
+  providerTradeId    String?             @map("provider_trade_id")
+  orderNumber        String              @map("order_number")
+  amountCents        Int                 @map("amount_cents")
+  currency           String              @default("twd") @db.VarChar(3)
+  status             PaymentRecordStatus @default(pending)
+  cardIdentifier     String?             @map("card_identifier")
+  cardLast4          String?             @map("card_last4") @db.VarChar(4)
+  failureCode        String?             @map("failure_code")
+  failureMessage     String?             @map("failure_message")
+  providerStatusCode String?             @map("provider_status_code")
+  providerMessage    String?             @map("provider_message")
+  createdAt          DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime            @updatedAt @map("updated_at") @db.Timestamptz(6)
+  order              Order               @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  invoices           Invoice[]
+
+  @@index([orderId])
+  @@index([orderNumber])
+  @@index([providerTradeId])
+  @@map("payment_records")
+}
+
+model Invoice {
+  id              String         @id @default(uuid()) @db.Uuid
+  userId          String         @map("user_id") @db.Uuid
+  orderId         String         @map("order_id") @db.Uuid
+  paymentRecordId String?        @map("payment_record_id") @db.Uuid
+  invoiceNumber   String         @unique @map("invoice_number")
+  amountCents     Int            @map("amount_cents")
+  currency        String         @default("twd") @db.VarChar(3)
+  status          InvoiceStatus  @default(paid)
+  issuedAt        DateTime       @default(now()) @map("issued_at") @db.Timestamptz(6)
+  createdAt       DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime       @updatedAt @map("updated_at") @db.Timestamptz(6)
+  order           Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  paymentRecord   PaymentRecord? @relation(fields: [paymentRecordId], references: [id], onDelete: SetNull)
+
+  @@index([userId, issuedAt])
+  @@index([orderId])
+  @@index([paymentRecordId])
+  @@map("invoices")
+}

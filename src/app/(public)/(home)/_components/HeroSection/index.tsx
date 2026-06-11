@@ -8,7 +8,7 @@ const trustSignals = ["綁定信用卡即可開始", "隨時取消無負擔"];
 
 export default function HeroSection() {
   return (
-    <section className="relative overflow-hidden pt-32 pb-24 lg:pt-40">
+    <section className="relative flex min-h-screen flex-col justify-center overflow-hidden pt-32 pb-24 lg:pt-40">
       <HeroGridBackground />
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
