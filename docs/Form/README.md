@@ -22,12 +22,19 @@ Controller 的 render prop 直接提供 `fieldState`，包含 `invalid`、`error
 
 ```tsx
 <Controller
-  name="email"
+  name="password"
   control={form.control}
   render={({ field, fieldState }) => (
     <Field data-invalid={fieldState.invalid}>
-      <FieldLabel htmlFor="email">Email</FieldLabel>
-      <Input {...field} id="email" aria-invalid={fieldState.invalid} />
+      <FieldLabel htmlFor={field.name}>密碼</FieldLabel>
+      <Input
+        {...field}
+        id={field.name}
+        type="password"
+        autoComplete="current-password"
+        aria-invalid={fieldState.invalid}
+        required
+      />
       {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
     </Field>
   )}
@@ -50,9 +57,9 @@ Controller 的 render prop 直接提供 `fieldState`，包含 `invalid`、`error
 
 | 元件類型   | 範例                                         | 支援 `register()`？        |
 | ---------- | -------------------------------------------- | -------------------------- |
-| 原生 input | `<Input />`, `<PasswordInput />`             | ✅                         |
+| 原生 input | `<Input />`, `<Input type="password" />`     | ✅                         |
 | Radix 元件 | `<RadioGroup />`, `<Select />`, `<Switch />` | ❌（使用 `onValueChange`） |
-| 需要值轉換 | 手機條碼 `toUpperCase()`                     | ❌（需攔截 `onChange`）    |
+| 需要值轉換 | 統一編號 `replace(/\D/g, "")`                | ❌（需攔截 `onChange`）    |
 
 統一使用 Controller，不需要判斷「這個元件該用 `register` 還是 `Controller`」，**一種寫法適用所有情境**。
 
@@ -73,22 +80,22 @@ Controller 的 render prop 直接提供 `fieldState`，包含 `invalid`、`error
 ```tsx
 "use client";
 
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Field,
+  FieldError,
   FieldGroup,
   FieldLabel,
-  FieldError,
 } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 
 // 1️⃣ 定義 Zod Schema
 const formSchema = z.object({
-  name: z.string().min(1, "請輸入姓名"),
-  email: z.string().email("請輸入有效的 Email"),
+  email: z.string().trim().email("請輸入有效的 Email"),
+  password: z.string().min(1, "請輸入密碼"),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -96,11 +103,11 @@ type FormValues = z.infer<typeof formSchema>;
 // 2️⃣ 建立元件
 export default function ExampleForm() {
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: standardSchemaResolver(formSchema),
     mode: "onTouched",
     defaultValues: {
-      name: "",
       email: "",
+      password: "",
     },
   });
 
@@ -113,12 +120,38 @@ export default function ExampleForm() {
     <form onSubmit={form.handleSubmit(onSubmit)}>
       <FieldGroup>
         <Controller
-          name="name"
+          name="email"
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="name">姓名</FieldLabel>
-              <Input {...field} id="name" aria-invalid={fieldState.invalid} />
+              <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+              <Input
+                {...field}
+                id={field.name}
+                type="email"
+                autoComplete="email"
+                aria-invalid={fieldState.invalid}
+                required
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+
+        <Controller
+          name="password"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor={field.name}>密碼</FieldLabel>
+              <Input
+                {...field}
+                id={field.name}
+                type="password"
+                autoComplete="current-password"
+                aria-invalid={fieldState.invalid}
+                required
+              />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
@@ -164,12 +197,12 @@ export default function CustomerInfoSection() {
 
   return (
     <Controller
-      name="name"
+      name="companyName"
       control={control}
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid}>
-          <FieldLabel htmlFor="name">姓名</FieldLabel>
-          <Input {...field} id="name" aria-invalid={fieldState.invalid} />
+          <FieldLabel htmlFor={field.name}>公司或團隊名稱</FieldLabel>
+          <Input {...field} id={field.name} aria-invalid={fieldState.invalid} />
           {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
         </Field>
       )}
@@ -198,16 +231,23 @@ export default function CustomerInfoSection() {
 
 ## 常用元件搭配範例
 
-### Input（文字輸入）
+### Input（密碼輸入）
 
 ```tsx
 <Controller
-  name="username"
+  name="password"
   control={form.control}
   render={({ field, fieldState }) => (
     <Field data-invalid={fieldState.invalid}>
-      <FieldLabel htmlFor="username">使用者名稱</FieldLabel>
-      <Input {...field} id="username" aria-invalid={fieldState.invalid} />
+      <FieldLabel htmlFor={field.name}>密碼</FieldLabel>
+      <Input
+        {...field}
+        id={field.name}
+        type="password"
+        autoComplete="current-password"
+        aria-invalid={fieldState.invalid}
+        required
+      />
       {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
     </Field>
   )}
@@ -218,18 +258,24 @@ export default function CustomerInfoSection() {
 
 ```tsx
 <Controller
-  name="category"
+  name="cycle"
   control={form.control}
   render={({ field, fieldState }) => (
     <Field data-invalid={fieldState.invalid}>
-      <FieldLabel htmlFor="category">分類</FieldLabel>
+      <FieldLabel htmlFor="cycle">付款週期</FieldLabel>
       <Select value={field.value} onValueChange={field.onChange}>
-        <SelectTrigger id="category" aria-invalid={fieldState.invalid}>
-          <SelectValue />
+        <SelectTrigger
+          id="cycle"
+          className="w-full"
+          aria-invalid={fieldState.invalid}
+        >
+          <SelectValue placeholder="選擇週期" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="bug">Bug</SelectItem>
-          <SelectItem value="feature">Feature</SelectItem>
+          <SelectGroup>
+            <SelectItem value="monthly">月繳</SelectItem>
+            <SelectItem value="yearly">年繳</SelectItem>
+          </SelectGroup>
         </SelectContent>
       </Select>
       {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -242,19 +288,19 @@ export default function CustomerInfoSection() {
 
 ```tsx
 <Controller
-  name="plan"
+  name="paymentMethod"
   control={form.control}
   render={({ field, fieldState }) => (
     <Field data-invalid={fieldState.invalid}>
-      <FieldLabel>方案</FieldLabel>
+      <FieldLabel>付款方式</FieldLabel>
       <RadioGroup value={field.value} onValueChange={field.onChange}>
         <div className="flex items-center gap-2">
-          <RadioGroupItem value="free" id="plan-free" />
-          <Label htmlFor="plan-free">免費版</Label>
+          <RadioGroupItem value="saved" id="payment-method-saved" />
+          <Label htmlFor="payment-method-saved">使用已儲存卡片</Label>
         </div>
         <div className="flex items-center gap-2">
-          <RadioGroupItem value="pro" id="plan-pro" />
-          <Label htmlFor="plan-pro">專業版</Label>
+          <RadioGroupItem value="new" id="payment-method-new" />
+          <Label htmlFor="payment-method-new">新增付款卡片</Label>
         </div>
       </RadioGroup>
       {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -267,17 +313,19 @@ export default function CustomerInfoSection() {
 
 ```tsx
 <Controller
-  name="mobileCarrier"
+  name="taxId"
   control={form.control}
   render={({ field, fieldState }) => (
     <Field data-invalid={fieldState.invalid}>
-      <FieldLabel htmlFor="mobile-carrier">手機條碼</FieldLabel>
+      <FieldLabel htmlFor={field.name}>統一編號</FieldLabel>
       <Input
         {...field}
-        onChange={(e) => field.onChange(e.target.value.toUpperCase())}
-        id="mobile-carrier"
+        id={field.name}
         maxLength={8}
-        className="font-mono uppercase"
+        inputMode="numeric"
+        onChange={(event) =>
+          field.onChange(event.target.value.replace(/\D/g, ""))
+        }
         aria-invalid={fieldState.invalid}
       />
       {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -293,9 +341,10 @@ export default function CustomerInfoSection() {
 撰寫表單時請確認以下事項：
 
 - [ ] 使用 Zod 定義 schema，型別由 `z.infer` 推導
-- [ ] `useForm` 設定 `zodResolver` 與 `mode: "onTouched"`
+- [ ] `useForm` 設定 `standardSchemaResolver` 與 `mode: "onTouched"`
 - [ ] 所有欄位使用 `<Controller />` 包裝
 - [ ] `<Field>` 設定 `data-invalid={fieldState.invalid}`
 - [ ] 輸入元件設定 `aria-invalid={fieldState.invalid}`
 - [ ] 驗證錯誤透過 `<FieldError errors={[fieldState.error]} />` 顯示
 - [ ] 每個欄位都有 `id` 和對應的 `<FieldLabel htmlFor="...">`
+- [ ] 需要瀏覽器自動填入的欄位設定正確 `type` 與 `autoComplete`
