@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   TypographyH2,
@@ -22,9 +21,6 @@ export default function CheckoutFlowSection() {
     <section className="py-24">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto mb-16 max-w-2xl text-center">
-          <Badge variant="secondary" className="mb-4">
-            流程說明
-          </Badge>
           <TypographyH2 className="border-0 pb-0 text-4xl font-bold">
             從選擇方案到啟用訂閱
           </TypographyH2>

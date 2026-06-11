@@ -6,7 +6,6 @@ import {
   Zap,
   Activity,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import {
   TypographyH2,
   TypographyH3,
@@ -58,9 +57,6 @@ export default function SecuritySection() {
     <section id="security" className="bg-muted/40 py-24">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto mb-16 max-w-2xl text-center">
-          <Badge variant="secondary" className="mb-4">
-            資安設計
-          </Badge>
           <TypographyH2 className="border-0 pb-0 text-4xl font-bold">
             安全是設計原則，不是事後補舊
           </TypographyH2>

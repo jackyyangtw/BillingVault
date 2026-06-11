@@ -9,7 +9,6 @@ import {
   ReceiptText,
   RotateCcw,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -53,9 +52,6 @@ export default async function CheckoutSuccessPage({
     <main>
       <section className="border-border/60 border-b py-14">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <Badge variant="secondary" className="mb-4">
-            Checkout Complete
-          </Badge>
           <h1 className="max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl">
             訂閱建立成功
           </h1>

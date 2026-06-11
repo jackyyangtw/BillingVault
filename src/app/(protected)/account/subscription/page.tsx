@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Badge } from "@/components/ui/badge";
 import { listSubscriptionOverview } from "@/features/subscriptions/dal/listSubscriptionOverview";
 import { verifySession } from "@/lib/auth/dal";
 import CurrentSubscription from "./_components/CurrentSubscription";
@@ -23,9 +22,6 @@ export default async function SubscriptionPage() {
     <main>
       <section className="border-border/60 border-b py-14">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <Badge variant="secondary" className="mb-4">
-            Subscription Management
-          </Badge>
           <h1 className="max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl">
             訂閱管理
           </h1>

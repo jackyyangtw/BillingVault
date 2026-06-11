@@ -8,7 +8,6 @@ import {
   Users,
   Zap,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -60,9 +59,6 @@ export default function ProductsSection() {
     <section id="products" className="bg-muted/40 py-24">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto mb-16 max-w-2xl text-center">
-          <Badge variant="secondary" className="mb-4">
-            產品介紹
-          </Badge>
           <TypographyH2 className="border-0 pb-0 text-4xl font-bold">
             專為開發者團隊打造的工具
           </TypographyH2>

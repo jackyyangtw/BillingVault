@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Badge } from "@/components/ui/badge";
 import { listBillingOverview } from "@/features/billing/dal/listBillingOverview";
 import { listPaymentMethods } from "@/features/payment-methods/dal/listPaymentMethods";
 import { verifySession } from "@/lib/auth/dal";
@@ -26,9 +25,6 @@ export default async function AccountPage() {
     <main>
       <section className="border-border/60 border-b py-14">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <Badge variant="secondary" className="mb-4">
-            Account Billing
-          </Badge>
           <h1 className="max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl">
             帳務管理
           </h1>

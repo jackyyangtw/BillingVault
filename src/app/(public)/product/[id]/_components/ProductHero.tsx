@@ -8,7 +8,6 @@ import {
   Users,
   Zap,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/tailwind-css/utils";
 import type { Product } from "@/mocks/products";
@@ -72,9 +71,6 @@ export default function ProductHero({ product }: ProductHeroProps) {
         >
           <Icon className={cn("size-7", accent.icon)} />
         </div>
-        <Badge variant="secondary" className="mb-4">
-          SaaS 產品詳細
-        </Badge>
         <h1 className="max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl">
           {product.name}
         </h1>

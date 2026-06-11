@@ -9,7 +9,6 @@ import {
   ReceiptText,
   ShieldAlert,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -51,9 +50,6 @@ export default async function CheckoutFailurePage({
     <main>
       <section className="border-border/60 border-b py-14">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <Badge variant="destructive" className="mb-4">
-            Checkout Failed
-          </Badge>
           <h1 className="max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl">
             付款未完成
           </h1>

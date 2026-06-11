@@ -26,9 +26,6 @@ export default function PaymentPage() {
     <main>
       <section className="border-border/60 border-b py-14">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <Badge variant="secondary" className="mb-4">
-            Payment Methods
-          </Badge>
           <h1 className="max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl">
             付款方式管理
           </h1>

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { LockKeyhole, ShieldCheck, Sparkles } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import LoginForm from "./_components/LoginForm";
 
 export const metadata: Metadata = {
@@ -41,10 +40,6 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
       <section className="mx-auto grid min-h-[calc(100vh-6rem)] max-w-7xl items-center gap-10 px-6 py-12 lg:grid-cols-[1fr_440px] lg:px-8">
         <div className="flex flex-col gap-8">
           <div className="max-w-2xl">
-            <Badge variant="secondary" className="mb-5 gap-1.5">
-              <ShieldCheck className="size-3" />
-              SecureCart Auth
-            </Badge>
             <h1 className="text-foreground text-4xl leading-tight font-bold text-balance sm:text-5xl">
               登入後，繼續完成你的安全訂閱結帳。
             </h1>

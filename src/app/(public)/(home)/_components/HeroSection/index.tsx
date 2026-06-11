@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { ShieldCheck, ArrowRight, Check } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { TypographyH1, TypographyMuted } from "@/components/ui/typography";
 import HeroGridBackground from "./HeroGridBackground";
 
@@ -14,11 +13,6 @@ export default function HeroSection() {
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
-          <Badge variant="secondary" className="mb-6 gap-1.5">
-            <ShieldCheck className="size-3" />
-            以資安為核心的 SaaS 結帳平台
-          </Badge>
-
           <TypographyH1 className="text-foreground text-5xl leading-tight font-bold sm:text-6xl lg:text-7xl">
             你的 SaaS 值得擁有
             <br />

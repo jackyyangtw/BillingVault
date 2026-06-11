@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Badge } from "@/components/ui/badge";
 import { getCurrentSubscriptionCheckoutState } from "@/features/subscriptions/dal/getCurrentSubscriptionCheckoutState";
 import { getCurrentUser } from "@/lib/auth/dal";
 import { products } from "@/mocks/products";
@@ -50,9 +49,6 @@ export default async function CheckoutPage({
     <main>
       <section className="border-border/60 border-b py-14">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <Badge variant="secondary" className="mb-4">
-            Secure Checkout
-          </Badge>
           <h1 className="max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl">
             模擬 SaaS 訂閱結帳流程
           </h1>

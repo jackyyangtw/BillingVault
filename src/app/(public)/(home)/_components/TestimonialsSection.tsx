@@ -1,5 +1,4 @@
 import { Star } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   TypographyH2,
@@ -37,9 +36,6 @@ export default function TestimonialsSection() {
     <section className="bg-muted/40 py-24">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto mb-16 max-w-2xl text-center">
-          <Badge variant="secondary" className="mb-4">
-            用戶評價
-          </Badge>
           <TypographyH2 className="border-0 pb-0 text-4xl font-bold">
             深受工程團隊信賴
           </TypographyH2>
