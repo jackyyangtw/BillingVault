@@ -6,7 +6,7 @@ import CtaTechBackground from "./CtaTechBackground";
 
 export default function CtaSection() {
   return (
-    <section className="py-24">
+    <section className="bg-muted/40 py-24">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="shadow-primary/20 relative overflow-hidden rounded-3xl px-8 py-16 text-center shadow-2xl">
           <CtaTechBackground />

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CreditCard, ExternalLink } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -42,10 +41,6 @@ export default function PaymentPage() {
           <aside className="flex flex-col gap-6">
             <Card>
               <CardHeader>
-                <Badge variant="secondary" className="w-fit">
-                  <CreditCard data-icon="inline-start" />
-                  Sandbox card
-                </Badge>
                 <CardTitle>使用 TapPay 測試卡</CardTitle>
                 <CardDescription>
                   這裡連接的是 TapPay
