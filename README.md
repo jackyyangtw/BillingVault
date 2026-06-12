@@ -15,7 +15,7 @@ A secure SaaS subscription and sandbox payment flow demo built with Next.js App 
 
 ```txt
 Email: demo@securecart.dev
-Password: demo-only-test-account
+Password: test12345
 ```
 
 這是刻意公開的 demo-only credential，方便履歷審查者直接登入體驗。
