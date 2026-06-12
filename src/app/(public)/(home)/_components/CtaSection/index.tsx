@@ -6,8 +6,12 @@ import CtaTechBackground from "./CtaTechBackground";
 
 export default function CtaSection() {
   return (
-    <section className="bg-muted/40 py-24">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    <section className="bg-background relative overflow-hidden py-24">
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[linear-gradient(to_bottom,var(--background)_0%,color-mix(in_oklch,var(--muted)_40%,var(--background))_30%,color-mix(in_oklch,var(--muted)_40%,var(--background))_100%)]"
+      />
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <div className="shadow-primary/20 relative overflow-hidden rounded-3xl px-8 py-16 text-center shadow-2xl">
           <CtaTechBackground />
 

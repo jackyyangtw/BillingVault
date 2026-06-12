@@ -18,8 +18,12 @@ const steps = [
 
 export default function CheckoutFlowSection() {
   return (
-    <section className="bg-muted/40 py-24">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    <section className="bg-background relative overflow-hidden py-24">
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[linear-gradient(to_bottom,var(--background)_0%,color-mix(in_oklch,var(--muted)_42%,var(--background))_20%,color-mix(in_oklch,var(--muted)_42%,var(--background))_80%,var(--background)_100%)]"
+      />
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto mb-16 max-w-2xl text-center">
           <TypographyH2 className="border-0 pb-0 text-4xl font-bold">
             從選擇方案到啟用訂閱

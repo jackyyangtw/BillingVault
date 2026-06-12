@@ -56,8 +56,15 @@ const accentClasses: Record<Product["accent"], { icon: string; bg: string }> = {
 
 export default function ProductsSection() {
   return (
-    <section id="products" className="bg-muted/40 py-24">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    <section
+      id="products"
+      className="bg-background relative overflow-hidden py-24"
+    >
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[linear-gradient(to_bottom,var(--background)_0%,color-mix(in_oklch,var(--muted)_46%,var(--background))_18%,color-mix(in_oklch,var(--muted)_46%,var(--background))_82%,var(--background)_100%)]"
+      />
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto mb-16 max-w-2xl text-center">
           <TypographyH2 className="border-0 pb-0 text-4xl font-bold">
             專為開發者團隊打造的工具
