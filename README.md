@@ -15,11 +15,34 @@ A secure SaaS subscription and sandbox payment flow demo built with Next.js App 
 
 ```txt
 Email: demo@securecart.dev
-Password: test12345
+Password: demo-only-test-account
 ```
+
+這是刻意公開的 demo-only credential，方便履歷審查者直接登入體驗。
+此帳號僅限 sandbox 資料，不包含真實客戶資料，也無法觸發真實扣款。
 
 這組帳號僅用於公開 demo，付款流程只連接 TapPay sandbox，不會真實扣款。
 請勿在 demo 環境輸入真實信用卡資料。
+
+## 安全範圍
+
+SecureCart 是一個具備資安意識的 SaaS checkout demo，不是 production payment
+platform。這個專案主要展示 Client UI、Server Actions、server-only DAL、
+Prisma、Supabase Auth 與 Supabase Postgres 之間的安全邊界。
+
+- Demo 付款只使用 TapPay sandbox，不會處理真實扣款。
+- 信用卡輸入使用 TapPay hosted fields，因此應用程式不會接收或儲存完整卡號
+  或 CVV。
+- 已儲存的卡片憑證是 TapPay sandbox PSP token，不是原始卡號。若進入
+  production，這類 token 欄位應改由 payment vault 或 KMS 支援的應用層加密保護，
+  並搭配 audit log 與更嚴格的營運權限控管。
+- Supabase Auth 負責登入與 session 管理。業務資料存取一律經過 Server Actions、
+  server-side session verification、feature DALs 與 Prisma。
+- RLS policy 會保留在 migrations 中，作為 Supabase exposed schema 的資料庫層
+  defense in depth。
+- CSP 針對 script 使用 nonce。`style-src 'unsafe-inline'` 目前是為了 demo 的 UI
+  runtime 相容性保留的取捨；production rollout 會先以 CSP report-only 監控，再逐步
+  收斂並啟用更嚴格的規則。
 
 ## 專案功能
 
