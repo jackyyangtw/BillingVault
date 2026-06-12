@@ -55,14 +55,14 @@ export default function PlanOption({
     <div className="flex min-h-44 flex-col justify-between rounded-3xl border p-4">
       <div className="flex flex-col gap-3">
         <div className="flex items-start justify-between gap-3">
-          <div>
-            <p className="text-lg font-semibold">{plan.name}</p>
-            <div className="flex items-baseline gap-1">
+          <div className="min-w-0">
+            <p className="text-lg font-semibold break-words">{plan.name}</p>
+            <div className="flex min-w-0 flex-wrap items-baseline gap-1">
               <span
                 className={
                   action === "contact"
-                    ? "text-xl font-bold"
-                    : "text-3xl font-bold"
+                    ? "text-xl font-bold break-words"
+                    : "text-3xl font-bold break-words"
                 }
               >
                 {displayCycle === "monthly"
@@ -82,7 +82,9 @@ export default function PlanOption({
             </Badge>
           )}
         </div>
-        <p className="text-muted-foreground text-sm leading-6">{plan.fit}</p>
+        <p className="text-muted-foreground text-sm leading-6 break-words">
+          {plan.fit}
+        </p>
       </div>
       <Button
         variant={isCurrent ? "secondary" : "outline"}
@@ -91,9 +93,13 @@ export default function PlanOption({
         onClick={() => onChangePlan(plan)}
       >
         {isPending ? (
-          <LoaderCircle data-icon="inline-start" className="animate-spin" />
+          <LoaderCircle
+            aria-hidden="true"
+            data-icon="inline-start"
+            className="animate-spin"
+          />
         ) : (
-          <Icon data-icon="inline-start" />
+          <Icon aria-hidden="true" data-icon="inline-start" />
         )}
         {actionLabel[action]}
       </Button>

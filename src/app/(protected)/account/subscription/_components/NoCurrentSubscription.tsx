@@ -22,7 +22,7 @@ export default function NoCurrentSubscription() {
         <div className="bg-muted/40 flex flex-col gap-4 rounded-3xl border p-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex min-w-0 items-start gap-3">
             <div className="bg-primary/10 text-primary flex size-10 shrink-0 items-center justify-center rounded-2xl">
-              <CreditCard />
+              <CreditCard aria-hidden="true" />
             </div>
             <div className="min-w-0">
               <p className="font-medium">選擇方案並完成付款</p>

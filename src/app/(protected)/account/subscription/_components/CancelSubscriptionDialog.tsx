@@ -59,7 +59,7 @@ export default function CancelSubscriptionDialog({
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button variant="destructive" className="w-full">
-          <CalendarX data-icon="inline-start" />
+          <CalendarX aria-hidden="true" data-icon="inline-start" />
           取消訂閱
         </Button>
       </DialogTrigger>
@@ -87,7 +87,11 @@ export default function CancelSubscriptionDialog({
             onClick={handleConfirmCancel}
           >
             {isPending && (
-              <LoaderCircle data-icon="inline-start" className="animate-spin" />
+              <LoaderCircle
+                aria-hidden="true"
+                data-icon="inline-start"
+                className="animate-spin"
+              />
             )}
             確認取消
           </Button>

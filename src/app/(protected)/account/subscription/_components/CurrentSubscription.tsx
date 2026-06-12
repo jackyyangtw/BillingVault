@@ -168,13 +168,18 @@ function SubscriptionMetric({
 }: SubscriptionMetricProps) {
   return (
     <div className="flex min-h-28 gap-4 rounded-3xl border p-4">
-      <div className="bg-primary/10 text-primary flex size-10 shrink-0 items-center justify-center rounded-2xl">
+      <div
+        aria-hidden="true"
+        className="bg-primary/10 text-primary flex size-10 shrink-0 items-center justify-center rounded-2xl"
+      >
         <Icon />
       </div>
       <div className="flex min-w-0 flex-col gap-1">
         <p className="text-muted-foreground text-sm">{label}</p>
         <p className="truncate text-xl font-semibold">{value}</p>
-        <p className="text-muted-foreground text-sm leading-6">{detail}</p>
+        <p className="text-muted-foreground text-sm leading-6 break-words">
+          {detail}
+        </p>
       </div>
     </div>
   );

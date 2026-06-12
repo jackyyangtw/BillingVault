@@ -292,17 +292,20 @@ describe("訂閱狀態 UI", () => {
 
     expect(screen.getByText("建立訂閱")).toHaveClass(
       "bg-violet-500/12",
-      "text-violet-200",
+      "text-violet-700",
+      "dark:text-violet-200",
       "font-semibold",
     );
     expect(screen.getByText("方案變更")).toHaveClass(
       "bg-sky-500/15",
-      "text-sky-200",
+      "text-sky-700",
+      "dark:text-sky-200",
       "font-semibold",
     );
     expect(screen.getByText("續訂")).toHaveClass(
       "bg-emerald-500/12",
-      "text-emerald-200",
+      "text-emerald-700",
+      "dark:text-emerald-200",
       "font-semibold",
     );
   });
@@ -333,7 +336,7 @@ describe("訂閱狀態 UI", () => {
     );
 
     expect(screen.getByText("NT$900")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "月繳" })).not.toBeDisabled();
+    expect(screen.getByRole("radio", { name: "月繳" })).not.toBeDisabled();
   });
 
   it("在年繳頁籤升級時送出年繳週期", () => {
@@ -365,7 +368,7 @@ describe("訂閱狀態 UI", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "年繳" }));
+    fireEvent.click(screen.getByRole("radio", { name: "年繳" }));
 
     expect(screen.queryByText("目標方案")).not.toBeInTheDocument();
     fireEvent.click(screen.getAllByRole("button", { name: /升級/ })[1]);
@@ -392,7 +395,7 @@ describe("訂閱狀態 UI", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "月繳" }));
+    fireEvent.click(screen.getByRole("radio", { name: "月繳" }));
 
     expect(screen.queryByText("目標方案")).not.toBeInTheDocument();
   });
@@ -417,7 +420,7 @@ describe("訂閱狀態 UI", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "月繳" }));
+    fireEvent.click(screen.getByRole("radio", { name: "月繳" }));
 
     expect(screen.getByText("目標方案")).toHaveClass(
       "border-amber-500/25",
@@ -456,7 +459,7 @@ describe("訂閱狀態 UI", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "月繳" }));
+    fireEvent.click(screen.getByRole("radio", { name: "月繳" }));
 
     expect(screen.getByText("目標方案")).toHaveClass(
       "border-amber-500/25",
@@ -488,7 +491,7 @@ describe("訂閱狀態 UI", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "月繳" }));
+    fireEvent.click(screen.getByRole("radio", { name: "月繳" }));
 
     expect(screen.getByText("目標方案")).toHaveClass(
       "border-amber-500/25",

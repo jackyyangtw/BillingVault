@@ -17,6 +17,7 @@ import type {
   ScheduledSubscriptionChangeData,
   SubscriptionStatus,
 } from "@/features/subscriptions/dal/types";
+import CycleSelector from "./CycleSelector";
 import PlanOption from "./PlanOption";
 import {
   getPlanOptionAction,
@@ -47,6 +48,10 @@ export default function PlanChangePanel({
   const changePlanMutation = useChangeSubscriptionPlan(currentSubscriptionId);
   const isCanceled = currentSubscriptionStatus === "canceled";
   const selectedDisplayCycle = displayCycle;
+
+  function handleDisplayCycleChange(cycle: BillingCycle) {
+    setDisplayCycle(cycle);
+  }
 
   function handleChangePlan(plan: PlanOptionData) {
     const isCurrentSelection =
@@ -114,30 +119,10 @@ export default function PlanChangePanel({
           </p>
         ) : (
           <>
-            <div className="mb-4 flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => setDisplayCycle("monthly")}
-                className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
-                  selectedDisplayCycle === "monthly"
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                月繳
-              </button>
-              <button
-                type="button"
-                onClick={() => setDisplayCycle("yearly")}
-                className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
-                  selectedDisplayCycle === "yearly"
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                年繳
-              </button>
-            </div>
+            <CycleSelector
+              selectedCycle={selectedDisplayCycle}
+              onCycleChange={handleDisplayCycleChange}
+            />
             <div className="grid gap-4 md:grid-cols-2">
               {plans.map((plan) => (
                 <PlanOption

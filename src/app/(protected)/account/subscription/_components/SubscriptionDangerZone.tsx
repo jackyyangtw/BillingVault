@@ -28,7 +28,7 @@ export default function SubscriptionDangerZone({
       </CardHeader>
       <CardContent>
         <div className="bg-destructive/10 text-destructive flex gap-3 rounded-3xl border p-4">
-          <AlertTriangle className="mt-0.5 shrink-0" />
+          <AlertTriangle aria-hidden="true" className="mt-0.5 shrink-0" />
           <p className="text-sm leading-6">
             取消訂閱會停止下一期續訂，現有專案和帳務紀錄仍會保留。
           </p>
