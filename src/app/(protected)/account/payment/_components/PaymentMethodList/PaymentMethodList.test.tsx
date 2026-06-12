@@ -103,9 +103,9 @@ describe("付款方式列表", () => {
 
     render(<PaymentMethodList />);
 
-    expect(screen.getByText("Visa 424242 .... 4242")).toBeInTheDocument();
-    expect(screen.getByText("Mastercard 424242 .... 8888")).toBeInTheDocument();
-    expect(screen.getByText("JCB 424242 .... 0005")).toBeInTheDocument();
+    expect(screen.getByText("Visa 424242 •••• 4242")).toBeInTheDocument();
+    expect(screen.getByText("Mastercard 424242 •••• 8888")).toBeInTheDocument();
+    expect(screen.getByText("JCB 424242 •••• 0005")).toBeInTheDocument();
     expect(screen.getByText("預設扣款")).toBeInTheDocument();
     expect(screen.getByText("備援卡")).toBeInTheDocument();
     expect(screen.getByText("已過期")).toBeInTheDocument();

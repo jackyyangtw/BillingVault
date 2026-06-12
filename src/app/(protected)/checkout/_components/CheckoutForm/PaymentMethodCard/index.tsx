@@ -38,13 +38,20 @@ export default function PaymentMethodCard({
       <CardContent>
         <div className="flex flex-col gap-4">
           {isPaymentMethodsPending && (
-            <div className="text-muted-foreground rounded-3xl border border-dashed p-6 text-sm leading-6">
-              載入已綁定卡片中...
+            <div
+              role="status"
+              aria-live="polite"
+              className="text-muted-foreground rounded-3xl border border-dashed p-6 text-sm leading-6"
+            >
+              載入已綁定卡片中…
             </div>
           )}
 
           {!isPaymentMethodsPending && isPaymentMethodsError && (
-            <div className="text-destructive rounded-3xl border border-dashed p-6 text-sm leading-6">
+            <div
+              role="alert"
+              className="text-destructive rounded-3xl border border-dashed p-6 text-sm leading-6"
+            >
               付款方式載入失敗，請改用新卡片付款或稍後再試。
             </div>
           )}

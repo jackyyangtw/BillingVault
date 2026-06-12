@@ -26,7 +26,10 @@ export default function CheckoutPendingDialog({
         onPointerDownOutside={preventDialogClose}
       >
         <DialogHeader className="items-center text-center">
-          <LoaderCircle className="text-primary mb-2 animate-spin" />
+          <LoaderCircle
+            aria-hidden="true"
+            className="text-primary mb-2 motion-safe:animate-spin"
+          />
           <DialogTitle>正在結帳</DialogTitle>
           <DialogDescription>
             正在建立訂單與處理付款資訊，請不要重新整理或離開此頁面。

@@ -40,7 +40,7 @@ export default function ProductsField({
                 <label
                   key={product.id}
                   htmlFor={inputId}
-                  className="bg-input/40 has-checked:border-primary has-checked:bg-primary/10 flex min-h-24 cursor-pointer flex-col gap-2 rounded-3xl border border-transparent p-4 transition-colors"
+                  className="bg-input/40 has-checked:border-primary has-checked:bg-primary/10 focus-within:ring-ring/30 flex min-h-24 cursor-pointer flex-col gap-2 rounded-3xl border border-transparent p-4 transition-colors focus-within:ring-3"
                 >
                   <span className="flex items-center gap-2">
                     <input

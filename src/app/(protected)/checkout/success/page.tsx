@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import type { ComponentType } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
   CheckCircle2,
   CreditCard,
   FileText,
+  type LucideIcon,
   ReceiptText,
   RotateCcw,
 } from "lucide-react";
@@ -67,7 +67,7 @@ export default async function CheckoutSuccessPage({
           <Card>
             <CardHeader>
               <div className="bg-primary text-primary-foreground flex size-12 items-center justify-center rounded-3xl">
-                <CheckCircle2 />
+                <CheckCircle2 aria-hidden="true" />
               </div>
               <CardTitle className="text-2xl">付款流程已完成</CardTitle>
             </CardHeader>
@@ -122,7 +122,7 @@ export default async function CheckoutSuccessPage({
               </Button>
               <Button variant="ghost" asChild>
                 <Link href="/checkout">
-                  <RotateCcw data-icon="inline-start" />
+                  <RotateCcw aria-hidden="true" data-icon="inline-start" />
                   再次結帳
                 </Link>
               </Button>
@@ -157,7 +157,7 @@ function getProductDisplayValue(details: CheckoutSuccessDetails | null) {
 }
 
 type NextStepProps = {
-  icon: ComponentType;
+  icon: LucideIcon;
   title: string;
   description: string;
 };
@@ -166,7 +166,7 @@ function NextStep({ icon: Icon, title, description }: NextStepProps) {
   return (
     <div className="flex gap-3 rounded-3xl border p-4">
       <div className="bg-secondary text-secondary-foreground flex size-9 shrink-0 items-center justify-center rounded-2xl">
-        <Icon />
+        <Icon aria-hidden="true" />
       </div>
       <div>
         <p className="font-medium">{title}</p>

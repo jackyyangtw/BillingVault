@@ -46,7 +46,7 @@ describe("付款方式項目", () => {
   it("預設卡只顯示卡片摘要，不顯示設定預設與操作選單", () => {
     render(<PaymentMethodItem method={createPaymentMethod()} />);
 
-    expect(screen.getByText("Visa 424242 .... 4242")).toBeInTheDocument();
+    expect(screen.getByText("Visa 424242 •••• 4242")).toBeInTheDocument();
     expect(screen.getByText("預設扣款")).toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: "設為預設" }),

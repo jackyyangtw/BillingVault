@@ -14,7 +14,6 @@ import { SummaryRow } from "./fields";
 
 type OrderSummaryProps = {
   summary: CheckoutSummary;
-  isValid: boolean;
   isSubmitting: boolean;
   paymentError: string;
   onFailure: () => void;
@@ -22,7 +21,6 @@ type OrderSummaryProps = {
 
 export default function OrderSummary({
   summary,
-  isValid,
   isSubmitting,
   paymentError,
   onFailure,
@@ -50,7 +48,10 @@ export default function OrderSummary({
         <Separator />
         <SummaryRow label="總計" value={summary.total} strong />
         <div className="bg-muted/40 text-muted-foreground rounded-3xl border p-4 text-sm">
-          <LockKeyhole className="text-primary mb-2 size-4" />
+          <LockKeyhole
+            aria-hidden="true"
+            className="text-primary mb-2 size-4"
+          />
           TapPay hosted fields 只交換 prime，後端保存本地訂單與 sandbox
           交易狀態。
         </div>
@@ -58,9 +59,9 @@ export default function OrderSummary({
           type="submit"
           size="lg"
           className="w-full"
-          disabled={!isValid || isSubmitting}
+          disabled={isSubmitting}
         >
-          <CreditCard data-icon="inline-start" />
+          <CreditCard aria-hidden="true" data-icon="inline-start" />
           {isSubmitting ? "處理中" : "確認訂閱"}
         </Button>
         {paymentError && <FieldError>{paymentError}</FieldError>}
@@ -71,7 +72,7 @@ export default function OrderSummary({
           onClick={onFailure}
           disabled={isSubmitting}
         >
-          <ShieldAlert data-icon="inline-start" />
+          <ShieldAlert aria-hidden="true" data-icon="inline-start" />
           模擬付款失敗
         </Button>
       </CardContent>

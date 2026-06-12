@@ -58,7 +58,9 @@ export default function TapPayHostedField({
         className={cn(isValid && "text-green-500")}
       >
         {fieldLabels[name]}
-        {isValid && <CheckCircle2 className="text-green-500" />}
+        {isValid && (
+          <CheckCircle2 aria-hidden="true" className="text-green-500" />
+        )}
       </FieldLabel>
       <div
         id={fieldElementIds[name]}

@@ -55,10 +55,9 @@ export default function CheckoutForm({
     paymentError,
     submitCheckout,
   } = useCheckoutSubmission();
-  const { paymentCardProps, canSubmitPayment, getSubmitPaymentInput } =
-    useCheckoutPaymentMethod({
-      onPaymentReady: clearPaymentError,
-    });
+  const { paymentCardProps, getSubmitPaymentInput } = useCheckoutPaymentMethod({
+    onPaymentReady: clearPaymentError,
+  });
   const isSubmitting = form.formState.isSubmitting || isCheckoutPending;
 
   const handleValidSubmit = useCallback(
@@ -104,7 +103,6 @@ export default function CheckoutForm({
 
         <OrderSummary
           summary={summary}
-          isValid={form.formState.isValid && canSubmitPayment}
           isSubmitting={isSubmitting}
           paymentError={paymentError}
           onFailure={handleFailure}

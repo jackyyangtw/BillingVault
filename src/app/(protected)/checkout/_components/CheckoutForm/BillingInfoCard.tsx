@@ -22,23 +22,31 @@ export default function BillingInfoCard() {
           <ControlledTextField
             name="companyName"
             label="公司或團隊名稱"
-            placeholder="Acme Security Lab"
+            autoComplete="organization"
+            placeholder="例如 Acme Security Lab…"
           />
           <ControlledTextField
             name="billingEmail"
             label="帳務 Email"
-            placeholder="billing@example.com"
+            autoComplete="email"
+            inputMode="email"
+            placeholder="例如 billing@example.com…"
+            spellCheck={false}
             type="email"
           />
           <ControlledTextField
             name="taxId"
             label="稅籍或統編"
-            placeholder="選填"
+            autoComplete="off"
+            inputMode="numeric"
+            placeholder="選填…"
+            spellCheck={false}
           />
           <ControlledTextField
             name="billingAddress"
             label="帳單地址"
-            placeholder="Taipei, Taiwan"
+            autoComplete="street-address"
+            placeholder="例如 Taipei, Taiwan…"
           />
         </FieldGroup>
       </CardContent>

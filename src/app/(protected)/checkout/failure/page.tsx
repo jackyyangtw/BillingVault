@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import type { ComponentType } from "react";
 import Link from "next/link";
 import {
   AlertTriangle,
   ArrowRight,
   CreditCard,
+  type LucideIcon,
   RefreshCcw,
   ReceiptText,
   ShieldAlert,
@@ -64,7 +64,7 @@ export default async function CheckoutFailurePage({
           <Card>
             <CardHeader>
               <div className="bg-destructive/10 text-destructive flex size-12 items-center justify-center rounded-3xl">
-                <AlertTriangle />
+                <AlertTriangle aria-hidden="true" />
               </div>
               <CardTitle className="text-2xl">訂閱尚未建立</CardTitle>
             </CardHeader>
@@ -114,13 +114,13 @@ export default async function CheckoutFailurePage({
               </Button>
               <Button variant="outline" asChild>
                 <Link href="/account/payment">
-                  <CreditCard data-icon="inline-start" />
+                  <CreditCard aria-hidden="true" data-icon="inline-start" />
                   管理付款方式
                 </Link>
               </Button>
               <Button variant="ghost" asChild>
                 <Link href="/account/billing">
-                  <RefreshCcw data-icon="inline-start" />
+                  <RefreshCcw aria-hidden="true" data-icon="inline-start" />
                   回帳務
                 </Link>
               </Button>
@@ -167,7 +167,7 @@ function getFailureCode(
 }
 
 type FailureReasonProps = {
-  icon: ComponentType;
+  icon: LucideIcon;
   title: string;
   description: string;
 };
@@ -176,7 +176,7 @@ function FailureReason({ icon: Icon, title, description }: FailureReasonProps) {
   return (
     <div className="flex gap-3 rounded-3xl border p-4">
       <div className="bg-secondary text-secondary-foreground flex size-9 shrink-0 items-center justify-center rounded-2xl">
-        <Icon />
+        <Icon aria-hidden="true" />
       </div>
       <div>
         <p className="font-medium">{title}</p>

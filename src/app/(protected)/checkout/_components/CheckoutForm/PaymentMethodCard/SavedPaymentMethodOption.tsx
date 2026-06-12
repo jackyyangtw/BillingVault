@@ -26,7 +26,7 @@ export default function SavedPaymentMethodOption({
   return (
     <button
       type="button"
-      className="disabled:cursor-not-allowed disabled:opacity-60"
+      className="focus-visible:ring-ring/30 rounded-3xl outline-none focus-visible:ring-3 disabled:cursor-not-allowed disabled:opacity-60"
       disabled={isDisabled}
       aria-pressed={isSelected}
       onClick={handleSelect}

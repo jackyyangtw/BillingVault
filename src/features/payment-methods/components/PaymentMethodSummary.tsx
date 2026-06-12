@@ -24,7 +24,7 @@ export default function PaymentMethodSummary({
   const isPrimary = method.status === "primary";
   const isHighlighted = isSelected || (highlightPrimary && isPrimary);
   const cardNumberLabel = method.binCode
-    ? `${method.binCode} .... ${method.last4}`
+    ? `${method.binCode} •••• ${method.last4}`
     : `ending in ${method.last4}`;
 
   return (
