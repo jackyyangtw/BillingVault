@@ -21,7 +21,8 @@ and maintainable App Router structure.
 - Server state: TanStack Query
 - Client state: Zustand
 - Tests: Vitest, Testing Library, Storybook test integration, Playwright browser provider
-- Security: HttpOnly session cookie, CSP nonce, safe callback URL validation
+- Security: Supabase SSR cookie flow, server-side session verification, CSP
+  nonce, safe callback URL validation
 
 ## Directory Map
 
