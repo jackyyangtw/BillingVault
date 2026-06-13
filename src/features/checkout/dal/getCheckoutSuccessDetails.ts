@@ -21,6 +21,7 @@ const purchaseDateFormatter = new Intl.DateTimeFormat(LOCALE, {
   hour: "2-digit",
   minute: "2-digit",
   hour12: false,
+  timeZone: "Asia/Taipei",
 });
 
 export async function getCheckoutSuccessDetails(
