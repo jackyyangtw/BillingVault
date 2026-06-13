@@ -108,4 +108,46 @@ test.describe("Supabase Email 登入", () => {
       /\/login\?callbackUrl=%2Faccount%2Fsubscription/,
     );
   });
+
+  test("session cookie 失效後觸發清除資料 action 時會導向登入頁", async ({
+    page,
+  }) => {
+    const password = demoPassword;
+
+    if (!password) {
+      test.skip(
+        true,
+        "請設定 PLAYWRIGHT_TEST_PASSWORD 來執行 Supabase 真實登入測試。",
+      );
+      return;
+    }
+
+    await page.goto("/account/billing");
+    await signIn(page, password);
+
+    await expect(page).toHaveURL(/\/account\/billing$/);
+    await expect(
+      page.getByText("Billing, payments, subscriptions"),
+    ).toBeVisible();
+
+    await page.getByRole("button", { name: "開啟使用者選單" }).click();
+    await page.getByRole("menuitem", { name: "清除帳號資料" }).click();
+    await expect(
+      page.getByRole("heading", { name: "確認清除所有資料？" }),
+    ).toBeVisible();
+
+    await page.context().clearCookies();
+    const actionResponsePromise = page.waitForResponse(
+      (response) =>
+        response.request().method() === "POST" &&
+        response.url().includes("/account/billing"),
+    );
+    await page.getByRole("button", { name: "確認清除" }).click();
+    const actionResponse = await actionResponsePromise;
+
+    expect(actionResponse.status()).toBeGreaterThanOrEqual(300);
+    expect(actionResponse.status()).toBeLessThan(400);
+    expect(actionResponse.headers().location).toContain("/login");
+    await expect(page.getByText("帳號資料已清除")).not.toBeVisible();
+  });
 });
