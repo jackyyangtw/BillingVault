@@ -1,6 +1,6 @@
-# SecureCart
+# BillingVault
 
-SecureCart 是一個以 SaaS 訂閱、信用卡管理與 sandbox 付款流程為核心的
+BillingVault 是一個以 SaaS 訂閱、信用卡管理與 sandbox 付款流程為核心的
 Next.js App Router side project。
 
 這不是一般實體商品商城，而是一個模擬真實 SaaS 商業產品的訂閱結帳系統：
@@ -14,7 +14,7 @@ A secure SaaS subscription and sandbox payment flow demo built with Next.js App 
 ## Demo Access
 
 ```txt
-Email: demo@securecart.dev
+Email: demo@billingvault.dev
 Password: test12345
 ```
 
@@ -26,7 +26,7 @@ Password: test12345
 
 ## 安全範圍
 
-SecureCart 是一個具備資安意識的 SaaS checkout demo，不是 production payment
+BillingVault 是一個具備資安意識的 SaaS checkout demo，不是 production payment
 platform。這個專案主要展示 Client UI、Server Actions、server-only DAL、
 Prisma、Supabase Auth 與 Supabase Postgres 之間的安全邊界。
 

@@ -3,8 +3,8 @@ import { LockKeyhole, ShieldCheck, Sparkles } from "lucide-react";
 import LoginForm from "./_components/LoginForm";
 
 export const metadata: Metadata = {
-  title: "登入 | SecureCart",
-  description: "登入 SecureCart，繼續完成你的訂閱結帳流程。",
+  title: "登入 | BillingVault",
+  description: "登入 BillingVault，繼續完成你的訂閱結帳流程。",
 };
 
 type LoginPageProps = {

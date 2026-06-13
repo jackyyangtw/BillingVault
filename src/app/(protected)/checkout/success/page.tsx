@@ -25,9 +25,9 @@ import {
 import { verifySession } from "@/lib/auth/dal";
 
 export const metadata: Metadata = {
-  title: "結帳成功 | SecureCart",
+  title: "結帳成功 | BillingVault",
   description:
-    "你的 SecureCart 訂閱結帳已成功完成，可查看帳務摘要、訂閱方案與付款方式狀態。",
+    "你的 BillingVault 訂閱結帳已成功完成，可查看帳務摘要、訂閱方案與付款方式狀態。",
 };
 
 type CheckoutSuccessPageProps = {
@@ -56,7 +56,7 @@ export default async function CheckoutSuccessPage({
             訂閱建立成功
           </h1>
           <p className="text-muted-foreground mt-5 max-w-3xl text-lg leading-8">
-            SecureCart
+            BillingVault
             已完成這筆模擬結帳。你可以接著查看帳務摘要、管理訂閱方案，或確認付款方式狀態。
           </p>
         </div>

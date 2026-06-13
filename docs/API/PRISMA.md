@@ -65,20 +65,20 @@ pnpm exec prisma migrate dev --name <migration-name> --create-only
 database 重播既有 migration 失敗，則使用 schema diff 產 SQL：
 
 ```bash
-mkdir -p /private/tmp/secure-cart-prisma-base
-git show HEAD:prisma/schema.prisma > /private/tmp/secure-cart-prisma-base/schema.prisma
-git show HEAD:prisma/models/billing.prisma > /private/tmp/secure-cart-prisma-base/billing.prisma
-git show HEAD:prisma/models/checkout.prisma > /private/tmp/secure-cart-prisma-base/checkout.prisma
-git show HEAD:prisma/models/payment-methods.prisma > /private/tmp/secure-cart-prisma-base/payment-methods.prisma
-git show HEAD:prisma/models/subscriptions.prisma > /private/tmp/secure-cart-prisma-base/subscriptions.prisma
+mkdir -p /private/tmp/billing-vault-prisma-base
+git show HEAD:prisma/schema.prisma > /private/tmp/billing-vault-prisma-base/schema.prisma
+git show HEAD:prisma/models/billing.prisma > /private/tmp/billing-vault-prisma-base/billing.prisma
+git show HEAD:prisma/models/checkout.prisma > /private/tmp/billing-vault-prisma-base/checkout.prisma
+git show HEAD:prisma/models/payment-methods.prisma > /private/tmp/billing-vault-prisma-base/payment-methods.prisma
+git show HEAD:prisma/models/subscriptions.prisma > /private/tmp/billing-vault-prisma-base/subscriptions.prisma
 
 pnpm exec prisma migrate diff \
-  --from-schema /private/tmp/secure-cart-prisma-base \
+  --from-schema /private/tmp/billing-vault-prisma-base \
   --to-schema prisma/ \
   --script > prisma/migrations/<migration-name>/migration.sql
 ```
 
-Windows 環境可將暫存資料夾改成 `C:\tmp\secure-cart-prisma-base`。
+Windows 環境可將暫存資料夾改成 `C:\tmp\billing-vault-prisma-base`。
 
 產完後再手動補上 Prisma 無法產生的 Supabase RLS policy 區塊。
 

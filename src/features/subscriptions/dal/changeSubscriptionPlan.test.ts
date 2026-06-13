@@ -317,7 +317,7 @@ function createCurrentSubscription({
     createdAt: new Date("2026-06-01T00:00:00.000Z"),
     updatedAt: new Date("2026-06-01T00:00:00.000Z"),
     order: {
-      companyName: "SecureCart",
+      companyName: "BillingVault",
       billingEmail: "billing@example.com",
       billingAddress: "台北市信義區",
       taxId: null,

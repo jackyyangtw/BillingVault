@@ -61,7 +61,7 @@ export const Default: Story = {
       <CardContent>
         <div className="flex items-center justify-between gap-6">
           <div className="flex flex-col gap-1">
-            <span className="font-medium">Secure Cart Pro</span>
+            <span className="font-medium">Billing Vault Pro</span>
             <span className="text-muted-foreground">Monthly billing</span>
           </div>
           <span className="font-medium">$29.00</span>

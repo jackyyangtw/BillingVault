@@ -35,7 +35,7 @@ describe("處理 TapPay sandbox 付款", () => {
         prime: "test_prime",
         details: "CodeGuard Pro subscription",
         cardholder: {
-          name: "SecureCart",
+          name: "BillingVault",
           email: "billing@example.com",
           address: "台北市信義區",
         },
@@ -68,7 +68,7 @@ describe("處理 TapPay sandbox 付款", () => {
           order_number: "SC20260529TEST",
           cardholder: {
             phone_number: "",
-            name: "SecureCart",
+            name: "BillingVault",
             email: "billing@example.com",
             address: "台北市信義區",
           },
@@ -100,7 +100,7 @@ describe("處理 TapPay sandbox 付款", () => {
         cardToken: "CARD_TOKEN",
         details: "CodeGuard Pro subscription",
         cardholder: {
-          name: "SecureCart",
+          name: "BillingVault",
           email: "billing@example.com",
           address: "台北市信義區",
         },
@@ -130,7 +130,7 @@ describe("處理 TapPay sandbox 付款", () => {
           order_number: "SC20260529TEST",
           cardholder: {
             phone_number: "",
-            name: "SecureCart",
+            name: "BillingVault",
             email: "billing@example.com",
             address: "台北市信義區",
           },
@@ -160,7 +160,7 @@ describe("處理 TapPay sandbox 付款", () => {
         prime: "test_prime",
         details: "CodeGuard Pro subscription",
         cardholder: {
-          name: "SecureCart",
+          name: "BillingVault",
           email: "billing@example.com",
           address: "台北市信義區",
         },
@@ -184,7 +184,7 @@ describe("處理 TapPay sandbox 付款", () => {
         prime: "test_prime",
         details: "CodeGuard Pro subscription",
         cardholder: {
-          name: "SecureCart",
+          name: "BillingVault",
           email: "billing@example.com",
           address: "台北市信義區",
         },
@@ -206,7 +206,7 @@ describe("處理 TapPay sandbox 付款", () => {
         prime: "test_prime",
         details: "CodeGuard Pro subscription",
         cardholder: {
-          name: "SecureCart",
+          name: "BillingVault",
           email: "billing@example.com",
           address: "台北市信義區",
         },
@@ -226,7 +226,7 @@ describe("處理 TapPay sandbox 付款", () => {
         prime: "test_prime",
         details: "CodeGuard Pro subscription",
         cardholder: {
-          name: "SecureCart",
+          name: "BillingVault",
           email: "billing@example.com",
           address: "台北市信義區",
         },

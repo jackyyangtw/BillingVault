@@ -18,7 +18,7 @@ const fieldLabels: Record<TapPayFieldName, string> = {
 };
 
 const fieldDescriptions: Record<TapPayFieldName, string> = {
-  number: "卡號由 TapPay 安全欄位處理，不會進入 SecureCart 狀態。",
+  number: "卡號由 TapPay 安全欄位處理，不會進入 BillingVault 狀態。",
   expiry: "格式為 MM / YY。",
   ccv: "輸入信用卡背面的 3 到 4 位安全碼。",
 };

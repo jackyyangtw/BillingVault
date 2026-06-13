@@ -5,7 +5,7 @@ Read it with `AGENTS.md` before changing code.
 
 ## Project Snapshot
 
-SecureCart is a Next.js 16 / React 19 demo for a secure SaaS subscription
+BillingVault is a Next.js 16 / React 19 demo for a secure SaaS subscription
 checkout flow. It showcases pricing plans, login/session handling, checkout,
 payment methods, subscription management, billing history, form validation, CSP,
 and maintainable App Router structure.

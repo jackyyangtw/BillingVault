@@ -23,7 +23,7 @@ export default function NotFound() {
         </TypographyH1>
         <TypographyLead className="mt-6 max-w-2xl text-lg leading-relaxed sm:text-xl">
           這個連結可能已經移動、失效，或目前還沒有開放。你可以回到首頁，
-          或前往定價頁繼續探索 SecureCart。
+          或前往定價頁繼續探索 BillingVault。
         </TypographyLead>
 
         <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row">

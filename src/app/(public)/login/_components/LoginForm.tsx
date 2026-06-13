@@ -70,7 +70,7 @@ export default function LoginForm({ callbackUrl }: LoginFormProps) {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="text-2xl">登入 SecureCart</CardTitle>
+        <CardTitle className="text-2xl">登入 BillingVault</CardTitle>
         <CardDescription>
           使用 README 提供的 demo 帳號登入，體驗完整 sandbox 訂閱流程。
         </CardDescription>

@@ -1,10 +1,11 @@
 import { Badge } from "@/components/ui/badge";
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
 
-export const DEMO_EMAIL = "demo@securecart.dev";
+export const DEMO_EMAIL = "demo@billingvault.dev";
 export const DEMO_PASSWORD = "請查看 GitHub README";
 
-const DEMO_ACCESS_URL = "https://github.com/jackyyangtw/SecureCart#demo-access";
+const DEMO_ACCESS_URL =
+  "https://github.com/jackyyangtw/BillingVault#demo-access";
 
 export default function DemoAccessPanel() {
   return (

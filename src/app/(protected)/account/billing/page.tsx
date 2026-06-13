@@ -8,8 +8,8 @@ import OrderHistory from "./_components/OrderHistory";
 import PaymentMethodPanel from "./_components/PaymentMethodPanel";
 
 export const metadata: Metadata = {
-  title: "帳務管理 | SecureCart",
-  description: "管理 SecureCart 帳務摘要、付款方式與帳單紀錄。",
+  title: "帳務管理 | BillingVault",
+  description: "管理 BillingVault 帳務摘要、付款方式與帳單紀錄。",
 };
 
 export default async function AccountPage() {

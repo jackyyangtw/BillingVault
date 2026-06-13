@@ -1,6 +1,6 @@
 import { expect, type Page, test } from "@playwright/test";
 
-const demoEmail = process.env.PLAYWRIGHT_TEST_EMAIL ?? "demo@securecart.dev";
+const demoEmail = process.env.PLAYWRIGHT_TEST_EMAIL ?? "demo@billingvault.dev";
 const demoPassword = process.env.PLAYWRIGHT_TEST_PASSWORD;
 
 async function signIn(page: Page, password: string) {
@@ -66,7 +66,9 @@ test.describe("結帳表單防呆", () => {
     await expect(page.locator("#tappay-card-expiration-date")).toBeVisible();
     await expect(page.locator("#tappay-card-ccv")).toBeVisible();
     await expect(
-      page.getByText("卡號由 TapPay 安全欄位處理，不會進入 SecureCart 狀態。"),
+      page.getByText(
+        "卡號由 TapPay 安全欄位處理，不會進入 BillingVault 狀態。",
+      ),
     ).toBeVisible();
 
     await expect(page.locator("#tappay-card-number input")).toHaveCount(0);

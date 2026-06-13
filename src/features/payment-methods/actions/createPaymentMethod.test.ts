@@ -38,7 +38,7 @@ describe("新增付款方式", () => {
     await expect(
       createPaymentMethodAction({
         prime: "test_prime",
-        cardHolder: "SecureCart",
+        cardHolder: "BillingVault",
         billingEmail: "billing@example.com",
         card: {
           binCode: "424242",
@@ -57,7 +57,7 @@ describe("新增付款方式", () => {
     expect(bindTapPaySandboxCardMock).toHaveBeenCalledWith({
       prime: "test_prime",
       cardholder: {
-        name: "SecureCart",
+        name: "BillingVault",
         email: "billing@example.com",
       },
     });

@@ -44,7 +44,7 @@ export default function ProductDetailCards({
           <CardHeader>
             <CardTitle>資安設計重點</CardTitle>
             <CardDescription>
-              詳細頁保留 SecureCart 的核心展示方向：安全流程與可維護架構。
+              詳細頁保留 BillingVault 的核心展示方向：安全流程與可維護架構。
             </CardDescription>
           </CardHeader>
           <CardContent>

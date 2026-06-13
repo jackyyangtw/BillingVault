@@ -19,7 +19,7 @@ function TestPlanSelector({
       planId: "business",
       productIds: ["codeguard"],
       cycle: currentCycle ?? "monthly",
-      companyName: "SecureCart",
+      companyName: "BillingVault",
       billingEmail: "billing@example.com",
       taxId: "",
       billingAddress: "台北市信義區",

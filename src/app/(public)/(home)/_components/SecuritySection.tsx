@@ -61,7 +61,7 @@ export default function SecuritySection() {
             安全是設計原則，不是事後補舊
           </TypographyH2>
           <TypographyLead className="mt-4 text-base">
-            SecureCart 的每一層架構都以真實攻擊情境為前提進行設計， 從 Token
+            BillingVault 的每一層架構都以真實攻擊情境為前提進行設計， 從 Token
             處理到表單送出，每個環節都有對應的防護措施。
           </TypographyLead>
         </div>

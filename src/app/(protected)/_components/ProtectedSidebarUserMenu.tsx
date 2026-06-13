@@ -26,7 +26,7 @@ type ProtectedSidebarUserMenuProps = {
 export default function ProtectedSidebarUserMenu({
   user,
 }: ProtectedSidebarUserMenuProps) {
-  const userName = user?.name || "SecureCart User";
+  const userName = user?.name || "BillingVault User";
   const avatarInitial = userName.trim().charAt(0).toUpperCase() || "S";
   const [isClearDialogOpen, setIsClearDialogOpen] = useState(false);
 

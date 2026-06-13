@@ -19,7 +19,7 @@ type CheckoutPageProps = {
 };
 
 export const metadata: Metadata = {
-  title: "訂閱結帳 | SecureCart",
+  title: "訂閱結帳 | BillingVault",
   description:
     "模擬安全的 SaaS 訂閱結帳流程，包含帳務資料、付款方式輸入與訂單確認。",
 };

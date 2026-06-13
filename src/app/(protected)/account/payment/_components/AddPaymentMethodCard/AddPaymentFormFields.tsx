@@ -66,7 +66,7 @@ export default function AddPaymentFormFields({
               id={field.name}
               type="email"
               autoComplete="email"
-              placeholder="billing@securecart.dev"
+              placeholder="billing@billingvault.dev"
               aria-invalid={fieldState.invalid}
               required
             />

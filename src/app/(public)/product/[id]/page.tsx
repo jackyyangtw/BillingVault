@@ -23,12 +23,12 @@ export async function generateMetadata({
 
   if (!product) {
     return {
-      title: "找不到產品 | SecureCart",
+      title: "找不到產品 | BillingVault",
     };
   }
 
   return {
-    title: `${product.name} | SecureCart`,
+    title: `${product.name} | BillingVault`,
     description: product.summary,
   };
 }

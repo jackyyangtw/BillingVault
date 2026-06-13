@@ -1,6 +1,6 @@
 import { expect, type Page, test } from "@playwright/test";
 
-const demoEmail = process.env.PLAYWRIGHT_TEST_EMAIL ?? "demo@securecart.dev";
+const demoEmail = process.env.PLAYWRIGHT_TEST_EMAIL ?? "demo@billingvault.dev";
 const demoPassword = process.env.PLAYWRIGHT_TEST_PASSWORD;
 
 async function signIn(page: Page, password: string) {

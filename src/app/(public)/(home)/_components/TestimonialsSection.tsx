@@ -10,7 +10,7 @@ import {
 const testimonials = [
   {
     quote:
-      "導入 SecureCart 後，結帳放棄率下降了 38%。訂閱流程穩定到幾乎不需要維護。",
+      "導入 BillingVault 後，結帳放棄率下降了 38%。訂閱流程穩定到幾乎不需要維護。",
     author: "Priya K.",
     role: "CTO，StackLayer",
     rating: 5,
@@ -24,7 +24,7 @@ const testimonials = [
   },
   {
     quote:
-      "我們在一個週末就從 Stripe 託管頁面遷移到 SecureCart。開發體驗好到不可思議。",
+      "我們在一個週末就從 Stripe 託管頁面遷移到 BillingVault。開發體驗好到不可思議。",
     author: "Ana Torres",
     role: "創辦人，Codeflow",
     rating: 5,

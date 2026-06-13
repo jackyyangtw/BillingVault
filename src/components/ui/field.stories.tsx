@@ -62,7 +62,7 @@ export const Default: Story = {
         <Input
           id="customer-email"
           type="email"
-          placeholder="demo@securecart.dev"
+          placeholder="demo@billingvault.dev"
         />
         <FieldDescription>
           This address receives receipts and checkout alerts.
@@ -136,7 +136,7 @@ export const Horizontal: Story = {
     <FieldGroup className="max-w-md">
       <Field orientation="horizontal">
         <FieldLabel htmlFor="risk-alerts">Risk alerts</FieldLabel>
-        <Input id="risk-alerts" placeholder="alerts@securecart.dev" />
+        <Input id="risk-alerts" placeholder="alerts@billingvault.dev" />
       </Field>
       <Field orientation="horizontal">
         <FieldContent>
@@ -183,7 +183,7 @@ export const WithSeparator: Story = {
         <Input
           id="account-email"
           type="email"
-          placeholder="demo@securecart.dev"
+          placeholder="demo@billingvault.dev"
         />
       </Field>
       <FieldSeparator>Security</FieldSeparator>

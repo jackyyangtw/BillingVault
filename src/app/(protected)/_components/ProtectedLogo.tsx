@@ -11,7 +11,7 @@ export default function ProtectedLogo() {
         <ShieldCheck />
       </div>
       <div className="min-w-0">
-        <p className="truncate text-sm font-semibold">SecureCart Console</p>
+        <p className="truncate text-sm font-semibold">BillingVault Console</p>
         <p className="text-muted-foreground hidden truncate text-xs sm:block">
           Billing, payments, subscriptions
         </p>

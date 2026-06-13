@@ -28,7 +28,7 @@ describe("綁定 TapPay sandbox 卡片", () => {
       bindTapPaySandboxCard({
         prime: "test_prime",
         cardholder: {
-          name: "SecureCart",
+          name: "BillingVault",
           email: "billing@example.com",
         },
       }),
@@ -52,7 +52,7 @@ describe("綁定 TapPay sandbox 卡片", () => {
           currency: "TWD",
           cardholder: {
             phone_number: "",
-            name: "SecureCart",
+            name: "BillingVault",
             email: "billing@example.com",
           },
         }),
@@ -78,7 +78,7 @@ describe("綁定 TapPay sandbox 卡片", () => {
       bindTapPaySandboxCard({
         prime: "test_prime",
         cardholder: {
-          name: "SecureCart",
+          name: "BillingVault",
           email: "billing@example.com",
         },
       }),
@@ -94,7 +94,7 @@ describe("綁定 TapPay sandbox 卡片", () => {
       bindTapPaySandboxCard({
         prime: "test_prime",
         cardholder: {
-          name: "SecureCart",
+          name: "BillingVault",
           email: "billing@example.com",
         },
       }),

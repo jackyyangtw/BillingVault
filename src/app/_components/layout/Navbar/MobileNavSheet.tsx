@@ -43,7 +43,7 @@ export default function MobileNavSheet({
       </SheetTrigger>
       <SheetContent side="right" className="w-72">
         <SheetHeader>
-          <SheetTitle>SecureCart</SheetTitle>
+          <SheetTitle>BillingVault</SheetTitle>
         </SheetHeader>
         <div className="flex min-h-0 flex-1 flex-col">
           <nav className="flex flex-col gap-2 px-3">

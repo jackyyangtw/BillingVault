@@ -71,7 +71,7 @@ describe("新增付款方式表單", () => {
     expect(screen.getByText("CVC")).toBeInTheDocument();
     expect(
       screen.getByText(
-        "卡號由 TapPay 安全欄位處理，不會進入 SecureCart 狀態。",
+        "卡號由 TapPay 安全欄位處理，不會進入 BillingVault 狀態。",
       ),
     ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "儲存卡片" })).toBeDisabled();

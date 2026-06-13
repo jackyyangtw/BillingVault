@@ -29,7 +29,7 @@ function createPaymentMethod(
     brand: "Visa",
     binCode: "424242",
     last4: "4242",
-    holder: "SecureCart",
+    holder: "BillingVault",
     expiresAt: "12/99",
     billingEmail: "billing@example.com",
     status: "primary",

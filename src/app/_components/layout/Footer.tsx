@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ShieldCheck } from "lucide-react";
 
-const GITHUB_REPOSITORY_URL = "https://github.com/jackyyangtw/SecureCart";
+const GITHUB_REPOSITORY_URL = "https://github.com/jackyyangtw/BillingVault";
 
 function GitHubLogo(props: React.ComponentProps<"svg">) {
   return (
@@ -20,17 +20,17 @@ export default function Footer() {
             <span className="bg-primary text-primary-foreground flex size-7 items-center justify-center rounded-md">
               <ShieldCheck className="size-4" />
             </span>
-            SecureCart
+            BillingVault
           </div>
           <p className="text-muted-foreground text-sm">
-            © {new Date().getFullYear()} SecureCart。以 Next.js App Router
+            © {new Date().getFullYear()} BillingVault。以 Next.js App Router
             打造的 SaaS 結帳展示專案。
           </p>
           <Link
             href={GITHUB_REPOSITORY_URL}
             target="_blank"
             rel="noreferrer"
-            aria-label="前往 SecureCart GitHub repository"
+            aria-label="前往 BillingVault GitHub repository"
             className="text-muted-foreground hover:text-foreground rounded-md p-2 transition-colors"
           >
             <GitHubLogo className="size-8" />

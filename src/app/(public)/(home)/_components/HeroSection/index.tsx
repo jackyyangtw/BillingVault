@@ -20,7 +20,7 @@ export default function HeroSection() {
           </TypographyH1>
 
           <TypographyMuted className="mx-auto mt-6 max-w-xl text-lg leading-relaxed">
-            SecureCart 提供訂閱方案管理、帳務計費、模擬信用卡 Tokenization
+            BillingVault 提供訂閱方案管理、帳務計費、模擬信用卡 Tokenization
             與稽核紀錄， 讓你專注在功能開發，而不是重複建構結帳流程。
           </TypographyMuted>
 

@@ -1,8 +1,8 @@
-# SecureCart 專案計畫
+# BillingVault 專案計畫
 
 ## 專案定位
 
-**SecureCart** 是一個以 **SaaS 訂閱與信用卡管理流程** 為核心的 Next.js side project。
+**BillingVault** 是一個以 **SaaS 訂閱與信用卡管理流程** 為核心的 Next.js side project。
 
 這不是一般商品商城，而是用來展示：
 
@@ -55,7 +55,7 @@ SaaS 訂閱商城更能展示真實商業產品中的前端架構能力，而不
 
 ## 產品方向
 
-SecureCart 可以想像成一個「安全 SaaS 訂閱與信用卡管理平台」，販售開發者工具或團隊軟體服務。
+BillingVault 可以想像成一個「安全 SaaS 訂閱與信用卡管理平台」，販售開發者工具或團隊軟體服務。
 
 ## 建議販售的 SaaS 產品
 
@@ -147,7 +147,7 @@ SecureCart 可以想像成一個「安全 SaaS 訂閱與信用卡管理平台」
 
 ## 核心架構邊界
 
-SecureCart 的後端與資料存取採用保守分層，避免 Client Component 直接碰敏感資料或資料庫查詢。
+BillingVault 的後端與資料存取採用保守分層，避免 Client Component 直接碰敏感資料或資料庫查詢。
 
 | 層級                          | 職責                                                          | 不做什麼                                      |
 | ----------------------------- | ------------------------------------------------------------- | --------------------------------------------- |
@@ -301,7 +301,7 @@ docs/
 ### 測試帳號策略
 
 ```txt
-Email: demo@securecart.dev
+Email: demo@billingvault.dev
 Password: 由 Supabase Dashboard 建立與管理，不提交到 repo
 ```
 
@@ -348,7 +348,7 @@ Password: 由 Supabase Dashboard 建立與管理，不提交到 repo
 
 ## 訂單與付款紀錄規劃
 
-TapPay sandbox 只負責模擬授權與交易回傳，不負責建立 SecureCart 的訂單資料。SecureCart 需要在自己的資料庫建立訂單、付款紀錄與訂閱狀態，並用本地 `orderNumber` 對應 TapPay 的 `order_number`。
+TapPay sandbox 只負責模擬授權與交易回傳，不負責建立 BillingVault 的訂單資料。BillingVault 需要在自己的資料庫建立訂單、付款紀錄與訂閱狀態，並用本地 `orderNumber` 對應 TapPay 的 `order_number`。
 
 ```txt
 Checkout request
@@ -381,7 +381,7 @@ Checkout request
 | 前端 SDK | `NEXT_PUBLIC_TAPPAY_SERVER_TYPE=sandbox`                             |
 | 後端 API | 只允許呼叫 `https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime`  |
 | 扣款狀態 | sandbox 只模擬授權，不真實扣款                                       |
-| 訂單編號 | 由 SecureCart 產生並傳入 TapPay `order_number`                       |
+| 訂單編號 | 由 BillingVault 產生並傳入 TapPay `order_number`                     |
 | 交易 ID  | 保存 TapPay 回傳的 `rec_trade_id` 到 `PaymentRecord.providerTradeId` |
 | 金流密鑰 | `partner_key` 只存在 server-only env，不暴露到 Client Component      |
 | 防呆     | 非 production demo 預設拒絕 TapPay production endpoint               |
@@ -467,7 +467,7 @@ type SubscriptionStatus =
 
 > 現況：本專案目前已串接 TapPay hosted fields 進行前端 tokenization，checkout 先取得一次性 prime，付款方式頁會以 TapPay sandbox Bind Card 取得 `card_key` / `card_token`，並保存展示需要的非敏感欄位，例如卡片品牌、末四碼、持卡人、帳務 Email 與 TapPay card identifier。
 
-> 目標：checkout 新卡流程已改為 TapPay sandbox Pay by Prime，並以 `remember: true` 保存 TapPay 回傳的 `card_key` / `card_token`；已儲存卡片扣款改用 Pay by Card Token。SecureCart 需自己建立訂單、付款紀錄與訂閱資料；TapPay 回傳的 `rec_trade_id` 只作為 sandbox 交易對帳與查詢依據。既有缺少 token 的舊卡需要重新綁定後才能扣款。
+> 目標：checkout 新卡流程已改為 TapPay sandbox Pay by Prime，並以 `remember: true` 保存 TapPay 回傳的 `card_key` / `card_token`；已儲存卡片扣款改用 Pay by Card Token。BillingVault 需自己建立訂單、付款紀錄與訂閱資料；TapPay 回傳的 `rec_trade_id` 只作為 sandbox 交易對帳與查詢依據。既有缺少 token 的舊卡需要重新綁定後才能扣款。
 
 ---
 

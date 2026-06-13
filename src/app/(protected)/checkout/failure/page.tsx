@@ -22,8 +22,8 @@ import { getCheckoutFailureDetails } from "@/features/checkout/dal/getCheckoutFa
 import { verifySession } from "@/lib/auth/dal";
 
 export const metadata: Metadata = {
-  title: "結帳失敗 | SecureCart",
-  description: "你的 SecureCart 訂閱結帳尚未完成，請檢查付款資料後再試一次。",
+  title: "結帳失敗 | BillingVault",
+  description: "你的 BillingVault 訂閱結帳尚未完成，請檢查付款資料後再試一次。",
 };
 
 type CheckoutFailurePageProps = {

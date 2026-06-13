@@ -33,7 +33,7 @@ export default function Navbar() {
           <span className="bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-lg">
             <ShieldCheck className="size-5" />
           </span>
-          <span className="text-lg tracking-tight">SecureCart</span>
+          <span className="text-lg tracking-tight">BillingVault</span>
         </Link>
         {/* PC menu */}
         <ul className="hidden items-center gap-6 md:flex">

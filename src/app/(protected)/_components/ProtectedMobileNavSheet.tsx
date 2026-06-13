@@ -43,7 +43,7 @@ export default function ProtectedMobileNavSheet({
       </SheetTrigger>
       <SheetContent side="left" className="w-72">
         <SheetHeader>
-          <SheetTitle>SecureCart Console</SheetTitle>
+          <SheetTitle>BillingVault Console</SheetTitle>
         </SheetHeader>
         <div className="flex min-h-0 flex-1 flex-col">
           <nav className="flex flex-col gap-1 px-3">

@@ -26,7 +26,7 @@ const meta = {
   },
   args: {
     children:
-      "SecureCart keeps subscription checkout clear, resilient, and easy to audit.",
+      "BillingVault keeps subscription checkout clear, resilient, and easy to audit.",
   },
 } satisfies Meta<typeof TypographyP>;
 
@@ -118,7 +118,7 @@ function TypographyEditorialDemo() {
         Give customers a final, calm moment to confirm plan details.
       </TypographyLead>
       <TypographyP>
-        SecureCart groups pricing, billing cadence, and security guarantees so
+        BillingVault groups pricing, billing cadence, and security guarantees so
         the decision feels understandable before payment.
       </TypographyP>
       <TypographyH3>Before charging the card</TypographyH3>
