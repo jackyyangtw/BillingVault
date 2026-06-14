@@ -1,4 +1,5 @@
 const dateFormatter = new Intl.DateTimeFormat("zh-TW", {
+  timeZone: "Asia/Taipei",
   year: "numeric",
   month: "long",
   day: "numeric",
