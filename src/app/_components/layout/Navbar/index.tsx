@@ -69,7 +69,7 @@ export default function Navbar() {
                 <Link href="/login">登入</Link>
               </Button>
               <Button size="sm" asChild>
-                <Link href="/pricing">免費開始</Link>
+                <Link href="/pricing">開始體驗</Link>
               </Button>
             </>
           )}

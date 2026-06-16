@@ -13,6 +13,55 @@ function resolveCallbackUrl(value: string | undefined): string {
   return isSafeCallbackUrl(value) ? value : DEFAULT_LOGIN_REDIRECT;
 }
 
+function getDemoCredentials(): {
+  email: string;
+  password: string;
+} | null {
+  const email = process.env.DEMO_EMAIL;
+  const password = process.env.DEMO_PASSWORD;
+
+  if (!email || !password) {
+    return null;
+  }
+
+  return { email, password };
+}
+
+async function signInWithPassword(
+  email: string,
+  password: string,
+  callbackUrl: string | undefined,
+  returnedEmail = email,
+): Promise<LoginFormState> {
+  if (!getSupabaseEnv()) {
+    return {
+      fields: {
+        email: returnedEmail,
+        callbackUrl: callbackUrl ?? "",
+      },
+      message: "Supabase 尚未設定，請先補上環境變數。",
+    };
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (error) {
+    return {
+      fields: {
+        email: returnedEmail,
+        callbackUrl: callbackUrl ?? "",
+      },
+      message: "帳號或密碼錯誤，請確認測試帳號後再試。",
+    };
+  }
+
+  redirect(resolveCallbackUrl(callbackUrl));
+}
+
 // Public login entrypoint: unauthenticated users must be allowed to call it.
 // react-doctor-disable-next-line react-doctor/server-auth-actions
 export async function loginAction(
@@ -46,31 +95,34 @@ export async function loginAction(
 
   const { email, password, callbackUrl } = parsed.data;
 
-  if (!getSupabaseEnv()) {
+  return signInWithPassword(email, password, callbackUrl);
+}
+
+// Public demo login entrypoint: credentials stay on the server.
+// react-doctor-disable-next-line react-doctor/server-auth-actions
+export async function demoLoginAction(
+  _prevState: LoginFormState,
+  formData: FormData,
+): Promise<LoginFormState> {
+  const callbackUrlValue = formData.get("callbackUrl");
+  const callbackUrl =
+    typeof callbackUrlValue === "string" ? callbackUrlValue : undefined;
+  const credentials = getDemoCredentials();
+
+  if (!credentials) {
     return {
       fields: {
-        email,
+        email: "",
         callbackUrl: callbackUrl ?? "",
       },
-      message: "Supabase 尚未設定，請先補上環境變數。",
+      message: "Demo 帳號尚未設定，請補上 DEMO_EMAIL 與 DEMO_PASSWORD。",
     };
   }
 
-  const supabase = await createSupabaseServerClient();
-  const { error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
-
-  if (error) {
-    return {
-      fields: {
-        email,
-        callbackUrl: callbackUrl ?? "",
-      },
-      message: "帳號或密碼錯誤，請確認測試帳號後再試。",
-    };
-  }
-
-  redirect(resolveCallbackUrl(callbackUrl));
+  return signInWithPassword(
+    credentials.email,
+    credentials.password,
+    callbackUrl,
+    "",
+  );
 }

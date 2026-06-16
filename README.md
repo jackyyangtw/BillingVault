@@ -13,15 +13,14 @@ A secure SaaS subscription and sandbox payment flow demo built with Next.js App 
 
 ## Demo Access
 
-```txt
-Email: demo@billingvault.dev
-Password: test12345
-```
+前往登入頁，點擊「一鍵登入 Demo」即可直接體驗完整流程，不需要手動輸入或查找
+demo 帳密。
 
-這是刻意公開的 demo-only credential，方便履歷審查者直接登入體驗。
-此帳號僅限 sandbox 資料，不包含真實客戶資料，也無法觸發真實扣款。
+Demo 帳密只會由 Server Action 從 server-only environment variables 讀取，前端不會
+顯示或保存 credential。此帳號僅限 sandbox 資料，不包含真實客戶資料，也無法觸發
+真實扣款。
 
-這組帳號僅用於公開 demo，付款流程只連接 TapPay sandbox，不會真實扣款。
+Demo 付款流程只連接 TapPay sandbox，不會真實扣款。
 請勿在 demo 環境輸入真實信用卡資料。
 
 ## 安全範圍
