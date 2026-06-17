@@ -45,3 +45,129 @@ jobs:
 
       - name: Unit tests
         run: pnpm test:unit
+
+  deploy-preview:
+    name: Deploy preview
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: deployment-gate
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      GIT_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
+      GIT_COMMIT_REF: ${{ github.head_ref }}
+      GIT_COMMIT_ORG: ${{ github.event.pull_request.head.repo.owner.login }}
+      GIT_COMMIT_REPO: ${{ github.event.pull_request.head.repo.name }}
+      GIT_REPO_ID: ${{ github.event.repository.id }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.29.3
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Collect Vercel git metadata
+        run: |
+          echo "GIT_COMMIT_MESSAGE=$(git log -1 --pretty=%s)" >> "$GITHUB_ENV"
+          echo "GIT_COMMIT_AUTHOR_NAME=$(git log -1 --pretty=%an)" >> "$GITHUB_ENV"
+
+      - name: Pull Vercel preview environment
+        run: pnpm dlx vercel@latest pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build preview deployment
+        run: pnpm dlx vercel@latest build --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy preview
+        run: >
+          pnpm dlx vercel@latest deploy --prebuilt
+          --meta githubDeployment=1
+          --meta githubCommitSha="$GIT_COMMIT_SHA"
+          --meta githubCommitRef="$GIT_COMMIT_REF"
+          --meta githubCommitMessage="$GIT_COMMIT_MESSAGE"
+          --meta githubCommitAuthorName="$GIT_COMMIT_AUTHOR_NAME"
+          --meta githubCommitAuthorLogin="${{ github.actor }}"
+          --meta githubCommitOrg="$GIT_COMMIT_ORG"
+          --meta githubCommitRepo="$GIT_COMMIT_REPO"
+          --meta githubOrg="$GIT_COMMIT_ORG"
+          --meta githubRepo="$GIT_COMMIT_REPO"
+          --meta githubRepoId="$GIT_REPO_ID"
+          --token=${{ secrets.VERCEL_TOKEN }}
+
+  deploy-production:
+    name: Deploy production
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: deployment-gate
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      GIT_COMMIT_SHA: ${{ github.sha }}
+      GIT_COMMIT_REF: ${{ github.ref_name }}
+      GIT_COMMIT_ORG: ${{ github.repository_owner }}
+      GIT_COMMIT_REPO: ${{ github.event.repository.name }}
+      GIT_REPO_ID: ${{ github.event.repository.id }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.29.3
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Collect Vercel git metadata
+        run: |
+          echo "GIT_COMMIT_MESSAGE=$(git log -1 --pretty=%s)" >> "$GITHUB_ENV"
+          echo "GIT_COMMIT_AUTHOR_NAME=$(git log -1 --pretty=%an)" >> "$GITHUB_ENV"
+
+      - name: Pull Vercel production environment
+        run: pnpm dlx vercel@latest pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build production deployment
+        run: pnpm dlx vercel@latest build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy production
+        run: >
+          pnpm dlx vercel@latest deploy --prebuilt --prod
+          --meta githubDeployment=1
+          --meta githubCommitSha="$GIT_COMMIT_SHA"
+          --meta githubCommitRef="$GIT_COMMIT_REF"
+          --meta githubCommitMessage="$GIT_COMMIT_MESSAGE"
+          --meta githubCommitAuthorName="$GIT_COMMIT_AUTHOR_NAME"
+          --meta githubCommitAuthorLogin="${{ github.actor }}"
+          --meta githubCommitOrg="$GIT_COMMIT_ORG"
+          --meta githubCommitRepo="$GIT_COMMIT_REPO"
+          --meta githubOrg="$GIT_COMMIT_ORG"
+          --meta githubRepo="$GIT_COMMIT_REPO"
+          --meta githubRepoId="$GIT_REPO_ID"
+          --token=${{ secrets.VERCEL_TOKEN }}
