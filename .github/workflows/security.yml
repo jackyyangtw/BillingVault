@@ -35,6 +35,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Audit production dependencies
+        # Advisory-specific allowlist is maintained in pnpm-workspace.yaml.
         run: pnpm audit --prod --audit-level high
 
       - name: Lint
