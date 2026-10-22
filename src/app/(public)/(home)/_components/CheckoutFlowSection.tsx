@@ -11,7 +11,7 @@ import {
 const steps = [
   { step: "01", label: "選擇方案", desc: "選擇 Starter、Pro 或 Business" },
   { step: "02", label: "帳務資訊", desc: "填寫帳戶基本資料" },
-  { step: "03", label: "付款方式", desc: "模擬信用卡 Tokenization" },
+  { step: "03", label: "付款方式", desc: "TapPay 信用卡 Tokenization" },
   { step: "04", label: "確認訂單", desc: "確認方案與金額" },
   { step: "05", label: "完成訂閱", desc: "即時確認通知" },
 ];

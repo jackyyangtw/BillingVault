@@ -34,9 +34,9 @@ const securityItems = [
   },
   {
     icon: CreditCard,
-    title: "模擬信用卡 Tokenization",
+    title: "TapPay 信用卡 Tokenization",
     description:
-      "付款資料送出後立即進行 Tokenization，原始卡號絕不經過伺服器傳輸。",
+      "卡號由 TapPay Fields 安全欄位處理並轉為一次性 Prime，原始卡號絕不經過 BillingVault 伺服器。",
   },
   {
     icon: Zap,
