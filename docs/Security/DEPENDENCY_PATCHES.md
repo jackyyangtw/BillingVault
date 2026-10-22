@@ -1,5 +1,14 @@
 # 依賴安全修補
 
+## 2026-10-22
+
+- CI 的 `pnpm audit --prod --audit-level high` 因 `shadcn → @modelcontextprotocol/sdk` 1.31.0 的 high 公告（GHSA-22jm-h49p-29qw、GHSA-46jr-4wx8-v453）失敗；override 改為 `'@modelcontextprotocol/sdk@<1.32.0': '>=1.32.0'`，解析為 1.32.1。
+- `prisma → @prisma/dev → hono` 的 moderate 公告（GHSA-5r4p-p66f-jhc7）：override 改為 `hono@<4.13.11: 4.13.11`。
+- Storybook 全系列套件與 `eslint-plugin-storybook` 升級至 10.6.3，修正 critical 公告 GHSA-f2ph-cmg5-wxc8。
+- `vite` 升級至 ^8.1.6（解析為 8.3.5），修正 GHSA-587h-7wmj-h5pm 等 5 項公告。
+- Vitest 套件同步升級至 4.1.12，帶入 `@vitest/mocker` 4.1.12，修正 GHSA-qxg6-89mg-rqv8、GHSA-xp26-3454-mjgp。
+- 14 項安全警示全數修正；`pnpm audit` 僅剩已列入 allowlist 的 `braces` 公告。
+
 ## 2026-10-15
 
 - Next.js 與 `eslint-config-next` 升級至 16.4.1，Vitest 套件同步升級至 4.1.11。
