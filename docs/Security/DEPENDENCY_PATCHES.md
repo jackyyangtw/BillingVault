@@ -1,5 +1,13 @@
 # 依賴安全修補
 
+## 2026-10-25
+
+- `zod` high 公告（GHSA-mrhx-c7xc-m3w5，影響 `<4.6.6`）：直接依賴升級至 `^4.6.6`（解析為 4.6.7）；`shadcn` 由 4.7.0 升級至 `^4.22.1`，改用 `zod ^4.2.0`，移除 zod 3.25.76。
+- `shadcn → @modelcontextprotocol/sdk → express → body-parser` 的 high 公告（GHSA-27r3-jxmh-p828）：override 改為 `body-parser@>=2.0.0 <2.4.0: '>=2.4.0'`，解析為 2.4.0。
+- `jsdom → undici` 的 high 公告（GHSA-xjj6-f33q-929c）與兩項 moderate 公告：override 改為 `undici@>=7.0.0 <7.30.1: 7.30.1`。
+- `browserslist` override 由固定 `4.28.7` 改為 `'>=4.28.7'`，避免與 shadcn 4.22.1 要求的 `^4.29.3` 衝突。
+- 剩餘 `ip-address`、`fast-uri` 的 moderate / low 公告不影響 CI 的 high 門檻。
+
 ## 2026-10-22
 
 - CI 的 `pnpm audit --prod --audit-level high` 因 `shadcn → @modelcontextprotocol/sdk` 1.31.0 的 high 公告（GHSA-22jm-h49p-29qw、GHSA-46jr-4wx8-v453）失敗；override 改為 `'@modelcontextprotocol/sdk@<1.32.0': '>=1.32.0'`，解析為 1.32.1。
