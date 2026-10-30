@@ -2,11 +2,18 @@
 
 ## 2026-10-30
 
-- `zod` 升級至 ^4.6.6（解析為 4.6.7），修正 high 公告 GHSA-mrhx-c7xc-m3w5（驗證超大受限集合時記憶體耗盡）。
-- `shadcn` 升級至 ^4.23.0，其依賴的 zod 由 3.25.76 改為 4.x，一併移除同一公告。
-- 更新間接依賴的 override 下限：`undici` 7.30.1、`body-parser` 2.4.0、`fast-uri` 4.2.3、`@hono/node-server` 2.1.3、`qs` 6.16.1、`ip-address` 10.7.4。
+- `shadcn` 升級至 ^4.23.0。
+- 更新間接依賴的 override 下限：`fast-uri` 4.2.3、`@hono/node-server` 2.1.3、`qs` 6.16.1、`ip-address` 10.7.4，修正 10-25 留下的 moderate / low 公告。
 - `deepmerge` 4.3.1（GHSA-gcqx-w48m-w2h4，low）尚無官方修補版本，列入 allowlist，見下方說明。
-- 19 項安全警示中 18 項透過依賴更新修正；`pnpm audit` 僅剩已列入 allowlist 的公告。
+- `pnpm audit` 僅剩已列入 allowlist 的公告。
+
+## 2026-10-25
+
+- `zod` high 公告（GHSA-mrhx-c7xc-m3w5，影響 `<4.6.6`）：直接依賴升級至 `^4.6.6`（解析為 4.6.7）；`shadcn` 由 4.7.0 升級至 `^4.22.1`，改用 `zod ^4.2.0`，移除 zod 3.25.76。
+- `shadcn → @modelcontextprotocol/sdk → express → body-parser` 的 high 公告（GHSA-27r3-jxmh-p828）：override 改為 `body-parser@>=2.0.0 <2.4.0: '>=2.4.0'`，解析為 2.4.0。
+- `jsdom → undici` 的 high 公告（GHSA-xjj6-f33q-929c）與兩項 moderate 公告：override 改為 `undici@>=7.0.0 <7.30.1: 7.30.1`。
+- `browserslist` override 由固定 `4.28.7` 改為 `'>=4.28.7'`，避免與 shadcn 4.22.1 要求的 `^4.29.3` 衝突。
+- 剩餘 `ip-address`、`fast-uri` 的 moderate / low 公告不影響 CI 的 high 門檻。
 
 ## 2026-10-22
 

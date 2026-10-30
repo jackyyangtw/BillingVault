@@ -13,7 +13,7 @@ overrides:
   body-parser@>=2.0.0 <2.4.0: '>=2.4.0'
   brace-expansion@<2.0.0: 1.1.21
   brace-expansion@>=3.0.0 <5.0.12: 5.0.12
-  browserslist@<4.28.7: 4.28.7
+  browserslist@<4.28.7: '>=4.28.7'
   deepmerge-ts@<8.0.0: '>=8.0.0'
   esbuild@>=0.17.0 <0.28.1: '>=0.28.1'
   esbuild@>=0.27.3 <0.28.1: '>=0.28.1'
@@ -48,3 +48,10 @@ auditConfig:
     # deepmerge 4.3.1 prototype poisoning, used only by the shadcn CLI.
     # No patched version upstream; see docs/Security/DEPENDENCY_PATCHES.md.
     - GHSA-gcqx-w48m-w2h4
+
+allowBuilds:
+  '@prisma/engines': set this to true or false
+  esbuild: set this to true or false
+  msw: set this to true or false
+  prisma: set this to true or false
+  unrs-resolver: set this to true or false
