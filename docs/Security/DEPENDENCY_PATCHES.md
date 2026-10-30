@@ -1,5 +1,13 @@
 # 依賴安全修補
 
+## 2026-10-30
+
+- `zod` 升級至 ^4.6.6（解析為 4.6.7），修正 high 公告 GHSA-mrhx-c7xc-m3w5（驗證超大受限集合時記憶體耗盡）。
+- `shadcn` 升級至 ^4.23.0，其依賴的 zod 由 3.25.76 改為 4.x，一併移除同一公告。
+- 更新間接依賴的 override 下限：`undici` 7.30.1、`body-parser` 2.4.0、`fast-uri` 4.2.3、`@hono/node-server` 2.1.3、`qs` 6.16.1、`ip-address` 10.7.4。
+- `deepmerge` 4.3.1（GHSA-gcqx-w48m-w2h4，low）尚無官方修補版本，列入 allowlist，見下方說明。
+- 19 項安全警示中 18 項透過依賴更新修正；`pnpm audit` 僅剩已列入 allowlist 的公告。
+
 ## 2026-10-22
 
 - CI 的 `pnpm audit --prod --audit-level high` 因 `shadcn → @modelcontextprotocol/sdk` 1.31.0 的 high 公告（GHSA-22jm-h49p-29qw、GHSA-46jr-4wx8-v453）失敗；override 改為 `'@modelcontextprotocol/sdk@<1.32.0': '>=1.32.0'`，解析為 1.32.1。
@@ -14,6 +22,14 @@
 - Next.js 與 `eslint-config-next` 升級至 16.4.1，Vitest 套件同步升級至 4.1.11。
 - 間接依賴的安全版本限制統一維護於 `pnpm-workspace.yaml`，避免與 `package.json` 的重複設定互相覆蓋。
 - 56 項安全警示透過依賴更新修正；剩餘的 `braces` 公告依專案決定列入 allowlist。
+
+## deepmerge 4.3.1：GHSA-gcqx-w48m-w2h4
+
+[官方安全公告](https://github.com/advisories/GHSA-gcqx-w48m-w2h4) 列出 `mergeObject()` 回傳物件可被 prototype poisoning 的問題（low），目前尚無官方修補版本。
+
+依賴來源為 `shadcn → deepmerge`，只在執行 shadcn CLI 新增元件時使用，應用程式執行期間不會載入。
+
+此項目列入 `pnpm-workspace.yaml` 的 `auditConfig.ignoreGhsas`，不表示漏洞已修復。待官方發布修補版本，或 shadcn 改用其他套件後，應移除此 allowlist 項目。
 
 ## braces 3.0.3：CVE-2026-93687
 
