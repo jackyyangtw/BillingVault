@@ -1,5 +1,14 @@
 # 依賴安全修補
 
+## 2026-11-25
+
+- `prisma → @prisma/config → effect` 的 high 公告（GHSA-7589-6fvf-x4pw，Schema.TemplateLiteral ReDoS）：新增 override `effect@<3.22.1: 3.22.5`，維持 3.x 主版本。修補前 CI 的 `pnpm audit --prod --audit-level high` 會因此失敗。
+- Next.js 與 `eslint-config-next` 由 16.4.1 升級至 16.4.6，修正 7 項 moderate 公告（GHSA-7qx7-33qx-rqx2、GHSA-f3mh-rxg3-f5g2、GHSA-pc58-hwjq-p385、GHSA-rhh4-g77r-r9qj、GHSA-vvgp-ww4w-46vf、GHSA-mfr8-8qww-v76h、GHSA-vc7v-qv4w-wrv8）。
+- `prisma → @prisma/dev → hono`：override 改為 `hono@<4.13.16: 4.13.22`，修正 GHSA-4m76-xfj5-7975、GHSA-h7mg-cq63-vhpq、GHSA-46wx-v44x-9hh2、GHSA-4h7h-rv7c-7m2v（moderate）與 GHSA-3gg2-335m-rxc6（low）。
+- `prisma → @prisma/dev → @hono/node-server`：原本 `<1.19.13` 與 `<2.1.3` 兩條 override 合併為 `'@hono/node-server@<2.1.6': '>=2.1.6'`（解析為 2.1.11），修正 GHSA-qv5m-9pm6-hqp3、GHSA-jpvv-r467-5p4w。`@prisma/dev` 宣告的是 `1.19.11`，override 不會串接套用，因此必須由單一規則直接指到修補版本。
+- Storybook 開發依賴 `@joshwooding/vite-plugin-react-docgen-typescript → glob → minimatch`：新增 override `glob@>=9.0.0 <14.0.2: '>=14.0.2'`（解析為 14.0.6）與 `minimatch@>=7.0.0 <11.0.1: '>=11.0.1'`（解析為 11.0.9），修正 GHSA-3g3m-2fjr-6pw4、GHSA-g3hv-75wg-m249。此為跨主版本 override，已確認 `pnpm build-storybook` 正常。
+- `pnpm audit` 與 `pnpm audit --prod --audit-level high` 皆為 `No known vulnerabilities found`（allowlist 項目除外）。
+
 ## 2026-10-30
 
 - `shadcn` 升級至 ^4.23.0。
